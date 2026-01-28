@@ -238,17 +238,27 @@ export async function unSaveJobPost(savedJobPostId: string) {
     throw new Error("Forbidden");
   }
 
-  const data = await prisma.savedJob.delete({
+  const saved = await prisma.savedJob.findUnique({
     where: {
       id: savedJobPostId,
-      userId: user.id,
     },
     select: {
       jobId: true,
+      userId: true,
     },
   });
 
-  revalidatePath(`/job/${data.jobId}`);
+  if (!saved || saved.userId !== user.id) {
+    throw new Error("Forbidden");
+  }
+
+  await prisma.savedJob.delete({
+    where: {
+      id: savedJobPostId,
+    },
+  });
+
+  revalidatePath(`/job/${saved.jobId}`);
 }
 
 // Action to update a job post
@@ -270,7 +280,7 @@ export async function editJobPost(
 
   const validateData = jobSchema.parse(data);
 
-  await prisma.job.update({
+  await prisma.job.updateMany({
     where: {
       id: jobId,
       company: {
@@ -305,7 +315,7 @@ export async function deleteJobPost(jobId: string) {
     throw new Error("Forbidden");
   }
 
-  await prisma.job.delete({
+  await prisma.job.deleteMany({
     where: {
       id: jobId,
       company: {

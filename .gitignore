@@ -26,6 +26,7 @@
 .tmp
 .cache
 *.log
+*.bak
 
 # debug
 npm-debug.log*

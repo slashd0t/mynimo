@@ -33,10 +33,11 @@ const JobApplicationDetailsPage = async ({ params }: PageProps) => {
   const company = await isCompany();
   const { id } = await params;
 
-  const application = await getJobApplicationDetailsMutation(
+  const application = (await getJobApplicationDetailsMutation(
     id,
     company?.id as string
-  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  )) as any;
 
   const getStatusBadgeColor = (status: string) => {
     const normalizedStatus = status.toLowerCase();

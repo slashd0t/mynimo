@@ -51,10 +51,10 @@ export async function POST(req: Request){
             return new Response("Company not found.", { status: 400 });
         }
 
-        await prisma.job.update({
+        await prisma.job.updateMany({
             where:{
                 id: jobId,
-                companyId: user?.company?.id as string
+                companyId: user.company.id as string
             },
             data:{
                 status: "ACTIVE"

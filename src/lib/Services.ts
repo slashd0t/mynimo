@@ -99,10 +99,10 @@ export const getJobsDataMutation = async ({
 // Get Job Details
 export const getJobMutation = async (jobId: string, userId?: string) => {
   const [jobData, savedJob] = await Promise.all([
-    await prisma.job.findUnique({
+    prisma.job.findFirst({
       where: {
-        status: "ACTIVE",
         id: jobId,
+        status: "ACTIVE",
       },
       select: {
         jobTitle: true,
@@ -258,7 +258,7 @@ export const getMyJobsMutation = async ({
 
 // Get my job
 export const getMyJobMutation = async (jobId: string, userId: string) => {
-  const data = await prisma.job.findUnique({
+  const data = await prisma.job.findFirst({
     where: {
       id: jobId,
       company: {
@@ -468,7 +468,7 @@ export const getJobApplicationDetailsMutation = async (
   applicationId: string,
   userId: string
 ) => {
-  const data = await prisma.jobApplication.findUnique({
+  const data = await prisma.jobApplication.findFirst({
     where: {
       id: applicationId,
       job: {
