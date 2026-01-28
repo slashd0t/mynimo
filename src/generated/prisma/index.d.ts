@@ -3,67 +3,239 @@
  * Client
 **/
 
-import * as runtime from './runtime/library.js';
+import * as runtime from './runtime/library';
 import $Types = runtime.Types // general types
 import $Public = runtime.Types.Public
 import $Utils = runtime.Types.Utils
 import $Extensions = runtime.Types.Extensions
-import $Result = runtime.Types.Result
 
 export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
+
+export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "User"
+  objects: {
+    accounts: AccountPayload<ExtArgs>[]
+    sessions: SessionPayload<ExtArgs>[]
+    company: CompanyPayload<ExtArgs> | null
+    JobSeeker: JobSeekerPayload<ExtArgs> | null
+    SavedJob: SavedJobPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    name: string | null
+    email: string
+    emailVerified: Date | null
+    image: string | null
+    stripeCustomerId: string | null
+    userType: UserType | null
+    onboardingComplete: boolean
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["user"]>
+  composites: {}
+}
 
 /**
  * Model User
  * 
  */
-export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+export type User = runtime.Types.DefaultSelection<UserPayload>
+export type CompanyPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Company"
+  objects: {
+    user: UserPayload<ExtArgs>
+    jobs: JobPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    name: string
+    location: string
+    about: string
+    website: string
+    logo: string
+    xAccount: string | null
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["company"]>
+  composites: {}
+}
+
 /**
  * Model Company
  * 
  */
-export type Company = $Result.DefaultSelection<Prisma.$CompanyPayload>
+export type Company = runtime.Types.DefaultSelection<CompanyPayload>
+export type JobSeekerPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "JobSeeker"
+  objects: {
+    user: UserPayload<ExtArgs>
+    jobApplications: JobApplicationPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    name: string
+    about: string
+    resume: string
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["jobSeeker"]>
+  composites: {}
+}
+
 /**
  * Model JobSeeker
  * 
  */
-export type JobSeeker = $Result.DefaultSelection<Prisma.$JobSeekerPayload>
+export type JobSeeker = runtime.Types.DefaultSelection<JobSeekerPayload>
+export type AccountPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Account"
+  objects: {
+    user: UserPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    userId: string
+    type: string
+    provider: string
+    providerAccountId: string
+    refresh_token: string | null
+    access_token: string | null
+    expires_at: number | null
+    token_type: string | null
+    scope: string | null
+    id_token: string | null
+    session_state: string | null
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["account"]>
+  composites: {}
+}
+
 /**
  * Model Account
  * 
  */
-export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
+export type Account = runtime.Types.DefaultSelection<AccountPayload>
+export type SessionPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Session"
+  objects: {
+    user: UserPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    sessionToken: string
+    userId: string
+    expires: Date
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["session"]>
+  composites: {}
+}
+
 /**
  * Model Session
  * 
  */
-export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
+export type Session = runtime.Types.DefaultSelection<SessionPayload>
+export type VerificationTokenPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "VerificationToken"
+  objects: {}
+  scalars: $Extensions.GetResult<{
+    identifier: string
+    token: string
+    expires: Date
+  }, ExtArgs["result"]["verificationToken"]>
+  composites: {}
+}
+
 /**
  * Model VerificationToken
  * 
  */
-export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTokenPayload>
+export type VerificationToken = runtime.Types.DefaultSelection<VerificationTokenPayload>
+export type JobPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Job"
+  objects: {
+    company: CompanyPayload<ExtArgs>
+    savedJobs: SavedJobPayload<ExtArgs>[]
+    jobApplications: JobApplicationPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    jobTitle: string
+    jobDescription: string
+    employmentType: string
+    location: string
+    salaryFrom: number
+    salaryTo: number
+    listingDuration: number
+    benefits: string[]
+    status: JobStatus
+    companyId: string
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["job"]>
+  composites: {}
+}
+
 /**
  * Model Job
  * 
  */
-export type Job = $Result.DefaultSelection<Prisma.$JobPayload>
+export type Job = runtime.Types.DefaultSelection<JobPayload>
+export type SavedJobPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "SavedJob"
+  objects: {
+    job: JobPayload<ExtArgs>
+    user: UserPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    jobId: string
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["savedJob"]>
+  composites: {}
+}
+
 /**
  * Model SavedJob
  * 
  */
-export type SavedJob = $Result.DefaultSelection<Prisma.$SavedJobPayload>
+export type SavedJob = runtime.Types.DefaultSelection<SavedJobPayload>
+export type JobApplicationPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "JobApplication"
+  objects: {
+    job: JobPayload<ExtArgs>
+    jobSeeker: JobSeekerPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    jobId: string
+    jobSeekerId: string
+    resume: string
+    coverLetter: string | null
+    prevPosition: string | null
+    prevCompany: string | null
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["jobApplication"]>
+  composites: {}
+}
+
 /**
  * Model JobApplication
  * 
  */
-export type JobApplication = $Result.DefaultSelection<Prisma.$JobApplicationPayload>
+export type JobApplication = runtime.Types.DefaultSelection<JobApplicationPayload>
 
 /**
  * Enums
  */
-export namespace $Enums {
-  export const UserType: {
+
+export const UserType: {
   COMPANY: 'COMPANY',
   JOB_SEEKER: 'JOB_SEEKER'
 };
@@ -79,19 +251,10 @@ export const JobStatus: {
 
 export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]
 
-}
-
-export type UserType = $Enums.UserType
-
-export const UserType: typeof $Enums.UserType
-
-export type JobStatus = $Enums.JobStatus
-
-export const JobStatus: typeof $Enums.JobStatus
 
 /**
  * ##  Prisma Client ʲˢ
- *
+ * 
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
@@ -100,19 +263,22 @@ export const JobStatus: typeof $Enums.JobStatus
  * const users = await prisma.user.findMany()
  * ```
  *
- *
+ * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
  */
 export class PrismaClient<
-  ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
-  ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
+  T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
+  U = 'log' extends keyof T ? T['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<T['log']> : never : never,
+  GlobalReject extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined = 'rejectOnNotFound' extends keyof T
+    ? T['rejectOnNotFound']
+    : false,
+  ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
 
     /**
    * ##  Prisma Client ʲˢ
-   *
+   * 
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
@@ -121,22 +287,22 @@ export class PrismaClient<
    * const users = await prisma.user.findMany()
    * ```
    *
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
    */
 
-  constructor(optionsArg ?: Prisma.Subset<ClientOptions, Prisma.PrismaClientOptions>);
-  $on<V extends U>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): PrismaClient;
+  constructor(optionsArg ?: Prisma.Subset<T, Prisma.PrismaClientOptions>);
+  $on<V extends (U | 'beforeExit')>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : V extends 'beforeExit' ? () => Promise<void> : Prisma.LogEvent) => void): void;
 
   /**
    * Connect with the database
    */
-  $connect(): $Utils.JsPromise<void>;
+  $connect(): Promise<void>;
 
   /**
    * Disconnect from the database
    */
-  $disconnect(): $Utils.JsPromise<void>;
+  $disconnect(): Promise<void>;
 
   /**
    * Add a middleware
@@ -151,7 +317,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$executeRaw`UPDATE User SET cool = ${true} WHERE email = ${'user@email.com'};`
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
@@ -163,7 +329,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$executeRawUnsafe('UPDATE User SET cool = $1 WHERE email = $2 ;', true, 'user@email.com')
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
@@ -174,7 +340,7 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$queryRaw`SELECT * FROM User WHERE id = ${1} OR email = ${'user@email.com'};`
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
@@ -186,11 +352,10 @@ export class PrismaClient<
    * ```
    * const result = await prisma.$queryRawUnsafe('SELECT * FROM User WHERE id = $1 OR email = $2;', 1, 'user@email.com')
    * ```
-   *
+   * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
   $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
-
 
   /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
@@ -205,14 +370,12 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
+  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<runtime.Types.Utils.UnwrapTuple<P>>
 
-  $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => $Utils.JsPromise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<R>
+  $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => Promise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<R>
 
 
-  $extends: $Extensions.ExtendsHook<"extends", Prisma.TypeMapCb<ClientOptions>, ExtArgs, $Utils.Call<Prisma.TypeMapCb<ClientOptions>, {
-    extArgs: ExtArgs
-  }>>
+  $extends: $Extensions.ExtendsHook<'extends', Prisma.TypeMapCb, ExtArgs>
 
       /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -222,7 +385,7 @@ export class PrismaClient<
     * const users = await prisma.user.findMany()
     * ```
     */
-  get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+  get user(): Prisma.UserDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.company`: Exposes CRUD operations for the **Company** model.
@@ -232,7 +395,7 @@ export class PrismaClient<
     * const companies = await prisma.company.findMany()
     * ```
     */
-  get company(): Prisma.CompanyDelegate<ExtArgs, ClientOptions>;
+  get company(): Prisma.CompanyDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.jobSeeker`: Exposes CRUD operations for the **JobSeeker** model.
@@ -242,7 +405,7 @@ export class PrismaClient<
     * const jobSeekers = await prisma.jobSeeker.findMany()
     * ```
     */
-  get jobSeeker(): Prisma.JobSeekerDelegate<ExtArgs, ClientOptions>;
+  get jobSeeker(): Prisma.JobSeekerDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.account`: Exposes CRUD operations for the **Account** model.
@@ -252,7 +415,7 @@ export class PrismaClient<
     * const accounts = await prisma.account.findMany()
     * ```
     */
-  get account(): Prisma.AccountDelegate<ExtArgs, ClientOptions>;
+  get account(): Prisma.AccountDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.session`: Exposes CRUD operations for the **Session** model.
@@ -262,7 +425,7 @@ export class PrismaClient<
     * const sessions = await prisma.session.findMany()
     * ```
     */
-  get session(): Prisma.SessionDelegate<ExtArgs, ClientOptions>;
+  get session(): Prisma.SessionDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.verificationToken`: Exposes CRUD operations for the **VerificationToken** model.
@@ -272,7 +435,7 @@ export class PrismaClient<
     * const verificationTokens = await prisma.verificationToken.findMany()
     * ```
     */
-  get verificationToken(): Prisma.VerificationTokenDelegate<ExtArgs, ClientOptions>;
+  get verificationToken(): Prisma.VerificationTokenDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.job`: Exposes CRUD operations for the **Job** model.
@@ -282,7 +445,7 @@ export class PrismaClient<
     * const jobs = await prisma.job.findMany()
     * ```
     */
-  get job(): Prisma.JobDelegate<ExtArgs, ClientOptions>;
+  get job(): Prisma.JobDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.savedJob`: Exposes CRUD operations for the **SavedJob** model.
@@ -292,7 +455,7 @@ export class PrismaClient<
     * const savedJobs = await prisma.savedJob.findMany()
     * ```
     */
-  get savedJob(): Prisma.SavedJobDelegate<ExtArgs, ClientOptions>;
+  get savedJob(): Prisma.SavedJobDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.jobApplication`: Exposes CRUD operations for the **JobApplication** model.
@@ -302,7 +465,7 @@ export class PrismaClient<
     * const jobApplications = await prisma.jobApplication.findMany()
     * ```
     */
-  get jobApplication(): Prisma.JobApplicationDelegate<ExtArgs, ClientOptions>;
+  get jobApplication(): Prisma.JobApplicationDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -323,6 +486,7 @@ export namespace Prisma {
   export import PrismaClientRustPanicError = runtime.PrismaClientRustPanicError
   export import PrismaClientInitializationError = runtime.PrismaClientInitializationError
   export import PrismaClientValidationError = runtime.PrismaClientValidationError
+  export import NotFoundError = runtime.NotFoundError
 
   /**
    * Re-export of sql-template-tag
@@ -333,8 +497,6 @@ export namespace Prisma {
   export import raw = runtime.raw
   export import Sql = runtime.Sql
 
-
-
   /**
    * Decimal.js
    */
@@ -343,7 +505,7 @@ export namespace Prisma {
   export type DecimalJsLike = runtime.DecimalJsLike
 
   /**
-   * Metrics
+   * Metrics 
    */
   export type Metrics = runtime.Metrics
   export type Metric<T> = runtime.Metric<T>
@@ -353,46 +515,84 @@ export namespace Prisma {
   /**
   * Extensions
   */
-  export import Extension = $Extensions.UserArgs
+  export type Extension = $Extensions.UserArgs
   export import getExtensionContext = runtime.Extensions.getExtensionContext
-  export import Args = $Public.Args
-  export import Payload = $Public.Payload
-  export import Result = $Public.Result
-  export import Exact = $Public.Exact
+  export type Args<T, F extends $Public.Operation> = $Public.Args<T, F>
+  export type Payload<T, F extends $Public.Operation> = $Public.Payload<T, F>
+  export type Result<T, A, F extends $Public.Operation> = $Public.Result<T, A, F>
+  export type Exact<T, W> = $Public.Exact<T, W>
 
   /**
-   * Prisma Client JS version: 6.6.0
-   * Query Engine version: f676762280b54cd07c770017ed3711ddde35f37a
+   * Prisma Client JS version: 4.16.2
+   * Query Engine version: 4bc8b6e1b66cb932731fb1bdbbc550d1e010de81
    */
   export type PrismaVersion = {
     client: string
   }
 
-  export const prismaVersion: PrismaVersion
+  export const prismaVersion: PrismaVersion 
 
   /**
    * Utility Types
    */
 
+  /**
+   * From https://github.com/sindresorhus/type-fest/
+   * Matches a JSON object.
+   * This type can be useful to enforce some input to be JSON-compatible or as a super-type to be extended from. 
+   */
+  export type JsonObject = {[Key in string]?: JsonValue}
 
-  export import JsonObject = runtime.JsonObject
-  export import JsonArray = runtime.JsonArray
-  export import JsonValue = runtime.JsonValue
-  export import InputJsonObject = runtime.InputJsonObject
-  export import InputJsonArray = runtime.InputJsonArray
-  export import InputJsonValue = runtime.InputJsonValue
+  /**
+   * From https://github.com/sindresorhus/type-fest/
+   * Matches a JSON array.
+   */
+  export interface JsonArray extends Array<JsonValue> {}
+
+  /**
+   * From https://github.com/sindresorhus/type-fest/
+   * Matches any valid JSON value.
+   */
+  export type JsonValue = string | number | boolean | JsonObject | JsonArray | null
+
+  /**
+   * Matches a JSON object.
+   * Unlike `JsonObject`, this type allows undefined and read-only properties.
+   */
+  export type InputJsonObject = {readonly [Key in string]?: InputJsonValue | null}
+
+  /**
+   * Matches a JSON array.
+   * Unlike `JsonArray`, readonly arrays are assignable to this type.
+   */
+  export interface InputJsonArray extends ReadonlyArray<InputJsonValue | null> {}
+
+  /**
+   * Matches any valid value that can be used as an input for operations like
+   * create and update as the value of a JSON field. Unlike `JsonValue`, this
+   * type allows read-only arrays and read-only object properties and disallows
+   * `null` at the top level.
+   *
+   * `null` cannot be used as the value of a JSON field because its meaning
+   * would be ambiguous. Use `Prisma.JsonNull` to store the JSON null value or
+   * `Prisma.DbNull` to clear the JSON value and set the field to the database
+   * NULL value instead.
+   *
+   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+   */
+  export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray
 
   /**
    * Types of the values used to represent different kinds of `null` values when working with JSON fields.
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   namespace NullTypes {
     /**
     * Type of `Prisma.DbNull`.
-    *
+    * 
     * You cannot use other instances of this class. Please use the `Prisma.DbNull` value.
-    *
+    * 
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class DbNull {
@@ -402,9 +602,9 @@ export namespace Prisma {
 
     /**
     * Type of `Prisma.JsonNull`.
-    *
+    * 
     * You cannot use other instances of this class. Please use the `Prisma.JsonNull` value.
-    *
+    * 
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class JsonNull {
@@ -414,9 +614,9 @@ export namespace Prisma {
 
     /**
     * Type of `Prisma.AnyNull`.
-    *
+    * 
     * You cannot use other instances of this class. Please use the `Prisma.AnyNull` value.
-    *
+    * 
     * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
     */
     class AnyNull {
@@ -427,21 +627,21 @@ export namespace Prisma {
 
   /**
    * Helper for filtering JSON entries that have `null` on the database (empty on the db)
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const DbNull: NullTypes.DbNull
 
   /**
    * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const JsonNull: NullTypes.JsonNull
 
   /**
    * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
-   *
+   * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
   export const AnyNull: NullTypes.AnyNull
@@ -450,11 +650,19 @@ export namespace Prisma {
     select: any
     include: any
   }
-
-  type SelectAndOmit = {
+  type HasSelect = {
     select: any
-    omit: any
   }
+  type HasInclude = {
+    include: any
+  }
+  type CheckSelect<T, S, U> = T extends SelectAndInclude
+    ? 'Please either choose `select` or `include`'
+    : T extends HasSelect
+    ? U
+    : T extends HasInclude
+    ? U
+    : S
 
   /**
    * Get the type of the value, that the Promise holds.
@@ -464,7 +672,7 @@ export namespace Prisma {
   /**
    * Get the return type of a function which returns a Promise.
    */
-  export type PromiseReturnType<T extends (...args: any) => $Utils.JsPromise<any>> = PromiseType<ReturnType<T>>
+  export type PromiseReturnType<T extends (...args: any) => Promise<any>> = PromiseType<ReturnType<T>>
 
   /**
    * From T, pick a set of properties whose keys are in the union K
@@ -504,9 +712,7 @@ export namespace Prisma {
   } &
     (T extends SelectAndInclude
       ? 'Please either choose `select` or `include`.'
-      : T extends SelectAndOmit
-        ? 'Please either choose `select` or `omit`.'
-        : {})
+      : {})
 
   /**
    * Subset + Intersection
@@ -629,7 +835,7 @@ export namespace Prisma {
   type AtLeast<O extends object, K extends string> = NoExpand<
     O extends unknown
     ? | (K extends keyof O ? { [P in K]: O[P] } & O : O)
-      | {[P in keyof O as P extends K ? P : never]-?: O[P]} & O
+      | {[P in keyof O as P extends K ? K : never]-?: O[P]} & O
     : never>;
 
   type _Strict<U, _U = U> = U extends unknown ? U & OptionalFlat<_Record<Exclude<Keys<_U>, keyof U>, never>> : never;
@@ -727,9 +933,9 @@ export namespace Prisma {
   type MaybeTupleToUnion<T> = T extends any[] ? TupleToUnion<T> : T
 
   /**
-   * Like `Pick`, but additionally can also accept an array of keys
+   * Like `Pick`, but with an array
    */
-  type PickEnumerable<T, K extends Enumerable<keyof T> | keyof T> = Prisma__Pick<T, MaybeTupleToUnion<K>>
+  type PickArray<T, K extends Array<keyof T>> = Prisma__Pick<T, TupleToUnion<K>>
 
   /**
    * Exclude all keys with underscores
@@ -761,681 +967,598 @@ export namespace Prisma {
     db?: Datasource
   }
 
-  interface TypeMapCb<ClientOptions = {}> extends $Utils.Fn<{extArgs: $Extensions.InternalArgs }, $Utils.Record<string, any>> {
-    returns: Prisma.TypeMap<this['params']['extArgs'], ClientOptions extends { omit: infer OmitOptions } ? OmitOptions : {}>
+
+  interface TypeMapCb extends $Utils.Fn<{extArgs: $Extensions.Args}, $Utils.Record<string, any>> {
+    returns: Prisma.TypeMap<this['params']['extArgs']>
   }
 
-  export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> = {
-    globalOmitOptions: {
-      omit: GlobalOmitOptions
-    }
+  export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: "user" | "company" | "jobSeeker" | "account" | "session" | "verificationToken" | "job" | "savedJob" | "jobApplication"
+      modelProps: 'user' | 'company' | 'jobSeeker' | 'account' | 'session' | 'verificationToken' | 'job' | 'savedJob' | 'jobApplication'
       txIsolationLevel: Prisma.TransactionIsolationLevel
-    }
+    },
     model: {
       User: {
-        payload: Prisma.$UserPayload<ExtArgs>
-        fields: Prisma.UserFieldRefs
+        payload: UserPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.UserFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload> | null
+            args: Prisma.UserFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+            args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
           }
           findFirst: {
-            args: Prisma.UserFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload> | null
+            args: Prisma.UserFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+            args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
           }
           findMany: {
-            args: Prisma.UserFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+            args: Prisma.UserFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>[]
           }
           create: {
-            args: Prisma.UserCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+            args: Prisma.UserCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
           }
           createMany: {
-            args: Prisma.UserCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+            args: Prisma.UserCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.UserDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+            args: Prisma.UserDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
           }
           update: {
-            args: Prisma.UserUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+            args: Prisma.UserUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
           }
           deleteMany: {
-            args: Prisma.UserDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.UserDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.UserUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UserUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+            args: Prisma.UserUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.UserUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPayload>
+            args: Prisma.UserUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
           }
           aggregate: {
-            args: Prisma.UserAggregateArgs<ExtArgs>
+            args: Prisma.UserAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateUser>
           }
           groupBy: {
-            args: Prisma.UserGroupByArgs<ExtArgs>
+            args: Prisma.UserGroupByArgs<ExtArgs>,
             result: $Utils.Optional<UserGroupByOutputType>[]
           }
           count: {
-            args: Prisma.UserCountArgs<ExtArgs>
+            args: Prisma.UserCountArgs<ExtArgs>,
             result: $Utils.Optional<UserCountAggregateOutputType> | number
           }
         }
       }
       Company: {
-        payload: Prisma.$CompanyPayload<ExtArgs>
-        fields: Prisma.CompanyFieldRefs
+        payload: CompanyPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.CompanyFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload> | null
+            args: Prisma.CompanyFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.CompanyFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+            args: Prisma.CompanyFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload>
           }
           findFirst: {
-            args: Prisma.CompanyFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload> | null
+            args: Prisma.CompanyFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.CompanyFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+            args: Prisma.CompanyFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload>
           }
           findMany: {
-            args: Prisma.CompanyFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
+            args: Prisma.CompanyFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload>[]
           }
           create: {
-            args: Prisma.CompanyCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+            args: Prisma.CompanyCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload>
           }
           createMany: {
-            args: Prisma.CompanyCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.CompanyCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
+            args: Prisma.CompanyCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.CompanyDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+            args: Prisma.CompanyDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload>
           }
           update: {
-            args: Prisma.CompanyUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+            args: Prisma.CompanyUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload>
           }
           deleteMany: {
-            args: Prisma.CompanyDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.CompanyDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.CompanyUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.CompanyUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>[]
+            args: Prisma.CompanyUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.CompanyUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompanyPayload>
+            args: Prisma.CompanyUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CompanyPayload>
           }
           aggregate: {
-            args: Prisma.CompanyAggregateArgs<ExtArgs>
+            args: Prisma.CompanyAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateCompany>
           }
           groupBy: {
-            args: Prisma.CompanyGroupByArgs<ExtArgs>
+            args: Prisma.CompanyGroupByArgs<ExtArgs>,
             result: $Utils.Optional<CompanyGroupByOutputType>[]
           }
           count: {
-            args: Prisma.CompanyCountArgs<ExtArgs>
+            args: Prisma.CompanyCountArgs<ExtArgs>,
             result: $Utils.Optional<CompanyCountAggregateOutputType> | number
           }
         }
       }
       JobSeeker: {
-        payload: Prisma.$JobSeekerPayload<ExtArgs>
-        fields: Prisma.JobSeekerFieldRefs
+        payload: JobSeekerPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.JobSeekerFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload> | null
+            args: Prisma.JobSeekerFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.JobSeekerFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>
+            args: Prisma.JobSeekerFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload>
           }
           findFirst: {
-            args: Prisma.JobSeekerFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload> | null
+            args: Prisma.JobSeekerFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.JobSeekerFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>
+            args: Prisma.JobSeekerFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload>
           }
           findMany: {
-            args: Prisma.JobSeekerFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>[]
+            args: Prisma.JobSeekerFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload>[]
           }
           create: {
-            args: Prisma.JobSeekerCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>
+            args: Prisma.JobSeekerCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload>
           }
           createMany: {
-            args: Prisma.JobSeekerCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.JobSeekerCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>[]
+            args: Prisma.JobSeekerCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.JobSeekerDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>
+            args: Prisma.JobSeekerDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload>
           }
           update: {
-            args: Prisma.JobSeekerUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>
+            args: Prisma.JobSeekerUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload>
           }
           deleteMany: {
-            args: Prisma.JobSeekerDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.JobSeekerDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.JobSeekerUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.JobSeekerUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>[]
+            args: Prisma.JobSeekerUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.JobSeekerUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobSeekerPayload>
+            args: Prisma.JobSeekerUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobSeekerPayload>
           }
           aggregate: {
-            args: Prisma.JobSeekerAggregateArgs<ExtArgs>
+            args: Prisma.JobSeekerAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateJobSeeker>
           }
           groupBy: {
-            args: Prisma.JobSeekerGroupByArgs<ExtArgs>
+            args: Prisma.JobSeekerGroupByArgs<ExtArgs>,
             result: $Utils.Optional<JobSeekerGroupByOutputType>[]
           }
           count: {
-            args: Prisma.JobSeekerCountArgs<ExtArgs>
+            args: Prisma.JobSeekerCountArgs<ExtArgs>,
             result: $Utils.Optional<JobSeekerCountAggregateOutputType> | number
           }
         }
       }
       Account: {
-        payload: Prisma.$AccountPayload<ExtArgs>
-        fields: Prisma.AccountFieldRefs
+        payload: AccountPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.AccountFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload> | null
+            args: Prisma.AccountFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.AccountFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>
+            args: Prisma.AccountFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload>
           }
           findFirst: {
-            args: Prisma.AccountFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload> | null
+            args: Prisma.AccountFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.AccountFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>
+            args: Prisma.AccountFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload>
           }
           findMany: {
-            args: Prisma.AccountFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>[]
+            args: Prisma.AccountFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload>[]
           }
           create: {
-            args: Prisma.AccountCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>
+            args: Prisma.AccountCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload>
           }
           createMany: {
-            args: Prisma.AccountCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.AccountCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>[]
+            args: Prisma.AccountCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.AccountDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>
+            args: Prisma.AccountDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload>
           }
           update: {
-            args: Prisma.AccountUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>
+            args: Prisma.AccountUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload>
           }
           deleteMany: {
-            args: Prisma.AccountDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.AccountDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.AccountUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.AccountUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>[]
+            args: Prisma.AccountUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.AccountUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountPayload>
+            args: Prisma.AccountUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AccountPayload>
           }
           aggregate: {
-            args: Prisma.AccountAggregateArgs<ExtArgs>
+            args: Prisma.AccountAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateAccount>
           }
           groupBy: {
-            args: Prisma.AccountGroupByArgs<ExtArgs>
+            args: Prisma.AccountGroupByArgs<ExtArgs>,
             result: $Utils.Optional<AccountGroupByOutputType>[]
           }
           count: {
-            args: Prisma.AccountCountArgs<ExtArgs>
+            args: Prisma.AccountCountArgs<ExtArgs>,
             result: $Utils.Optional<AccountCountAggregateOutputType> | number
           }
         }
       }
       Session: {
-        payload: Prisma.$SessionPayload<ExtArgs>
-        fields: Prisma.SessionFieldRefs
+        payload: SessionPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.SessionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload> | null
+            args: Prisma.SessionFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.SessionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+            args: Prisma.SessionFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload>
           }
           findFirst: {
-            args: Prisma.SessionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload> | null
+            args: Prisma.SessionFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.SessionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+            args: Prisma.SessionFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload>
           }
           findMany: {
-            args: Prisma.SessionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
+            args: Prisma.SessionFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload>[]
           }
           create: {
-            args: Prisma.SessionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+            args: Prisma.SessionCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload>
           }
           createMany: {
-            args: Prisma.SessionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.SessionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
+            args: Prisma.SessionCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.SessionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+            args: Prisma.SessionDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload>
           }
           update: {
-            args: Prisma.SessionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+            args: Prisma.SessionUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload>
           }
           deleteMany: {
-            args: Prisma.SessionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.SessionDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.SessionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.SessionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>[]
+            args: Prisma.SessionUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.SessionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SessionPayload>
+            args: Prisma.SessionUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SessionPayload>
           }
           aggregate: {
-            args: Prisma.SessionAggregateArgs<ExtArgs>
+            args: Prisma.SessionAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateSession>
           }
           groupBy: {
-            args: Prisma.SessionGroupByArgs<ExtArgs>
+            args: Prisma.SessionGroupByArgs<ExtArgs>,
             result: $Utils.Optional<SessionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.SessionCountArgs<ExtArgs>
+            args: Prisma.SessionCountArgs<ExtArgs>,
             result: $Utils.Optional<SessionCountAggregateOutputType> | number
           }
         }
       }
       VerificationToken: {
-        payload: Prisma.$VerificationTokenPayload<ExtArgs>
-        fields: Prisma.VerificationTokenFieldRefs
+        payload: VerificationTokenPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.VerificationTokenFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload> | null
+            args: Prisma.VerificationTokenFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.VerificationTokenFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>
+            args: Prisma.VerificationTokenFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload>
           }
           findFirst: {
-            args: Prisma.VerificationTokenFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload> | null
+            args: Prisma.VerificationTokenFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.VerificationTokenFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>
+            args: Prisma.VerificationTokenFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload>
           }
           findMany: {
-            args: Prisma.VerificationTokenFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>[]
+            args: Prisma.VerificationTokenFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload>[]
           }
           create: {
-            args: Prisma.VerificationTokenCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>
+            args: Prisma.VerificationTokenCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload>
           }
           createMany: {
-            args: Prisma.VerificationTokenCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.VerificationTokenCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>[]
+            args: Prisma.VerificationTokenCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.VerificationTokenDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>
+            args: Prisma.VerificationTokenDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload>
           }
           update: {
-            args: Prisma.VerificationTokenUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>
+            args: Prisma.VerificationTokenUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload>
           }
           deleteMany: {
-            args: Prisma.VerificationTokenDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.VerificationTokenDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.VerificationTokenUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.VerificationTokenUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>[]
+            args: Prisma.VerificationTokenUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.VerificationTokenUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VerificationTokenPayload>
+            args: Prisma.VerificationTokenUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<VerificationTokenPayload>
           }
           aggregate: {
-            args: Prisma.VerificationTokenAggregateArgs<ExtArgs>
+            args: Prisma.VerificationTokenAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateVerificationToken>
           }
           groupBy: {
-            args: Prisma.VerificationTokenGroupByArgs<ExtArgs>
+            args: Prisma.VerificationTokenGroupByArgs<ExtArgs>,
             result: $Utils.Optional<VerificationTokenGroupByOutputType>[]
           }
           count: {
-            args: Prisma.VerificationTokenCountArgs<ExtArgs>
+            args: Prisma.VerificationTokenCountArgs<ExtArgs>,
             result: $Utils.Optional<VerificationTokenCountAggregateOutputType> | number
           }
         }
       }
       Job: {
-        payload: Prisma.$JobPayload<ExtArgs>
-        fields: Prisma.JobFieldRefs
+        payload: JobPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.JobFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload> | null
+            args: Prisma.JobFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.JobFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+            args: Prisma.JobFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload>
           }
           findFirst: {
-            args: Prisma.JobFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload> | null
+            args: Prisma.JobFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.JobFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+            args: Prisma.JobFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload>
           }
           findMany: {
-            args: Prisma.JobFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>[]
+            args: Prisma.JobFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload>[]
           }
           create: {
-            args: Prisma.JobCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+            args: Prisma.JobCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload>
           }
           createMany: {
-            args: Prisma.JobCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.JobCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>[]
+            args: Prisma.JobCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.JobDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+            args: Prisma.JobDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload>
           }
           update: {
-            args: Prisma.JobUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+            args: Prisma.JobUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload>
           }
           deleteMany: {
-            args: Prisma.JobDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.JobDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.JobUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.JobUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>[]
+            args: Prisma.JobUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.JobUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobPayload>
+            args: Prisma.JobUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobPayload>
           }
           aggregate: {
-            args: Prisma.JobAggregateArgs<ExtArgs>
+            args: Prisma.JobAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateJob>
           }
           groupBy: {
-            args: Prisma.JobGroupByArgs<ExtArgs>
+            args: Prisma.JobGroupByArgs<ExtArgs>,
             result: $Utils.Optional<JobGroupByOutputType>[]
           }
           count: {
-            args: Prisma.JobCountArgs<ExtArgs>
+            args: Prisma.JobCountArgs<ExtArgs>,
             result: $Utils.Optional<JobCountAggregateOutputType> | number
           }
         }
       }
       SavedJob: {
-        payload: Prisma.$SavedJobPayload<ExtArgs>
-        fields: Prisma.SavedJobFieldRefs
+        payload: SavedJobPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.SavedJobFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload> | null
+            args: Prisma.SavedJobFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.SavedJobFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>
+            args: Prisma.SavedJobFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload>
           }
           findFirst: {
-            args: Prisma.SavedJobFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload> | null
+            args: Prisma.SavedJobFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.SavedJobFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>
+            args: Prisma.SavedJobFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload>
           }
           findMany: {
-            args: Prisma.SavedJobFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>[]
+            args: Prisma.SavedJobFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload>[]
           }
           create: {
-            args: Prisma.SavedJobCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>
+            args: Prisma.SavedJobCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload>
           }
           createMany: {
-            args: Prisma.SavedJobCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.SavedJobCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>[]
+            args: Prisma.SavedJobCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.SavedJobDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>
+            args: Prisma.SavedJobDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload>
           }
           update: {
-            args: Prisma.SavedJobUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>
+            args: Prisma.SavedJobUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload>
           }
           deleteMany: {
-            args: Prisma.SavedJobDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.SavedJobDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.SavedJobUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.SavedJobUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>[]
+            args: Prisma.SavedJobUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.SavedJobUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$SavedJobPayload>
+            args: Prisma.SavedJobUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<SavedJobPayload>
           }
           aggregate: {
-            args: Prisma.SavedJobAggregateArgs<ExtArgs>
+            args: Prisma.SavedJobAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateSavedJob>
           }
           groupBy: {
-            args: Prisma.SavedJobGroupByArgs<ExtArgs>
+            args: Prisma.SavedJobGroupByArgs<ExtArgs>,
             result: $Utils.Optional<SavedJobGroupByOutputType>[]
           }
           count: {
-            args: Prisma.SavedJobCountArgs<ExtArgs>
+            args: Prisma.SavedJobCountArgs<ExtArgs>,
             result: $Utils.Optional<SavedJobCountAggregateOutputType> | number
           }
         }
       }
       JobApplication: {
-        payload: Prisma.$JobApplicationPayload<ExtArgs>
-        fields: Prisma.JobApplicationFieldRefs
+        payload: JobApplicationPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.JobApplicationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+            args: Prisma.JobApplicationFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.JobApplicationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+            args: Prisma.JobApplicationFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload>
           }
           findFirst: {
-            args: Prisma.JobApplicationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+            args: Prisma.JobApplicationFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.JobApplicationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+            args: Prisma.JobApplicationFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload>
           }
           findMany: {
-            args: Prisma.JobApplicationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+            args: Prisma.JobApplicationFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload>[]
           }
           create: {
-            args: Prisma.JobApplicationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+            args: Prisma.JobApplicationCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload>
           }
           createMany: {
-            args: Prisma.JobApplicationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.JobApplicationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+            args: Prisma.JobApplicationCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.JobApplicationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+            args: Prisma.JobApplicationDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload>
           }
           update: {
-            args: Prisma.JobApplicationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+            args: Prisma.JobApplicationUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload>
           }
           deleteMany: {
-            args: Prisma.JobApplicationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
+            args: Prisma.JobApplicationDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.JobApplicationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.JobApplicationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+            args: Prisma.JobApplicationUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.JobApplicationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+            args: Prisma.JobApplicationUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<JobApplicationPayload>
           }
           aggregate: {
-            args: Prisma.JobApplicationAggregateArgs<ExtArgs>
+            args: Prisma.JobApplicationAggregateArgs<ExtArgs>,
             result: $Utils.Optional<AggregateJobApplication>
           }
           groupBy: {
-            args: Prisma.JobApplicationGroupByArgs<ExtArgs>
+            args: Prisma.JobApplicationGroupByArgs<ExtArgs>,
             result: $Utils.Optional<JobApplicationGroupByOutputType>[]
           }
           count: {
-            args: Prisma.JobApplicationCountArgs<ExtArgs>
+            args: Prisma.JobApplicationCountArgs<ExtArgs>,
             result: $Utils.Optional<JobApplicationCountAggregateOutputType> | number
           }
         }
@@ -1445,15 +1568,11 @@ export namespace Prisma {
     other: {
       payload: any
       operations: {
-        $executeRaw: {
-          args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
-          result: any
-        }
         $executeRawUnsafe: {
           args: [query: string, ...values: any[]],
           result: any
         }
-        $queryRaw: {
+        $executeRaw: {
           args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
           result: any
         }
@@ -1461,25 +1580,64 @@ export namespace Prisma {
           args: [query: string, ...values: any[]],
           result: any
         }
+        $queryRaw: {
+          args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
+          result: any
+        }
       }
     }
   }
-  export const defineExtension: $Extensions.ExtendsHook<"define", Prisma.TypeMapCb, $Extensions.DefaultArgs>
+  export const defineExtension: $Extensions.ExtendsHook<'define', Prisma.TypeMapCb, $Extensions.DefaultArgs>
   export type DefaultPrismaClient = PrismaClient
+  export type RejectOnNotFound = boolean | ((error: Error) => Error)
+  export type RejectPerModel = { [P in ModelName]?: RejectOnNotFound }
+  export type RejectPerOperation =  { [P in "findUnique" | "findFirst"]?: RejectPerModel | RejectOnNotFound } 
+  type IsReject<T> = T extends true ? True : T extends (err: Error) => Error ? True : False
+  export type HasReject<
+    GlobalRejectSettings extends Prisma.PrismaClientOptions['rejectOnNotFound'],
+    LocalRejectSettings,
+    Action extends PrismaAction,
+    Model extends ModelName
+  > = LocalRejectSettings extends RejectOnNotFound
+    ? IsReject<LocalRejectSettings>
+    : GlobalRejectSettings extends RejectPerOperation
+    ? Action extends keyof GlobalRejectSettings
+      ? GlobalRejectSettings[Action] extends RejectOnNotFound
+        ? IsReject<GlobalRejectSettings[Action]>
+        : GlobalRejectSettings[Action] extends RejectPerModel
+        ? Model extends keyof GlobalRejectSettings[Action]
+          ? IsReject<GlobalRejectSettings[Action][Model]>
+          : False
+        : False
+      : False
+    : IsReject<GlobalRejectSettings>
   export type ErrorFormat = 'pretty' | 'colorless' | 'minimal'
+
   export interface PrismaClientOptions {
+    /**
+     * Configure findUnique/findFirst to throw an error if the query returns null. 
+     * @deprecated since 4.0.0. Use `findUniqueOrThrow`/`findFirstOrThrow` methods instead.
+     * @example
+     * ```
+     * // Reject on both findUnique/findFirst
+     * rejectOnNotFound: true
+     * // Reject only on findFirst with a custom error
+     * rejectOnNotFound: { findFirst: (err) => new Error("Custom Error")}
+     * // Reject on user.findUnique with a custom error
+     * rejectOnNotFound: { findUnique: {User: (err) => new Error("User not found")}}
+     * ```
+     */
+    rejectOnNotFound?: RejectOnNotFound | RejectPerOperation
     /**
      * Overwrites the datasource url from your schema.prisma file
      */
     datasources?: Datasources
-    /**
-     * Overwrites the datasource url from your schema.prisma file
-     */
-    datasourceUrl?: string
+
     /**
      * @default "colorless"
      */
     errorFormat?: ErrorFormat
+
     /**
      * @example
      * ```
@@ -1488,51 +1646,15 @@ export namespace Prisma {
      * 
      * // Emit as events
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
      * ]
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
-    log?: (LogLevel | LogDefinition)[]
-    /**
-     * The default values for transactionOptions
-     * maxWait ?= 2000
-     * timeout ?= 5000
-     */
-    transactionOptions?: {
-      maxWait?: number
-      timeout?: number
-      isolationLevel?: Prisma.TransactionIsolationLevel
-    }
-    /**
-     * Global configuration for omitting model fields by default.
-     * 
-     * @example
-     * ```
-     * const prisma = new PrismaClient({
-     *   omit: {
-     *     user: {
-     *       password: true
-     *     }
-     *   }
-     * })
-     * ```
-     */
-    omit?: Prisma.GlobalOmitConfig
-  }
-  export type GlobalOmitConfig = {
-    user?: UserOmit
-    company?: CompanyOmit
-    jobSeeker?: JobSeekerOmit
-    account?: AccountOmit
-    session?: SessionOmit
-    verificationToken?: VerificationTokenOmit
-    job?: JobOmit
-    savedJob?: SavedJobOmit
-    jobApplication?: JobApplicationOmit
+    log?: Array<LogLevel | LogDefinition>
   }
 
   /* Types for Logging */
@@ -1565,16 +1687,12 @@ export namespace Prisma {
 
   export type PrismaAction =
     | 'findUnique'
-    | 'findUniqueOrThrow'
     | 'findMany'
     | 'findFirst'
-    | 'findFirstOrThrow'
     | 'create'
     | 'createMany'
-    | 'createManyAndReturn'
     | 'update'
     | 'updateMany'
-    | 'updateManyAndReturn'
     | 'upsert'
     | 'delete'
     | 'deleteMany'
@@ -1584,7 +1702,6 @@ export namespace Prisma {
     | 'count'
     | 'runCommandRaw'
     | 'findRaw'
-    | 'groupBy'
 
   /**
    * These options are being passed into the middleware as "params"
@@ -1602,8 +1719,8 @@ export namespace Prisma {
    */
   export type Middleware<T = any> = (
     params: MiddlewareParams,
-    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
-  ) => $Utils.JsPromise<T>
+    next: (params: MiddlewareParams) => Promise<T>,
+  ) => Promise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -1626,151 +1743,170 @@ export namespace Prisma {
    * Count Type UserCountOutputType
    */
 
+
   export type UserCountOutputType = {
     accounts: number
     sessions: number
     SavedJob: number
   }
 
-  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     SavedJob?: boolean | UserCountOutputTypeCountSavedJobArgs
   }
 
   // Custom InputTypes
+
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the UserCountOutputType
      */
     select?: UserCountOutputTypeSelect<ExtArgs> | null
   }
 
+
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: AccountWhereInput
   }
 
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SessionWhereInput
-  }
 
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountSavedJobArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: SessionWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSavedJobArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: SavedJobWhereInput
   }
+
 
 
   /**
    * Count Type CompanyCountOutputType
    */
 
+
   export type CompanyCountOutputType = {
     jobs: number
   }
 
-  export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     jobs?: boolean | CompanyCountOutputTypeCountJobsArgs
   }
 
   // Custom InputTypes
+
   /**
    * CompanyCountOutputType without action
    */
-  export type CompanyCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the CompanyCountOutputType
      */
     select?: CompanyCountOutputTypeSelect<ExtArgs> | null
   }
 
+
   /**
    * CompanyCountOutputType without action
    */
-  export type CompanyCountOutputTypeCountJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyCountOutputTypeCountJobsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: JobWhereInput
   }
+
 
 
   /**
    * Count Type JobSeekerCountOutputType
    */
 
+
   export type JobSeekerCountOutputType = {
     jobApplications: number
   }
 
-  export type JobSeekerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     jobApplications?: boolean | JobSeekerCountOutputTypeCountJobApplicationsArgs
   }
 
   // Custom InputTypes
+
   /**
    * JobSeekerCountOutputType without action
    */
-  export type JobSeekerCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeekerCountOutputType
      */
     select?: JobSeekerCountOutputTypeSelect<ExtArgs> | null
   }
 
+
   /**
    * JobSeekerCountOutputType without action
    */
-  export type JobSeekerCountOutputTypeCountJobApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerCountOutputTypeCountJobApplicationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: JobApplicationWhereInput
   }
+
 
 
   /**
    * Count Type JobCountOutputType
    */
 
+
   export type JobCountOutputType = {
     savedJobs: number
     jobApplications: number
   }
 
-  export type JobCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     savedJobs?: boolean | JobCountOutputTypeCountSavedJobsArgs
     jobApplications?: boolean | JobCountOutputTypeCountJobApplicationsArgs
   }
 
   // Custom InputTypes
+
   /**
    * JobCountOutputType without action
    */
-  export type JobCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobCountOutputType
      */
     select?: JobCountOutputTypeSelect<ExtArgs> | null
   }
 
-  /**
-   * JobCountOutputType without action
-   */
-  export type JobCountOutputTypeCountSavedJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SavedJobWhereInput
-  }
 
   /**
    * JobCountOutputType without action
    */
-  export type JobCountOutputTypeCountJobApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobCountOutputTypeCountSavedJobsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: SavedJobWhereInput
+  }
+
+
+  /**
+   * JobCountOutputType without action
+   */
+  export type JobCountOutputTypeCountJobApplicationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: JobApplicationWhereInput
   }
+
 
 
   /**
@@ -1780,6 +1916,7 @@ export namespace Prisma {
   /**
    * Model User
    */
+
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
@@ -1794,7 +1931,7 @@ export namespace Prisma {
     emailVerified: Date | null
     image: string | null
     stripeCustomerId: string | null
-    userType: $Enums.UserType | null
+    userType: UserType | null
     onboardingComplete: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -1807,7 +1944,7 @@ export namespace Prisma {
     emailVerified: Date | null
     image: string | null
     stripeCustomerId: string | null
-    userType: $Enums.UserType | null
+    userType: UserType | null
     onboardingComplete: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -1868,7 +2005,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type UserAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which User to aggregate.
      */
@@ -1878,7 +2015,7 @@ export namespace Prisma {
      * 
      * Determine the order of Users to fetch.
      */
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -1928,10 +2065,10 @@ export namespace Prisma {
 
 
 
-  export type UserGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
-    orderBy?: UserOrderByWithAggregationInput | UserOrderByWithAggregationInput[]
-    by: UserScalarFieldEnum[] | UserScalarFieldEnum
+    orderBy?: Enumerable<UserOrderByWithAggregationInput>
+    by: UserScalarFieldEnum[]
     having?: UserScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -1940,6 +2077,7 @@ export namespace Prisma {
     _max?: UserMaxAggregateInputType
   }
 
+
   export type UserGroupByOutputType = {
     id: string
     name: string | null
@@ -1947,7 +2085,7 @@ export namespace Prisma {
     emailVerified: Date | null
     image: string | null
     stripeCustomerId: string | null
-    userType: $Enums.UserType | null
+    userType: UserType | null
     onboardingComplete: boolean
     createdAt: Date
     updatedAt: Date
@@ -1958,7 +2096,7 @@ export namespace Prisma {
 
   type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<UserGroupByOutputType, T['by']> &
+      PickArray<UserGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -1970,7 +2108,7 @@ export namespace Prisma {
     >
 
 
-  export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type UserSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     email?: boolean
@@ -1983,36 +2121,10 @@ export namespace Prisma {
     updatedAt?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
-    company?: boolean | User$companyArgs<ExtArgs>
-    JobSeeker?: boolean | User$JobSeekerArgs<ExtArgs>
+    company?: boolean | CompanyArgs<ExtArgs>
+    JobSeeker?: boolean | JobSeekerArgs<ExtArgs>
     SavedJob?: boolean | User$SavedJobArgs<ExtArgs>
-    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["user"]>
-
-  export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    email?: boolean
-    emailVerified?: boolean
-    image?: boolean
-    stripeCustomerId?: boolean
-    userType?: boolean
-    onboardingComplete?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["user"]>
-
-  export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    email?: boolean
-    emailVerified?: boolean
-    image?: boolean
-    stripeCustomerId?: boolean
-    userType?: boolean
-    onboardingComplete?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2028,50 +2140,24 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "stripeCustomerId" | "userType" | "onboardingComplete" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
-  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
-    company?: boolean | User$companyArgs<ExtArgs>
-    JobSeeker?: boolean | User$JobSeekerArgs<ExtArgs>
+    company?: boolean | CompanyArgs<ExtArgs>
+    JobSeeker?: boolean | JobSeekerArgs<ExtArgs>
     SavedJob?: boolean | User$SavedJobArgs<ExtArgs>
-    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "User"
-    objects: {
-      accounts: Prisma.$AccountPayload<ExtArgs>[]
-      sessions: Prisma.$SessionPayload<ExtArgs>[]
-      company: Prisma.$CompanyPayload<ExtArgs> | null
-      JobSeeker: Prisma.$JobSeekerPayload<ExtArgs> | null
-      SavedJob: Prisma.$SavedJobPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string | null
-      email: string
-      emailVerified: Date | null
-      image: string | null
-      stripeCustomerId: string | null
-      userType: $Enums.UserType | null
-      onboardingComplete: boolean
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["user"]>
-    composites: {}
+    _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }
 
-  type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = $Result.GetResult<Prisma.$UserPayload, S>
 
-  type UserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type UserGetPayload<S extends boolean | null | undefined | UserArgs> = $Types.GetResult<UserPayload, S>
+
+  type UserCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<UserFindManyArgs, 'select' | 'include'> & {
       select?: UserCountAggregateInputType | true
     }
 
-  export interface UserDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface UserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['User'], meta: { name: 'User' } }
     /**
      * Find zero or one User that matches the filter.
@@ -2083,12 +2169,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends UserFindUniqueArgs>(args: SelectSubset<T, UserFindUniqueArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends UserFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, UserFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'User'> extends True ? Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one User that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
      * @example
      * // Get one User
@@ -2097,8 +2185,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(args: SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first User that matches the filter.
@@ -2112,12 +2202,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends UserFindFirstArgs>(args?: SelectSubset<T, UserFindFirstArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends UserFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, UserFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'User'> extends True ? Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first User that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
@@ -2128,14 +2220,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(args?: SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Users that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {UserFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Users
      * const users = await prisma.user.findMany()
@@ -2146,8 +2240,10 @@ export namespace Prisma {
      * // Only select the `id`
      * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
      * 
-     */
-    findMany<T extends UserFindManyArgs>(args?: SelectSubset<T, UserFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends UserFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<UserPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a User.
@@ -2160,46 +2256,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends UserCreateArgs>(args: SelectSubset<T, UserCreateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends UserCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserCreateArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Users.
-     * @param {UserCreateManyArgs} args - Arguments to create many Users.
-     * @example
-     * // Create many Users
-     * const user = await prisma.user.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {UserCreateManyArgs} args - Arguments to create many Users.
+     *     @example
+     *     // Create many Users
+     *     const user = await prisma.user.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends UserCreateManyArgs>(args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Users and returns the data saved in the database.
-     * @param {UserCreateManyAndReturnArgs} args - Arguments to create many Users.
-     * @example
-     * // Create many Users
-     * const user = await prisma.user.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Users and only return the `id`
-     * const userWithIdOnly = await prisma.user.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UserCreateManyAndReturnArgs>(args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends UserCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a User.
@@ -2212,8 +2288,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends UserDeleteArgs>(args: SelectSubset<T, UserDeleteArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends UserDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, UserDeleteArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one User.
@@ -2229,8 +2307,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends UserUpdateArgs>(args: SelectSubset<T, UserUpdateArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends UserUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserUpdateArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Users.
@@ -2243,8 +2323,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends UserDeleteManyArgs>(args?: SelectSubset<T, UserDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends UserDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Users.
@@ -2262,38 +2344,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends UserUpdateManyArgs>(args: SelectSubset<T, UserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Users and returns the data updated in the database.
-     * @param {UserUpdateManyAndReturnArgs} args - Arguments to update many Users.
-     * @example
-     * // Update many Users
-     * const user = await prisma.user.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Users and only return the `id`
-     * const userWithIdOnly = await prisma.user.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UserUpdateManyAndReturnArgs>(args: SelectSubset<T, UserUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends UserUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, UserUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one User.
@@ -2311,9 +2365,10 @@ export namespace Prisma {
      *     // ... the filter for the User we want to update
      *   }
      * })
-     */
-    upsert<T extends UserUpsertArgs>(args: SelectSubset<T, UserUpsertArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends UserUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, UserUpsertArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Users.
@@ -2392,7 +2447,7 @@ export namespace Prisma {
         ? { orderBy: UserGroupByArgs['orderBy'] }
         : { orderBy?: UserGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -2440,10 +2495,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the User model
-   */
-  readonly fields: UserFieldRefs;
+
   }
 
   /**
@@ -2452,70 +2504,68 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    company<T extends User$companyArgs<ExtArgs> = {}>(args?: Subset<T, User$companyArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    JobSeeker<T extends User$JobSeekerArgs<ExtArgs> = {}>(args?: Subset<T, User$JobSeekerArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    SavedJob<T extends User$SavedJobArgs<ExtArgs> = {}>(args?: Subset<T, User$SavedJobArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  export class Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    company<T extends CompanyArgs<ExtArgs> = {}>(args?: Subset<T, CompanyArgs<ExtArgs>>): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    JobSeeker<T extends JobSeekerArgs<ExtArgs> = {}>(args?: Subset<T, JobSeekerArgs<ExtArgs>>): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    SavedJob<T extends User$SavedJobArgs<ExtArgs> = {}>(args?: Subset<T, User$SavedJobArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the User model
-   */
-  interface UserFieldRefs {
-    readonly id: FieldRef<"User", 'String'>
-    readonly name: FieldRef<"User", 'String'>
-    readonly email: FieldRef<"User", 'String'>
-    readonly emailVerified: FieldRef<"User", 'DateTime'>
-    readonly image: FieldRef<"User", 'String'>
-    readonly stripeCustomerId: FieldRef<"User", 'String'>
-    readonly userType: FieldRef<"User", 'UserType'>
-    readonly onboardingComplete: FieldRef<"User", 'Boolean'>
-    readonly createdAt: FieldRef<"User", 'DateTime'>
-    readonly updatedAt: FieldRef<"User", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * User findUnique
+   * User base type for findUnique actions
    */
-  export type UserFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2523,95 +2573,108 @@ export namespace Prisma {
      */
     where: UserWhereUniqueInput
   }
+
+  /**
+   * User findUnique
+   */
+  export interface UserFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UserFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * User findUniqueOrThrow
    */
-  export type UserFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
+  }
+
+
+  /**
+   * User base type for findFirst actions
+   */
+  export type UserFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
+    distinct?: Enumerable<UserScalarFieldEnum>
   }
 
   /**
    * User findFirst
    */
-  export type UserFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    /**
-     * Filter, which User to fetch.
-     */
-    where?: UserWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Users to fetch.
-     */
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Users.
-     */
-    cursor?: UserWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Users from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Users.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Users.
-     */
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  export interface UserFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UserFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * User findFirstOrThrow
    */
-  export type UserFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2623,7 +2686,7 @@ export namespace Prisma {
      * 
      * Determine the order of Users to fetch.
      */
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -2647,23 +2710,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Users.
      */
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    distinct?: Enumerable<UserScalarFieldEnum>
   }
+
 
   /**
    * User findMany
    */
-  export type UserFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2675,7 +2735,7 @@ export namespace Prisma {
      * 
      * Determine the order of Users to fetch.
      */
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -2694,23 +2754,20 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    distinct?: Enumerable<UserScalarFieldEnum>
   }
+
 
   /**
    * User create
    */
-  export type UserCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2719,50 +2776,29 @@ export namespace Prisma {
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
   }
 
+
   /**
    * User createMany
    */
-  export type UserCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Users.
      */
-    data: UserCreateManyInput | UserCreateManyInput[]
+    data: Enumerable<UserCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * User createManyAndReturn
-   */
-  export type UserCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * The data used to create many Users.
-     */
-    data: UserCreateManyInput | UserCreateManyInput[]
-    skipDuplicates?: boolean
-  }
 
   /**
    * User update
    */
-  export type UserUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2775,10 +2811,11 @@ export namespace Prisma {
     where: UserWhereUniqueInput
   }
 
+
   /**
    * User updateMany
    */
-  export type UserUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Users.
      */
@@ -2787,52 +2824,19 @@ export namespace Prisma {
      * Filter which Users to update
      */
     where?: UserWhereInput
-    /**
-     * Limit how many Users to update.
-     */
-    limit?: number
   }
 
-  /**
-   * User updateManyAndReturn
-   */
-  export type UserUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * The data used to update Users.
-     */
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
-    /**
-     * Filter which Users to update
-     */
-    where?: UserWhereInput
-    /**
-     * Limit how many Users to update.
-     */
-    limit?: number
-  }
 
   /**
    * User upsert
    */
-  export type UserUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2849,20 +2853,17 @@ export namespace Prisma {
     update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
   }
 
+
   /**
    * User delete
    */
-  export type UserDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2871,152 +2872,101 @@ export namespace Prisma {
     where: UserWhereUniqueInput
   }
 
+
   /**
    * User deleteMany
    */
-  export type UserDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Users to delete
      */
     where?: UserWhereInput
-    /**
-     * Limit how many Users to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * User.accounts
    */
-  export type User$accountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$accountsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     where?: AccountWhereInput
-    orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
+    orderBy?: Enumerable<AccountOrderByWithRelationInput>
     cursor?: AccountWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: Enumerable<AccountScalarFieldEnum>
   }
+
 
   /**
    * User.sessions
    */
-  export type User$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$sessionsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     where?: SessionWhereInput
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    orderBy?: Enumerable<SessionOrderByWithRelationInput>
     cursor?: SessionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+    distinct?: Enumerable<SessionScalarFieldEnum>
   }
 
-  /**
-   * User.company
-   */
-  export type User$companyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompanyInclude<ExtArgs> | null
-    where?: CompanyWhereInput
-  }
-
-  /**
-   * User.JobSeeker
-   */
-  export type User$JobSeekerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the JobSeeker
-     */
-    select?: JobSeekerSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobSeekerInclude<ExtArgs> | null
-    where?: JobSeekerWhereInput
-  }
 
   /**
    * User.SavedJob
    */
-  export type User$SavedJobArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$SavedJobArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     where?: SavedJobWhereInput
-    orderBy?: SavedJobOrderByWithRelationInput | SavedJobOrderByWithRelationInput[]
+    orderBy?: Enumerable<SavedJobOrderByWithRelationInput>
     cursor?: SavedJobWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SavedJobScalarFieldEnum | SavedJobScalarFieldEnum[]
+    distinct?: Enumerable<SavedJobScalarFieldEnum>
   }
+
 
   /**
    * User without action
    */
-  export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
   }
 
 
+
   /**
    * Model Company
    */
+
 
   export type AggregateCompany = {
     _count: CompanyCountAggregateOutputType | null
@@ -3105,7 +3055,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type CompanyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Company to aggregate.
      */
@@ -3115,7 +3065,7 @@ export namespace Prisma {
      * 
      * Determine the order of Companies to fetch.
      */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    orderBy?: Enumerable<CompanyOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -3165,10 +3115,10 @@ export namespace Prisma {
 
 
 
-  export type CompanyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: CompanyWhereInput
-    orderBy?: CompanyOrderByWithAggregationInput | CompanyOrderByWithAggregationInput[]
-    by: CompanyScalarFieldEnum[] | CompanyScalarFieldEnum
+    orderBy?: Enumerable<CompanyOrderByWithAggregationInput>
+    by: CompanyScalarFieldEnum[]
     having?: CompanyScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -3176,6 +3126,7 @@ export namespace Prisma {
     _min?: CompanyMinAggregateInputType
     _max?: CompanyMaxAggregateInputType
   }
+
 
   export type CompanyGroupByOutputType = {
     id: string
@@ -3195,7 +3146,7 @@ export namespace Prisma {
 
   type GetCompanyGroupByPayload<T extends CompanyGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<CompanyGroupByOutputType, T['by']> &
+      PickArray<CompanyGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof CompanyGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -3207,7 +3158,7 @@ export namespace Prisma {
     >
 
 
-  export type CompanySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CompanySelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     location?: boolean
@@ -3218,37 +3169,9 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | UserArgs<ExtArgs>
     jobs?: boolean | Company$jobsArgs<ExtArgs>
-    _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["company"]>
-
-  export type CompanySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    location?: boolean
-    about?: boolean
-    website?: boolean
-    logo?: boolean
-    xAccount?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["company"]>
-
-  export type CompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    location?: boolean
-    about?: boolean
-    website?: boolean
-    logo?: boolean
-    xAccount?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | CompanyCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectScalar = {
@@ -3264,48 +3187,21 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "location" | "about" | "website" | "logo" | "xAccount" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
-  export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+  export type CompanyInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UserArgs<ExtArgs>
     jobs?: boolean | Company$jobsArgs<ExtArgs>
-    _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | CompanyCountOutputTypeArgs<ExtArgs>
   }
 
-  export type $CompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Company"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      jobs: Prisma.$JobPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      location: string
-      about: string
-      website: string
-      logo: string
-      xAccount: string | null
-      userId: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["company"]>
-    composites: {}
-  }
 
-  type CompanyGetPayload<S extends boolean | null | undefined | CompanyDefaultArgs> = $Result.GetResult<Prisma.$CompanyPayload, S>
+  type CompanyGetPayload<S extends boolean | null | undefined | CompanyArgs> = $Types.GetResult<CompanyPayload, S>
 
-  type CompanyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CompanyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type CompanyCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<CompanyFindManyArgs, 'select' | 'include'> & {
       select?: CompanyCountAggregateInputType | true
     }
 
-  export interface CompanyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface CompanyDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Company'], meta: { name: 'Company' } }
     /**
      * Find zero or one Company that matches the filter.
@@ -3317,12 +3213,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends CompanyFindUniqueArgs>(args: SelectSubset<T, CompanyFindUniqueArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends CompanyFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CompanyFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Company'> extends True ? Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one Company that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one Company that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {CompanyFindUniqueOrThrowArgs} args - Arguments to find a Company
      * @example
      * // Get one Company
@@ -3331,8 +3229,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends CompanyFindUniqueOrThrowArgs>(args: SelectSubset<T, CompanyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends CompanyFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, CompanyFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first Company that matches the filter.
@@ -3346,12 +3246,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends CompanyFindFirstArgs>(args?: SelectSubset<T, CompanyFindFirstArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends CompanyFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CompanyFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Company'> extends True ? Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first Company that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {CompanyFindFirstOrThrowArgs} args - Arguments to find a Company
@@ -3362,14 +3264,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends CompanyFindFirstOrThrowArgs>(args?: SelectSubset<T, CompanyFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends CompanyFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, CompanyFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Companies that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompanyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {CompanyFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Companies
      * const companies = await prisma.company.findMany()
@@ -3380,8 +3284,10 @@ export namespace Prisma {
      * // Only select the `id`
      * const companyWithIdOnly = await prisma.company.findMany({ select: { id: true } })
      * 
-     */
-    findMany<T extends CompanyFindManyArgs>(args?: SelectSubset<T, CompanyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends CompanyFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, CompanyFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a Company.
@@ -3394,46 +3300,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends CompanyCreateArgs>(args: SelectSubset<T, CompanyCreateArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends CompanyCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, CompanyCreateArgs<ExtArgs>>
+    ): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Companies.
-     * @param {CompanyCreateManyArgs} args - Arguments to create many Companies.
-     * @example
-     * // Create many Companies
-     * const company = await prisma.company.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {CompanyCreateManyArgs} args - Arguments to create many Companies.
+     *     @example
+     *     // Create many Companies
+     *     const company = await prisma.company.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends CompanyCreateManyArgs>(args?: SelectSubset<T, CompanyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Companies and returns the data saved in the database.
-     * @param {CompanyCreateManyAndReturnArgs} args - Arguments to create many Companies.
-     * @example
-     * // Create many Companies
-     * const company = await prisma.company.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Companies and only return the `id`
-     * const companyWithIdOnly = await prisma.company.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CompanyCreateManyAndReturnArgs>(args?: SelectSubset<T, CompanyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends CompanyCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, CompanyCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Company.
@@ -3446,8 +3332,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends CompanyDeleteArgs>(args: SelectSubset<T, CompanyDeleteArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends CompanyDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, CompanyDeleteArgs<ExtArgs>>
+    ): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one Company.
@@ -3463,8 +3351,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends CompanyUpdateArgs>(args: SelectSubset<T, CompanyUpdateArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends CompanyUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, CompanyUpdateArgs<ExtArgs>>
+    ): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Companies.
@@ -3477,8 +3367,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends CompanyDeleteManyArgs>(args?: SelectSubset<T, CompanyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends CompanyDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, CompanyDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Companies.
@@ -3496,38 +3388,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends CompanyUpdateManyArgs>(args: SelectSubset<T, CompanyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Companies and returns the data updated in the database.
-     * @param {CompanyUpdateManyAndReturnArgs} args - Arguments to update many Companies.
-     * @example
-     * // Update many Companies
-     * const company = await prisma.company.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Companies and only return the `id`
-     * const companyWithIdOnly = await prisma.company.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CompanyUpdateManyAndReturnArgs>(args: SelectSubset<T, CompanyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends CompanyUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, CompanyUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Company.
@@ -3545,9 +3409,10 @@ export namespace Prisma {
      *     // ... the filter for the Company we want to update
      *   }
      * })
-     */
-    upsert<T extends CompanyUpsertArgs>(args: SelectSubset<T, CompanyUpsertArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends CompanyUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, CompanyUpsertArgs<ExtArgs>>
+    ): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Companies.
@@ -3626,7 +3491,7 @@ export namespace Prisma {
         ? { orderBy: CompanyGroupByArgs['orderBy'] }
         : { orderBy?: CompanyGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -3674,10 +3539,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CompanyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompanyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Company model
-   */
-  readonly fields: CompanyFieldRefs;
+
   }
 
   /**
@@ -3686,67 +3548,62 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    jobs<T extends Company$jobsArgs<ExtArgs> = {}>(args?: Subset<T, Company$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  export class Prisma__CompanyClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    jobs<T extends Company$jobsArgs<ExtArgs> = {}>(args?: Subset<T, Company$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<JobPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the Company model
-   */
-  interface CompanyFieldRefs {
-    readonly id: FieldRef<"Company", 'String'>
-    readonly name: FieldRef<"Company", 'String'>
-    readonly location: FieldRef<"Company", 'String'>
-    readonly about: FieldRef<"Company", 'String'>
-    readonly website: FieldRef<"Company", 'String'>
-    readonly logo: FieldRef<"Company", 'String'>
-    readonly xAccount: FieldRef<"Company", 'String'>
-    readonly userId: FieldRef<"Company", 'String'>
-    readonly createdAt: FieldRef<"Company", 'DateTime'>
-    readonly updatedAt: FieldRef<"Company", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * Company findUnique
+   * Company base type for findUnique actions
    */
-  export type CompanyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
@@ -3754,95 +3611,108 @@ export namespace Prisma {
      */
     where: CompanyWhereUniqueInput
   }
+
+  /**
+   * Company findUnique
+   */
+  export interface CompanyFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends CompanyFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * Company findUniqueOrThrow
    */
-  export type CompanyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
      * Filter, which Company to fetch.
      */
     where: CompanyWhereUniqueInput
+  }
+
+
+  /**
+   * Company base type for findFirst actions
+   */
+  export type CompanyFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    /**
+     * Filter, which Company to fetch.
+     */
+    where?: CompanyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Companies to fetch.
+     */
+    orderBy?: Enumerable<CompanyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Companies.
+     */
+    cursor?: CompanyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Companies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Companies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Companies.
+     */
+    distinct?: Enumerable<CompanyScalarFieldEnum>
   }
 
   /**
    * Company findFirst
    */
-  export type CompanyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompanyInclude<ExtArgs> | null
-    /**
-     * Filter, which Company to fetch.
-     */
-    where?: CompanyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Companies to fetch.
-     */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Companies.
-     */
-    cursor?: CompanyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Companies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Companies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Companies.
-     */
-    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+  export interface CompanyFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends CompanyFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * Company findFirstOrThrow
    */
-  export type CompanyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
@@ -3854,7 +3724,7 @@ export namespace Prisma {
      * 
      * Determine the order of Companies to fetch.
      */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    orderBy?: Enumerable<CompanyOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -3878,23 +3748,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Companies.
      */
-    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+    distinct?: Enumerable<CompanyScalarFieldEnum>
   }
+
 
   /**
    * Company findMany
    */
-  export type CompanyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
@@ -3906,7 +3773,7 @@ export namespace Prisma {
      * 
      * Determine the order of Companies to fetch.
      */
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    orderBy?: Enumerable<CompanyOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -3925,23 +3792,20 @@ export namespace Prisma {
      * Skip the first `n` Companies.
      */
     skip?: number
-    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+    distinct?: Enumerable<CompanyScalarFieldEnum>
   }
+
 
   /**
    * Company create
    */
-  export type CompanyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
@@ -3950,54 +3814,29 @@ export namespace Prisma {
     data: XOR<CompanyCreateInput, CompanyUncheckedCreateInput>
   }
 
+
   /**
    * Company createMany
    */
-  export type CompanyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Companies.
      */
-    data: CompanyCreateManyInput | CompanyCreateManyInput[]
+    data: Enumerable<CompanyCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * Company createManyAndReturn
-   */
-  export type CompanyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * The data used to create many Companies.
-     */
-    data: CompanyCreateManyInput | CompanyCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompanyIncludeCreateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Company update
    */
-  export type CompanyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
@@ -4010,10 +3849,11 @@ export namespace Prisma {
     where: CompanyWhereUniqueInput
   }
 
+
   /**
    * Company updateMany
    */
-  export type CompanyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Companies.
      */
@@ -4022,56 +3862,19 @@ export namespace Prisma {
      * Filter which Companies to update
      */
     where?: CompanyWhereInput
-    /**
-     * Limit how many Companies to update.
-     */
-    limit?: number
   }
 
-  /**
-   * Company updateManyAndReturn
-   */
-  export type CompanyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * The data used to update Companies.
-     */
-    data: XOR<CompanyUpdateManyMutationInput, CompanyUncheckedUpdateManyInput>
-    /**
-     * Filter which Companies to update
-     */
-    where?: CompanyWhereInput
-    /**
-     * Limit how many Companies to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompanyIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Company upsert
    */
-  export type CompanyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
@@ -4088,20 +3891,17 @@ export namespace Prisma {
     update: XOR<CompanyUpdateInput, CompanyUncheckedUpdateInput>
   }
 
+
   /**
    * Company delete
    */
-  export type CompanyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
     /**
@@ -4110,66 +3910,59 @@ export namespace Prisma {
     where: CompanyWhereUniqueInput
   }
 
+
   /**
    * Company deleteMany
    */
-  export type CompanyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Companies to delete
      */
     where?: CompanyWhereInput
-    /**
-     * Limit how many Companies to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * Company.jobs
    */
-  export type Company$jobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Company$jobsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     where?: JobWhereInput
-    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobOrderByWithRelationInput>
     cursor?: JobWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+    distinct?: Enumerable<JobScalarFieldEnum>
   }
+
 
   /**
    * Company without action
    */
-  export type CompanyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CompanyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Company
      */
     select?: CompanySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: CompanyInclude<ExtArgs> | null
   }
 
 
+
   /**
    * Model JobSeeker
    */
+
 
   export type AggregateJobSeeker = {
     _count: JobSeekerCountAggregateOutputType | null
@@ -4240,7 +4033,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type JobSeekerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which JobSeeker to aggregate.
      */
@@ -4250,7 +4043,7 @@ export namespace Prisma {
      * 
      * Determine the order of JobSeekers to fetch.
      */
-    orderBy?: JobSeekerOrderByWithRelationInput | JobSeekerOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobSeekerOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -4300,10 +4093,10 @@ export namespace Prisma {
 
 
 
-  export type JobSeekerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: JobSeekerWhereInput
-    orderBy?: JobSeekerOrderByWithAggregationInput | JobSeekerOrderByWithAggregationInput[]
-    by: JobSeekerScalarFieldEnum[] | JobSeekerScalarFieldEnum
+    orderBy?: Enumerable<JobSeekerOrderByWithAggregationInput>
+    by: JobSeekerScalarFieldEnum[]
     having?: JobSeekerScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -4311,6 +4104,7 @@ export namespace Prisma {
     _min?: JobSeekerMinAggregateInputType
     _max?: JobSeekerMaxAggregateInputType
   }
+
 
   export type JobSeekerGroupByOutputType = {
     id: string
@@ -4327,7 +4121,7 @@ export namespace Prisma {
 
   type GetJobSeekerGroupByPayload<T extends JobSeekerGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<JobSeekerGroupByOutputType, T['by']> &
+      PickArray<JobSeekerGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof JobSeekerGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -4339,7 +4133,7 @@ export namespace Prisma {
     >
 
 
-  export type JobSeekerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type JobSeekerSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     about?: boolean
@@ -4347,31 +4141,9 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | UserArgs<ExtArgs>
     jobApplications?: boolean | JobSeeker$jobApplicationsArgs<ExtArgs>
-    _count?: boolean | JobSeekerCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["jobSeeker"]>
-
-  export type JobSeekerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    about?: boolean
-    resume?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["jobSeeker"]>
-
-  export type JobSeekerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    about?: boolean
-    resume?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | JobSeekerCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["jobSeeker"]>
 
   export type JobSeekerSelectScalar = {
@@ -4384,45 +4156,21 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type JobSeekerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "about" | "resume" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["jobSeeker"]>
-  export type JobSeekerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+  export type JobSeekerInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UserArgs<ExtArgs>
     jobApplications?: boolean | JobSeeker$jobApplicationsArgs<ExtArgs>
-    _count?: boolean | JobSeekerCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type JobSeekerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type JobSeekerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | JobSeekerCountOutputTypeArgs<ExtArgs>
   }
 
-  export type $JobSeekerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "JobSeeker"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      jobApplications: Prisma.$JobApplicationPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      about: string
-      resume: string
-      userId: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["jobSeeker"]>
-    composites: {}
-  }
 
-  type JobSeekerGetPayload<S extends boolean | null | undefined | JobSeekerDefaultArgs> = $Result.GetResult<Prisma.$JobSeekerPayload, S>
+  type JobSeekerGetPayload<S extends boolean | null | undefined | JobSeekerArgs> = $Types.GetResult<JobSeekerPayload, S>
 
-  type JobSeekerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<JobSeekerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type JobSeekerCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<JobSeekerFindManyArgs, 'select' | 'include'> & {
       select?: JobSeekerCountAggregateInputType | true
     }
 
-  export interface JobSeekerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface JobSeekerDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['JobSeeker'], meta: { name: 'JobSeeker' } }
     /**
      * Find zero or one JobSeeker that matches the filter.
@@ -4434,12 +4182,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends JobSeekerFindUniqueArgs>(args: SelectSubset<T, JobSeekerFindUniqueArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends JobSeekerFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, JobSeekerFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'JobSeeker'> extends True ? Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one JobSeeker that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one JobSeeker that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {JobSeekerFindUniqueOrThrowArgs} args - Arguments to find a JobSeeker
      * @example
      * // Get one JobSeeker
@@ -4448,8 +4198,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends JobSeekerFindUniqueOrThrowArgs>(args: SelectSubset<T, JobSeekerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends JobSeekerFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobSeekerFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first JobSeeker that matches the filter.
@@ -4463,12 +4215,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends JobSeekerFindFirstArgs>(args?: SelectSubset<T, JobSeekerFindFirstArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends JobSeekerFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, JobSeekerFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'JobSeeker'> extends True ? Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first JobSeeker that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {JobSeekerFindFirstOrThrowArgs} args - Arguments to find a JobSeeker
@@ -4479,14 +4233,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends JobSeekerFindFirstOrThrowArgs>(args?: SelectSubset<T, JobSeekerFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends JobSeekerFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobSeekerFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more JobSeekers that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {JobSeekerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {JobSeekerFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all JobSeekers
      * const jobSeekers = await prisma.jobSeeker.findMany()
@@ -4497,8 +4253,10 @@ export namespace Prisma {
      * // Only select the `id`
      * const jobSeekerWithIdOnly = await prisma.jobSeeker.findMany({ select: { id: true } })
      * 
-     */
-    findMany<T extends JobSeekerFindManyArgs>(args?: SelectSubset<T, JobSeekerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends JobSeekerFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobSeekerFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a JobSeeker.
@@ -4511,46 +4269,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends JobSeekerCreateArgs>(args: SelectSubset<T, JobSeekerCreateArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends JobSeekerCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, JobSeekerCreateArgs<ExtArgs>>
+    ): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many JobSeekers.
-     * @param {JobSeekerCreateManyArgs} args - Arguments to create many JobSeekers.
-     * @example
-     * // Create many JobSeekers
-     * const jobSeeker = await prisma.jobSeeker.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {JobSeekerCreateManyArgs} args - Arguments to create many JobSeekers.
+     *     @example
+     *     // Create many JobSeekers
+     *     const jobSeeker = await prisma.jobSeeker.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends JobSeekerCreateManyArgs>(args?: SelectSubset<T, JobSeekerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many JobSeekers and returns the data saved in the database.
-     * @param {JobSeekerCreateManyAndReturnArgs} args - Arguments to create many JobSeekers.
-     * @example
-     * // Create many JobSeekers
-     * const jobSeeker = await prisma.jobSeeker.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many JobSeekers and only return the `id`
-     * const jobSeekerWithIdOnly = await prisma.jobSeeker.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends JobSeekerCreateManyAndReturnArgs>(args?: SelectSubset<T, JobSeekerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends JobSeekerCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobSeekerCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a JobSeeker.
@@ -4563,8 +4301,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends JobSeekerDeleteArgs>(args: SelectSubset<T, JobSeekerDeleteArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends JobSeekerDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, JobSeekerDeleteArgs<ExtArgs>>
+    ): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one JobSeeker.
@@ -4580,8 +4320,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends JobSeekerUpdateArgs>(args: SelectSubset<T, JobSeekerUpdateArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends JobSeekerUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, JobSeekerUpdateArgs<ExtArgs>>
+    ): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more JobSeekers.
@@ -4594,8 +4336,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends JobSeekerDeleteManyArgs>(args?: SelectSubset<T, JobSeekerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends JobSeekerDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobSeekerDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more JobSeekers.
@@ -4613,38 +4357,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends JobSeekerUpdateManyArgs>(args: SelectSubset<T, JobSeekerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more JobSeekers and returns the data updated in the database.
-     * @param {JobSeekerUpdateManyAndReturnArgs} args - Arguments to update many JobSeekers.
-     * @example
-     * // Update many JobSeekers
-     * const jobSeeker = await prisma.jobSeeker.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more JobSeekers and only return the `id`
-     * const jobSeekerWithIdOnly = await prisma.jobSeeker.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends JobSeekerUpdateManyAndReturnArgs>(args: SelectSubset<T, JobSeekerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends JobSeekerUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, JobSeekerUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one JobSeeker.
@@ -4662,9 +4378,10 @@ export namespace Prisma {
      *     // ... the filter for the JobSeeker we want to update
      *   }
      * })
-     */
-    upsert<T extends JobSeekerUpsertArgs>(args: SelectSubset<T, JobSeekerUpsertArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends JobSeekerUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, JobSeekerUpsertArgs<ExtArgs>>
+    ): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of JobSeekers.
@@ -4743,7 +4460,7 @@ export namespace Prisma {
         ? { orderBy: JobSeekerGroupByArgs['orderBy'] }
         : { orderBy?: JobSeekerGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -4791,10 +4508,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, JobSeekerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobSeekerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the JobSeeker model
-   */
-  readonly fields: JobSeekerFieldRefs;
+
   }
 
   /**
@@ -4803,64 +4517,62 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__JobSeekerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    jobApplications<T extends JobSeeker$jobApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, JobSeeker$jobApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  export class Prisma__JobSeekerClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    jobApplications<T extends JobSeeker$jobApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, JobSeeker$jobApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the JobSeeker model
-   */
-  interface JobSeekerFieldRefs {
-    readonly id: FieldRef<"JobSeeker", 'String'>
-    readonly name: FieldRef<"JobSeeker", 'String'>
-    readonly about: FieldRef<"JobSeeker", 'String'>
-    readonly resume: FieldRef<"JobSeeker", 'String'>
-    readonly userId: FieldRef<"JobSeeker", 'String'>
-    readonly createdAt: FieldRef<"JobSeeker", 'DateTime'>
-    readonly updatedAt: FieldRef<"JobSeeker", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * JobSeeker findUnique
+   * JobSeeker base type for findUnique actions
    */
-  export type JobSeekerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
@@ -4868,95 +4580,108 @@ export namespace Prisma {
      */
     where: JobSeekerWhereUniqueInput
   }
+
+  /**
+   * JobSeeker findUnique
+   */
+  export interface JobSeekerFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends JobSeekerFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * JobSeeker findUniqueOrThrow
    */
-  export type JobSeekerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
      * Filter, which JobSeeker to fetch.
      */
     where: JobSeekerWhereUniqueInput
+  }
+
+
+  /**
+   * JobSeeker base type for findFirst actions
+   */
+  export type JobSeekerFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobSeeker
+     */
+    select?: JobSeekerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: JobSeekerInclude<ExtArgs> | null
+    /**
+     * Filter, which JobSeeker to fetch.
+     */
+    where?: JobSeekerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobSeekers to fetch.
+     */
+    orderBy?: Enumerable<JobSeekerOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobSeekers.
+     */
+    cursor?: JobSeekerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobSeekers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobSeekers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobSeekers.
+     */
+    distinct?: Enumerable<JobSeekerScalarFieldEnum>
   }
 
   /**
    * JobSeeker findFirst
    */
-  export type JobSeekerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the JobSeeker
-     */
-    select?: JobSeekerSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobSeekerInclude<ExtArgs> | null
-    /**
-     * Filter, which JobSeeker to fetch.
-     */
-    where?: JobSeekerWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of JobSeekers to fetch.
-     */
-    orderBy?: JobSeekerOrderByWithRelationInput | JobSeekerOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for JobSeekers.
-     */
-    cursor?: JobSeekerWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` JobSeekers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` JobSeekers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of JobSeekers.
-     */
-    distinct?: JobSeekerScalarFieldEnum | JobSeekerScalarFieldEnum[]
+  export interface JobSeekerFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends JobSeekerFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * JobSeeker findFirstOrThrow
    */
-  export type JobSeekerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
@@ -4968,7 +4693,7 @@ export namespace Prisma {
      * 
      * Determine the order of JobSeekers to fetch.
      */
-    orderBy?: JobSeekerOrderByWithRelationInput | JobSeekerOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobSeekerOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -4992,23 +4717,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of JobSeekers.
      */
-    distinct?: JobSeekerScalarFieldEnum | JobSeekerScalarFieldEnum[]
+    distinct?: Enumerable<JobSeekerScalarFieldEnum>
   }
+
 
   /**
    * JobSeeker findMany
    */
-  export type JobSeekerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
@@ -5020,7 +4742,7 @@ export namespace Prisma {
      * 
      * Determine the order of JobSeekers to fetch.
      */
-    orderBy?: JobSeekerOrderByWithRelationInput | JobSeekerOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobSeekerOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -5039,23 +4761,20 @@ export namespace Prisma {
      * Skip the first `n` JobSeekers.
      */
     skip?: number
-    distinct?: JobSeekerScalarFieldEnum | JobSeekerScalarFieldEnum[]
+    distinct?: Enumerable<JobSeekerScalarFieldEnum>
   }
+
 
   /**
    * JobSeeker create
    */
-  export type JobSeekerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
@@ -5064,54 +4783,29 @@ export namespace Prisma {
     data: XOR<JobSeekerCreateInput, JobSeekerUncheckedCreateInput>
   }
 
+
   /**
    * JobSeeker createMany
    */
-  export type JobSeekerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many JobSeekers.
      */
-    data: JobSeekerCreateManyInput | JobSeekerCreateManyInput[]
+    data: Enumerable<JobSeekerCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * JobSeeker createManyAndReturn
-   */
-  export type JobSeekerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the JobSeeker
-     */
-    select?: JobSeekerSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * The data used to create many JobSeekers.
-     */
-    data: JobSeekerCreateManyInput | JobSeekerCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobSeekerIncludeCreateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * JobSeeker update
    */
-  export type JobSeekerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
@@ -5124,10 +4818,11 @@ export namespace Prisma {
     where: JobSeekerWhereUniqueInput
   }
 
+
   /**
    * JobSeeker updateMany
    */
-  export type JobSeekerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update JobSeekers.
      */
@@ -5136,56 +4831,19 @@ export namespace Prisma {
      * Filter which JobSeekers to update
      */
     where?: JobSeekerWhereInput
-    /**
-     * Limit how many JobSeekers to update.
-     */
-    limit?: number
   }
 
-  /**
-   * JobSeeker updateManyAndReturn
-   */
-  export type JobSeekerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the JobSeeker
-     */
-    select?: JobSeekerSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * The data used to update JobSeekers.
-     */
-    data: XOR<JobSeekerUpdateManyMutationInput, JobSeekerUncheckedUpdateManyInput>
-    /**
-     * Filter which JobSeekers to update
-     */
-    where?: JobSeekerWhereInput
-    /**
-     * Limit how many JobSeekers to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobSeekerIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * JobSeeker upsert
    */
-  export type JobSeekerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
@@ -5202,20 +4860,17 @@ export namespace Prisma {
     update: XOR<JobSeekerUpdateInput, JobSeekerUncheckedUpdateInput>
   }
 
+
   /**
    * JobSeeker delete
    */
-  export type JobSeekerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
     /**
@@ -5224,66 +4879,59 @@ export namespace Prisma {
     where: JobSeekerWhereUniqueInput
   }
 
+
   /**
    * JobSeeker deleteMany
    */
-  export type JobSeekerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which JobSeekers to delete
      */
     where?: JobSeekerWhereInput
-    /**
-     * Limit how many JobSeekers to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * JobSeeker.jobApplications
    */
-  export type JobSeeker$jobApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeeker$jobApplicationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     where?: JobApplicationWhereInput
-    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobApplicationOrderByWithRelationInput>
     cursor?: JobApplicationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+    distinct?: Enumerable<JobApplicationScalarFieldEnum>
   }
+
 
   /**
    * JobSeeker without action
    */
-  export type JobSeekerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobSeekerArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobSeeker
      */
     select?: JobSeekerSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobSeeker
-     */
-    omit?: JobSeekerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobSeekerInclude<ExtArgs> | null
   }
 
 
+
   /**
    * Model Account
    */
+
 
   export type AggregateAccount = {
     _count: AccountCountAggregateOutputType | null
@@ -5408,7 +5056,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type AccountAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Account to aggregate.
      */
@@ -5418,7 +5066,7 @@ export namespace Prisma {
      * 
      * Determine the order of Accounts to fetch.
      */
-    orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
+    orderBy?: Enumerable<AccountOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -5480,10 +5128,10 @@ export namespace Prisma {
 
 
 
-  export type AccountGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: AccountWhereInput
-    orderBy?: AccountOrderByWithAggregationInput | AccountOrderByWithAggregationInput[]
-    by: AccountScalarFieldEnum[] | AccountScalarFieldEnum
+    orderBy?: Enumerable<AccountOrderByWithAggregationInput>
+    by: AccountScalarFieldEnum[]
     having?: AccountScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -5493,6 +5141,7 @@ export namespace Prisma {
     _min?: AccountMinAggregateInputType
     _max?: AccountMaxAggregateInputType
   }
+
 
   export type AccountGroupByOutputType = {
     userId: string
@@ -5517,7 +5166,7 @@ export namespace Prisma {
 
   type GetAccountGroupByPayload<T extends AccountGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<AccountGroupByOutputType, T['by']> &
+      PickArray<AccountGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof AccountGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -5529,7 +5178,7 @@ export namespace Prisma {
     >
 
 
-  export type AccountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type AccountSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     type?: boolean
     provider?: boolean
@@ -5543,41 +5192,7 @@ export namespace Prisma {
     session_state?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["account"]>
-
-  export type AccountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    userId?: boolean
-    type?: boolean
-    provider?: boolean
-    providerAccountId?: boolean
-    refresh_token?: boolean
-    access_token?: boolean
-    expires_at?: boolean
-    token_type?: boolean
-    scope?: boolean
-    id_token?: boolean
-    session_state?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["account"]>
-
-  export type AccountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    userId?: boolean
-    type?: boolean
-    provider?: boolean
-    providerAccountId?: boolean
-    refresh_token?: boolean
-    access_token?: boolean
-    expires_at?: boolean
-    token_type?: boolean
-    scope?: boolean
-    id_token?: boolean
-    session_state?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | UserArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
   export type AccountSelectScalar = {
@@ -5596,48 +5211,19 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "type" | "provider" | "providerAccountId" | "refresh_token" | "access_token" | "expires_at" | "token_type" | "scope" | "id_token" | "session_state" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
-  export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type AccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type AccountIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+  export type AccountInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UserArgs<ExtArgs>
   }
 
-  export type $AccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Account"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      userId: string
-      type: string
-      provider: string
-      providerAccountId: string
-      refresh_token: string | null
-      access_token: string | null
-      expires_at: number | null
-      token_type: string | null
-      scope: string | null
-      id_token: string | null
-      session_state: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["account"]>
-    composites: {}
-  }
 
-  type AccountGetPayload<S extends boolean | null | undefined | AccountDefaultArgs> = $Result.GetResult<Prisma.$AccountPayload, S>
+  type AccountGetPayload<S extends boolean | null | undefined | AccountArgs> = $Types.GetResult<AccountPayload, S>
 
-  type AccountCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AccountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type AccountCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<AccountFindManyArgs, 'select' | 'include'> & {
       select?: AccountCountAggregateInputType | true
     }
 
-  export interface AccountDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface AccountDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Account'], meta: { name: 'Account' } }
     /**
      * Find zero or one Account that matches the filter.
@@ -5649,12 +5235,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends AccountFindUniqueArgs>(args: SelectSubset<T, AccountFindUniqueArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends AccountFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, AccountFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Account'> extends True ? Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one Account that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one Account that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {AccountFindUniqueOrThrowArgs} args - Arguments to find a Account
      * @example
      * // Get one Account
@@ -5663,8 +5251,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends AccountFindUniqueOrThrowArgs>(args: SelectSubset<T, AccountFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends AccountFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, AccountFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first Account that matches the filter.
@@ -5678,12 +5268,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends AccountFindFirstArgs>(args?: SelectSubset<T, AccountFindFirstArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends AccountFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, AccountFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Account'> extends True ? Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first Account that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {AccountFindFirstOrThrowArgs} args - Arguments to find a Account
@@ -5694,14 +5286,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends AccountFindFirstOrThrowArgs>(args?: SelectSubset<T, AccountFindFirstOrThrowArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends AccountFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, AccountFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Accounts that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {AccountFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Accounts
      * const accounts = await prisma.account.findMany()
@@ -5712,8 +5306,10 @@ export namespace Prisma {
      * // Only select the `userId`
      * const accountWithUserIdOnly = await prisma.account.findMany({ select: { userId: true } })
      * 
-     */
-    findMany<T extends AccountFindManyArgs>(args?: SelectSubset<T, AccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends AccountFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AccountFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<AccountPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a Account.
@@ -5726,46 +5322,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends AccountCreateArgs>(args: SelectSubset<T, AccountCreateArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends AccountCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, AccountCreateArgs<ExtArgs>>
+    ): Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Accounts.
-     * @param {AccountCreateManyArgs} args - Arguments to create many Accounts.
-     * @example
-     * // Create many Accounts
-     * const account = await prisma.account.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {AccountCreateManyArgs} args - Arguments to create many Accounts.
+     *     @example
+     *     // Create many Accounts
+     *     const account = await prisma.account.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends AccountCreateManyArgs>(args?: SelectSubset<T, AccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Accounts and returns the data saved in the database.
-     * @param {AccountCreateManyAndReturnArgs} args - Arguments to create many Accounts.
-     * @example
-     * // Create many Accounts
-     * const account = await prisma.account.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Accounts and only return the `userId`
-     * const accountWithUserIdOnly = await prisma.account.createManyAndReturn({
-     *   select: { userId: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends AccountCreateManyAndReturnArgs>(args?: SelectSubset<T, AccountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends AccountCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AccountCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Account.
@@ -5778,8 +5354,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends AccountDeleteArgs>(args: SelectSubset<T, AccountDeleteArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends AccountDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, AccountDeleteArgs<ExtArgs>>
+    ): Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one Account.
@@ -5795,8 +5373,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends AccountUpdateArgs>(args: SelectSubset<T, AccountUpdateArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends AccountUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, AccountUpdateArgs<ExtArgs>>
+    ): Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Accounts.
@@ -5809,8 +5389,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends AccountDeleteManyArgs>(args?: SelectSubset<T, AccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends AccountDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AccountDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Accounts.
@@ -5828,38 +5410,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends AccountUpdateManyArgs>(args: SelectSubset<T, AccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Accounts and returns the data updated in the database.
-     * @param {AccountUpdateManyAndReturnArgs} args - Arguments to update many Accounts.
-     * @example
-     * // Update many Accounts
-     * const account = await prisma.account.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Accounts and only return the `userId`
-     * const accountWithUserIdOnly = await prisma.account.updateManyAndReturn({
-     *   select: { userId: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends AccountUpdateManyAndReturnArgs>(args: SelectSubset<T, AccountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends AccountUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, AccountUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Account.
@@ -5877,9 +5431,10 @@ export namespace Prisma {
      *     // ... the filter for the Account we want to update
      *   }
      * })
-     */
-    upsert<T extends AccountUpsertArgs>(args: SelectSubset<T, AccountUpsertArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends AccountUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, AccountUpsertArgs<ExtArgs>>
+    ): Prisma__AccountClient<$Types.GetResult<AccountPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Accounts.
@@ -5958,7 +5513,7 @@ export namespace Prisma {
         ? { orderBy: AccountGroupByArgs['orderBy'] }
         : { orderBy?: AccountGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -6006,10 +5561,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, AccountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAccountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Account model
-   */
-  readonly fields: AccountFieldRefs;
+
   }
 
   /**
@@ -6018,69 +5570,60 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__AccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  export class Prisma__AccountClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the Account model
-   */
-  interface AccountFieldRefs {
-    readonly userId: FieldRef<"Account", 'String'>
-    readonly type: FieldRef<"Account", 'String'>
-    readonly provider: FieldRef<"Account", 'String'>
-    readonly providerAccountId: FieldRef<"Account", 'String'>
-    readonly refresh_token: FieldRef<"Account", 'String'>
-    readonly access_token: FieldRef<"Account", 'String'>
-    readonly expires_at: FieldRef<"Account", 'Int'>
-    readonly token_type: FieldRef<"Account", 'String'>
-    readonly scope: FieldRef<"Account", 'String'>
-    readonly id_token: FieldRef<"Account", 'String'>
-    readonly session_state: FieldRef<"Account", 'String'>
-    readonly createdAt: FieldRef<"Account", 'DateTime'>
-    readonly updatedAt: FieldRef<"Account", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * Account findUnique
+   * Account base type for findUnique actions
    */
-  export type AccountFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
@@ -6088,95 +5631,108 @@ export namespace Prisma {
      */
     where: AccountWhereUniqueInput
   }
+
+  /**
+   * Account findUnique
+   */
+  export interface AccountFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends AccountFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * Account findUniqueOrThrow
    */
-  export type AccountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
      * Filter, which Account to fetch.
      */
     where: AccountWhereUniqueInput
+  }
+
+
+  /**
+   * Account base type for findFirst actions
+   */
+  export type AccountFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AccountInclude<ExtArgs> | null
+    /**
+     * Filter, which Account to fetch.
+     */
+    where?: AccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Accounts to fetch.
+     */
+    orderBy?: Enumerable<AccountOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Accounts.
+     */
+    cursor?: AccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Accounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Accounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Accounts.
+     */
+    distinct?: Enumerable<AccountScalarFieldEnum>
   }
 
   /**
    * Account findFirst
    */
-  export type AccountFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Account
-     */
-    select?: AccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountInclude<ExtArgs> | null
-    /**
-     * Filter, which Account to fetch.
-     */
-    where?: AccountWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Accounts to fetch.
-     */
-    orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Accounts.
-     */
-    cursor?: AccountWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Accounts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Accounts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Accounts.
-     */
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+  export interface AccountFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends AccountFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * Account findFirstOrThrow
    */
-  export type AccountFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
@@ -6188,7 +5744,7 @@ export namespace Prisma {
      * 
      * Determine the order of Accounts to fetch.
      */
-    orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
+    orderBy?: Enumerable<AccountOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -6212,23 +5768,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Accounts.
      */
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: Enumerable<AccountScalarFieldEnum>
   }
+
 
   /**
    * Account findMany
    */
-  export type AccountFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
@@ -6240,7 +5793,7 @@ export namespace Prisma {
      * 
      * Determine the order of Accounts to fetch.
      */
-    orderBy?: AccountOrderByWithRelationInput | AccountOrderByWithRelationInput[]
+    orderBy?: Enumerable<AccountOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -6259,23 +5812,20 @@ export namespace Prisma {
      * Skip the first `n` Accounts.
      */
     skip?: number
-    distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+    distinct?: Enumerable<AccountScalarFieldEnum>
   }
+
 
   /**
    * Account create
    */
-  export type AccountCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
@@ -6284,54 +5834,29 @@ export namespace Prisma {
     data: XOR<AccountCreateInput, AccountUncheckedCreateInput>
   }
 
+
   /**
    * Account createMany
    */
-  export type AccountCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Accounts.
      */
-    data: AccountCreateManyInput | AccountCreateManyInput[]
+    data: Enumerable<AccountCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * Account createManyAndReturn
-   */
-  export type AccountCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Account
-     */
-    select?: AccountSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * The data used to create many Accounts.
-     */
-    data: AccountCreateManyInput | AccountCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountIncludeCreateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Account update
    */
-  export type AccountUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
@@ -6344,10 +5869,11 @@ export namespace Prisma {
     where: AccountWhereUniqueInput
   }
 
+
   /**
    * Account updateMany
    */
-  export type AccountUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Accounts.
      */
@@ -6356,56 +5882,19 @@ export namespace Prisma {
      * Filter which Accounts to update
      */
     where?: AccountWhereInput
-    /**
-     * Limit how many Accounts to update.
-     */
-    limit?: number
   }
 
-  /**
-   * Account updateManyAndReturn
-   */
-  export type AccountUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Account
-     */
-    select?: AccountSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * The data used to update Accounts.
-     */
-    data: XOR<AccountUpdateManyMutationInput, AccountUncheckedUpdateManyInput>
-    /**
-     * Filter which Accounts to update
-     */
-    where?: AccountWhereInput
-    /**
-     * Limit how many Accounts to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Account upsert
    */
-  export type AccountUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
@@ -6422,20 +5911,17 @@ export namespace Prisma {
     update: XOR<AccountUpdateInput, AccountUncheckedUpdateInput>
   }
 
+
   /**
    * Account delete
    */
-  export type AccountDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
     /**
@@ -6444,42 +5930,38 @@ export namespace Prisma {
     where: AccountWhereUniqueInput
   }
 
+
   /**
    * Account deleteMany
    */
-  export type AccountDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Accounts to delete
      */
     where?: AccountWhereInput
-    /**
-     * Limit how many Accounts to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * Account without action
    */
-  export type AccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AccountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Account
      */
     select?: AccountSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: AccountInclude<ExtArgs> | null
   }
 
 
+
   /**
    * Model Session
    */
+
 
   export type AggregateSession = {
     _count: SessionCountAggregateOutputType | null
@@ -6538,7 +6020,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type SessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Session to aggregate.
      */
@@ -6548,7 +6030,7 @@ export namespace Prisma {
      * 
      * Determine the order of Sessions to fetch.
      */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    orderBy?: Enumerable<SessionOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -6598,10 +6080,10 @@ export namespace Prisma {
 
 
 
-  export type SessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: SessionWhereInput
-    orderBy?: SessionOrderByWithAggregationInput | SessionOrderByWithAggregationInput[]
-    by: SessionScalarFieldEnum[] | SessionScalarFieldEnum
+    orderBy?: Enumerable<SessionOrderByWithAggregationInput>
+    by: SessionScalarFieldEnum[]
     having?: SessionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -6609,6 +6091,7 @@ export namespace Prisma {
     _min?: SessionMinAggregateInputType
     _max?: SessionMaxAggregateInputType
   }
+
 
   export type SessionGroupByOutputType = {
     sessionToken: string
@@ -6623,7 +6106,7 @@ export namespace Prisma {
 
   type GetSessionGroupByPayload<T extends SessionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<SessionGroupByOutputType, T['by']> &
+      PickArray<SessionGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof SessionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -6635,31 +6118,13 @@ export namespace Prisma {
     >
 
 
-  export type SessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type SessionSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     sessionToken?: boolean
     userId?: boolean
     expires?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["session"]>
-
-  export type SessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    sessionToken?: boolean
-    userId?: boolean
-    expires?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["session"]>
-
-  export type SessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    sessionToken?: boolean
-    userId?: boolean
-    expires?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | UserArgs<ExtArgs>
   }, ExtArgs["result"]["session"]>
 
   export type SessionSelectScalar = {
@@ -6670,40 +6135,19 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"sessionToken" | "userId" | "expires" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
-  export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type SessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type SessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+  export type SessionInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UserArgs<ExtArgs>
   }
 
-  export type $SessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Session"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      sessionToken: string
-      userId: string
-      expires: Date
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["session"]>
-    composites: {}
-  }
 
-  type SessionGetPayload<S extends boolean | null | undefined | SessionDefaultArgs> = $Result.GetResult<Prisma.$SessionPayload, S>
+  type SessionGetPayload<S extends boolean | null | undefined | SessionArgs> = $Types.GetResult<SessionPayload, S>
 
-  type SessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<SessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type SessionCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<SessionFindManyArgs, 'select' | 'include'> & {
       select?: SessionCountAggregateInputType | true
     }
 
-  export interface SessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface SessionDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Session'], meta: { name: 'Session' } }
     /**
      * Find zero or one Session that matches the filter.
@@ -6715,12 +6159,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends SessionFindUniqueArgs>(args: SelectSubset<T, SessionFindUniqueArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends SessionFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, SessionFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Session'> extends True ? Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one Session that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one Session that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {SessionFindUniqueOrThrowArgs} args - Arguments to find a Session
      * @example
      * // Get one Session
@@ -6729,8 +6175,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends SessionFindUniqueOrThrowArgs>(args: SelectSubset<T, SessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends SessionFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, SessionFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first Session that matches the filter.
@@ -6744,12 +6192,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends SessionFindFirstArgs>(args?: SelectSubset<T, SessionFindFirstArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends SessionFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, SessionFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Session'> extends True ? Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first Session that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {SessionFindFirstOrThrowArgs} args - Arguments to find a Session
@@ -6760,14 +6210,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends SessionFindFirstOrThrowArgs>(args?: SelectSubset<T, SessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends SessionFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, SessionFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Sessions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {SessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {SessionFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Sessions
      * const sessions = await prisma.session.findMany()
@@ -6778,8 +6230,10 @@ export namespace Prisma {
      * // Only select the `sessionToken`
      * const sessionWithSessionTokenOnly = await prisma.session.findMany({ select: { sessionToken: true } })
      * 
-     */
-    findMany<T extends SessionFindManyArgs>(args?: SelectSubset<T, SessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends SessionFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SessionFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<SessionPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a Session.
@@ -6792,46 +6246,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends SessionCreateArgs>(args: SelectSubset<T, SessionCreateArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends SessionCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, SessionCreateArgs<ExtArgs>>
+    ): Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Sessions.
-     * @param {SessionCreateManyArgs} args - Arguments to create many Sessions.
-     * @example
-     * // Create many Sessions
-     * const session = await prisma.session.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {SessionCreateManyArgs} args - Arguments to create many Sessions.
+     *     @example
+     *     // Create many Sessions
+     *     const session = await prisma.session.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends SessionCreateManyArgs>(args?: SelectSubset<T, SessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Sessions and returns the data saved in the database.
-     * @param {SessionCreateManyAndReturnArgs} args - Arguments to create many Sessions.
-     * @example
-     * // Create many Sessions
-     * const session = await prisma.session.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Sessions and only return the `sessionToken`
-     * const sessionWithSessionTokenOnly = await prisma.session.createManyAndReturn({
-     *   select: { sessionToken: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends SessionCreateManyAndReturnArgs>(args?: SelectSubset<T, SessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends SessionCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SessionCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Session.
@@ -6844,8 +6278,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends SessionDeleteArgs>(args: SelectSubset<T, SessionDeleteArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends SessionDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, SessionDeleteArgs<ExtArgs>>
+    ): Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one Session.
@@ -6861,8 +6297,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends SessionUpdateArgs>(args: SelectSubset<T, SessionUpdateArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends SessionUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, SessionUpdateArgs<ExtArgs>>
+    ): Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Sessions.
@@ -6875,8 +6313,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends SessionDeleteManyArgs>(args?: SelectSubset<T, SessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends SessionDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SessionDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Sessions.
@@ -6894,38 +6334,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends SessionUpdateManyArgs>(args: SelectSubset<T, SessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Sessions and returns the data updated in the database.
-     * @param {SessionUpdateManyAndReturnArgs} args - Arguments to update many Sessions.
-     * @example
-     * // Update many Sessions
-     * const session = await prisma.session.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Sessions and only return the `sessionToken`
-     * const sessionWithSessionTokenOnly = await prisma.session.updateManyAndReturn({
-     *   select: { sessionToken: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends SessionUpdateManyAndReturnArgs>(args: SelectSubset<T, SessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends SessionUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, SessionUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Session.
@@ -6943,9 +6355,10 @@ export namespace Prisma {
      *     // ... the filter for the Session we want to update
      *   }
      * })
-     */
-    upsert<T extends SessionUpsertArgs>(args: SelectSubset<T, SessionUpsertArgs<ExtArgs>>): Prisma__SessionClient<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends SessionUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, SessionUpsertArgs<ExtArgs>>
+    ): Prisma__SessionClient<$Types.GetResult<SessionPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Sessions.
@@ -7024,7 +6437,7 @@ export namespace Prisma {
         ? { orderBy: SessionGroupByArgs['orderBy'] }
         : { orderBy?: SessionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -7072,10 +6485,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, SessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Session model
-   */
-  readonly fields: SessionFieldRefs;
+
   }
 
   /**
@@ -7084,61 +6494,60 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__SessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  export class Prisma__SessionClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the Session model
-   */
-  interface SessionFieldRefs {
-    readonly sessionToken: FieldRef<"Session", 'String'>
-    readonly userId: FieldRef<"Session", 'String'>
-    readonly expires: FieldRef<"Session", 'DateTime'>
-    readonly createdAt: FieldRef<"Session", 'DateTime'>
-    readonly updatedAt: FieldRef<"Session", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * Session findUnique
+   * Session base type for findUnique actions
    */
-  export type SessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
@@ -7146,95 +6555,108 @@ export namespace Prisma {
      */
     where: SessionWhereUniqueInput
   }
+
+  /**
+   * Session findUnique
+   */
+  export interface SessionFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends SessionFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * Session findUniqueOrThrow
    */
-  export type SessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
      * Filter, which Session to fetch.
      */
     where: SessionWhereUniqueInput
+  }
+
+
+  /**
+   * Session base type for findFirst actions
+   */
+  export type SessionFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Session
+     */
+    select?: SessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Session to fetch.
+     */
+    where?: SessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sessions to fetch.
+     */
+    orderBy?: Enumerable<SessionOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Sessions.
+     */
+    cursor?: SessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sessions.
+     */
+    distinct?: Enumerable<SessionScalarFieldEnum>
   }
 
   /**
    * Session findFirst
    */
-  export type SessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionInclude<ExtArgs> | null
-    /**
-     * Filter, which Session to fetch.
-     */
-    where?: SessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Sessions to fetch.
-     */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Sessions.
-     */
-    cursor?: SessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Sessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Sessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Sessions.
-     */
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  export interface SessionFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends SessionFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * Session findFirstOrThrow
    */
-  export type SessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
@@ -7246,7 +6668,7 @@ export namespace Prisma {
      * 
      * Determine the order of Sessions to fetch.
      */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    orderBy?: Enumerable<SessionOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -7270,23 +6692,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Sessions.
      */
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+    distinct?: Enumerable<SessionScalarFieldEnum>
   }
+
 
   /**
    * Session findMany
    */
-  export type SessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
@@ -7298,7 +6717,7 @@ export namespace Prisma {
      * 
      * Determine the order of Sessions to fetch.
      */
-    orderBy?: SessionOrderByWithRelationInput | SessionOrderByWithRelationInput[]
+    orderBy?: Enumerable<SessionOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -7317,23 +6736,20 @@ export namespace Prisma {
      * Skip the first `n` Sessions.
      */
     skip?: number
-    distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+    distinct?: Enumerable<SessionScalarFieldEnum>
   }
+
 
   /**
    * Session create
    */
-  export type SessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
@@ -7342,54 +6758,29 @@ export namespace Prisma {
     data: XOR<SessionCreateInput, SessionUncheckedCreateInput>
   }
 
+
   /**
    * Session createMany
    */
-  export type SessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Sessions.
      */
-    data: SessionCreateManyInput | SessionCreateManyInput[]
+    data: Enumerable<SessionCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * Session createManyAndReturn
-   */
-  export type SessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * The data used to create many Sessions.
-     */
-    data: SessionCreateManyInput | SessionCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionIncludeCreateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Session update
    */
-  export type SessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
@@ -7402,10 +6793,11 @@ export namespace Prisma {
     where: SessionWhereUniqueInput
   }
 
+
   /**
    * Session updateMany
    */
-  export type SessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Sessions.
      */
@@ -7414,56 +6806,19 @@ export namespace Prisma {
      * Filter which Sessions to update
      */
     where?: SessionWhereInput
-    /**
-     * Limit how many Sessions to update.
-     */
-    limit?: number
   }
 
-  /**
-   * Session updateManyAndReturn
-   */
-  export type SessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Session
-     */
-    select?: SessionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * The data used to update Sessions.
-     */
-    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyInput>
-    /**
-     * Filter which Sessions to update
-     */
-    where?: SessionWhereInput
-    /**
-     * Limit how many Sessions to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SessionIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Session upsert
    */
-  export type SessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
@@ -7480,20 +6835,17 @@ export namespace Prisma {
     update: XOR<SessionUpdateInput, SessionUncheckedUpdateInput>
   }
 
+
   /**
    * Session delete
    */
-  export type SessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
     /**
@@ -7502,42 +6854,38 @@ export namespace Prisma {
     where: SessionWhereUniqueInput
   }
 
+
   /**
    * Session deleteMany
    */
-  export type SessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Sessions to delete
      */
     where?: SessionWhereInput
-    /**
-     * Limit how many Sessions to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * Session without action
    */
-  export type SessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SessionArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Session
      */
     select?: SessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Session
-     */
-    omit?: SessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SessionInclude<ExtArgs> | null
   }
 
 
+
   /**
    * Model VerificationToken
    */
+
 
   export type AggregateVerificationToken = {
     _count: VerificationTokenCountAggregateOutputType | null
@@ -7584,7 +6932,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type VerificationTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which VerificationToken to aggregate.
      */
@@ -7594,7 +6942,7 @@ export namespace Prisma {
      * 
      * Determine the order of VerificationTokens to fetch.
      */
-    orderBy?: VerificationTokenOrderByWithRelationInput | VerificationTokenOrderByWithRelationInput[]
+    orderBy?: Enumerable<VerificationTokenOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -7644,10 +6992,10 @@ export namespace Prisma {
 
 
 
-  export type VerificationTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: VerificationTokenWhereInput
-    orderBy?: VerificationTokenOrderByWithAggregationInput | VerificationTokenOrderByWithAggregationInput[]
-    by: VerificationTokenScalarFieldEnum[] | VerificationTokenScalarFieldEnum
+    orderBy?: Enumerable<VerificationTokenOrderByWithAggregationInput>
+    by: VerificationTokenScalarFieldEnum[]
     having?: VerificationTokenScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -7655,6 +7003,7 @@ export namespace Prisma {
     _min?: VerificationTokenMinAggregateInputType
     _max?: VerificationTokenMaxAggregateInputType
   }
+
 
   export type VerificationTokenGroupByOutputType = {
     identifier: string
@@ -7667,7 +7016,7 @@ export namespace Prisma {
 
   type GetVerificationTokenGroupByPayload<T extends VerificationTokenGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<VerificationTokenGroupByOutputType, T['by']> &
+      PickArray<VerificationTokenGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof VerificationTokenGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -7679,19 +7028,7 @@ export namespace Prisma {
     >
 
 
-  export type VerificationTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    identifier?: boolean
-    token?: boolean
-    expires?: boolean
-  }, ExtArgs["result"]["verificationToken"]>
-
-  export type VerificationTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    identifier?: boolean
-    token?: boolean
-    expires?: boolean
-  }, ExtArgs["result"]["verificationToken"]>
-
-  export type VerificationTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type VerificationTokenSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     identifier?: boolean
     token?: boolean
     expires?: boolean
@@ -7703,27 +7040,15 @@ export namespace Prisma {
     expires?: boolean
   }
 
-  export type VerificationTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"identifier" | "token" | "expires", ExtArgs["result"]["verificationToken"]>
 
-  export type $VerificationTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "VerificationToken"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      identifier: string
-      token: string
-      expires: Date
-    }, ExtArgs["result"]["verificationToken"]>
-    composites: {}
-  }
+  type VerificationTokenGetPayload<S extends boolean | null | undefined | VerificationTokenArgs> = $Types.GetResult<VerificationTokenPayload, S>
 
-  type VerificationTokenGetPayload<S extends boolean | null | undefined | VerificationTokenDefaultArgs> = $Result.GetResult<Prisma.$VerificationTokenPayload, S>
-
-  type VerificationTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<VerificationTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type VerificationTokenCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<VerificationTokenFindManyArgs, 'select' | 'include'> & {
       select?: VerificationTokenCountAggregateInputType | true
     }
 
-  export interface VerificationTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface VerificationTokenDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VerificationToken'], meta: { name: 'VerificationToken' } }
     /**
      * Find zero or one VerificationToken that matches the filter.
@@ -7735,12 +7060,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends VerificationTokenFindUniqueArgs>(args: SelectSubset<T, VerificationTokenFindUniqueArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends VerificationTokenFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, VerificationTokenFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'VerificationToken'> extends True ? Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one VerificationToken that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one VerificationToken that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {VerificationTokenFindUniqueOrThrowArgs} args - Arguments to find a VerificationToken
      * @example
      * // Get one VerificationToken
@@ -7749,8 +7076,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends VerificationTokenFindUniqueOrThrowArgs>(args: SelectSubset<T, VerificationTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends VerificationTokenFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, VerificationTokenFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first VerificationToken that matches the filter.
@@ -7764,12 +7093,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends VerificationTokenFindFirstArgs>(args?: SelectSubset<T, VerificationTokenFindFirstArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends VerificationTokenFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, VerificationTokenFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'VerificationToken'> extends True ? Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first VerificationToken that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {VerificationTokenFindFirstOrThrowArgs} args - Arguments to find a VerificationToken
@@ -7780,14 +7111,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends VerificationTokenFindFirstOrThrowArgs>(args?: SelectSubset<T, VerificationTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends VerificationTokenFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, VerificationTokenFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more VerificationTokens that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {VerificationTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {VerificationTokenFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all VerificationTokens
      * const verificationTokens = await prisma.verificationToken.findMany()
@@ -7798,8 +7131,10 @@ export namespace Prisma {
      * // Only select the `identifier`
      * const verificationTokenWithIdentifierOnly = await prisma.verificationToken.findMany({ select: { identifier: true } })
      * 
-     */
-    findMany<T extends VerificationTokenFindManyArgs>(args?: SelectSubset<T, VerificationTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends VerificationTokenFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, VerificationTokenFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a VerificationToken.
@@ -7812,46 +7147,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends VerificationTokenCreateArgs>(args: SelectSubset<T, VerificationTokenCreateArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends VerificationTokenCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, VerificationTokenCreateArgs<ExtArgs>>
+    ): Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many VerificationTokens.
-     * @param {VerificationTokenCreateManyArgs} args - Arguments to create many VerificationTokens.
-     * @example
-     * // Create many VerificationTokens
-     * const verificationToken = await prisma.verificationToken.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {VerificationTokenCreateManyArgs} args - Arguments to create many VerificationTokens.
+     *     @example
+     *     // Create many VerificationTokens
+     *     const verificationToken = await prisma.verificationToken.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends VerificationTokenCreateManyArgs>(args?: SelectSubset<T, VerificationTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many VerificationTokens and returns the data saved in the database.
-     * @param {VerificationTokenCreateManyAndReturnArgs} args - Arguments to create many VerificationTokens.
-     * @example
-     * // Create many VerificationTokens
-     * const verificationToken = await prisma.verificationToken.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many VerificationTokens and only return the `identifier`
-     * const verificationTokenWithIdentifierOnly = await prisma.verificationToken.createManyAndReturn({
-     *   select: { identifier: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends VerificationTokenCreateManyAndReturnArgs>(args?: SelectSubset<T, VerificationTokenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends VerificationTokenCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, VerificationTokenCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a VerificationToken.
@@ -7864,8 +7179,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends VerificationTokenDeleteArgs>(args: SelectSubset<T, VerificationTokenDeleteArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends VerificationTokenDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, VerificationTokenDeleteArgs<ExtArgs>>
+    ): Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one VerificationToken.
@@ -7881,8 +7198,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends VerificationTokenUpdateArgs>(args: SelectSubset<T, VerificationTokenUpdateArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends VerificationTokenUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, VerificationTokenUpdateArgs<ExtArgs>>
+    ): Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more VerificationTokens.
@@ -7895,8 +7214,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends VerificationTokenDeleteManyArgs>(args?: SelectSubset<T, VerificationTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends VerificationTokenDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, VerificationTokenDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more VerificationTokens.
@@ -7914,38 +7235,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends VerificationTokenUpdateManyArgs>(args: SelectSubset<T, VerificationTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more VerificationTokens and returns the data updated in the database.
-     * @param {VerificationTokenUpdateManyAndReturnArgs} args - Arguments to update many VerificationTokens.
-     * @example
-     * // Update many VerificationTokens
-     * const verificationToken = await prisma.verificationToken.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more VerificationTokens and only return the `identifier`
-     * const verificationTokenWithIdentifierOnly = await prisma.verificationToken.updateManyAndReturn({
-     *   select: { identifier: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends VerificationTokenUpdateManyAndReturnArgs>(args: SelectSubset<T, VerificationTokenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends VerificationTokenUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, VerificationTokenUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one VerificationToken.
@@ -7963,9 +7256,10 @@ export namespace Prisma {
      *     // ... the filter for the VerificationToken we want to update
      *   }
      * })
-     */
-    upsert<T extends VerificationTokenUpsertArgs>(args: SelectSubset<T, VerificationTokenUpsertArgs<ExtArgs>>): Prisma__VerificationTokenClient<$Result.GetResult<Prisma.$VerificationTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends VerificationTokenUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, VerificationTokenUpsertArgs<ExtArgs>>
+    ): Prisma__VerificationTokenClient<$Types.GetResult<VerificationTokenPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of VerificationTokens.
@@ -8044,7 +7338,7 @@ export namespace Prisma {
         ? { orderBy: VerificationTokenGroupByArgs['orderBy'] }
         : { orderBy?: VerificationTokenGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -8092,10 +7386,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, VerificationTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVerificationTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the VerificationToken model
-   */
-  readonly fields: VerificationTokenFieldRefs;
+
   }
 
   /**
@@ -8104,140 +7395,154 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__VerificationTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
+  export class Prisma__VerificationTokenClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the VerificationToken model
-   */
-  interface VerificationTokenFieldRefs {
-    readonly identifier: FieldRef<"VerificationToken", 'String'>
-    readonly token: FieldRef<"VerificationToken", 'String'>
-    readonly expires: FieldRef<"VerificationToken", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * VerificationToken findUnique
+   * VerificationToken base type for findUnique actions
    */
-  export type VerificationTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
-    /**
      * Filter, which VerificationToken to fetch.
      */
     where: VerificationTokenWhereUniqueInput
   }
+
+  /**
+   * VerificationToken findUnique
+   */
+  export interface VerificationTokenFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends VerificationTokenFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * VerificationToken findUniqueOrThrow
    */
-  export type VerificationTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
-    /**
      * Filter, which VerificationToken to fetch.
      */
     where: VerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * VerificationToken base type for findFirst actions
+   */
+  export type VerificationTokenFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VerificationToken
+     */
+    select?: VerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which VerificationToken to fetch.
+     */
+    where?: VerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VerificationTokens to fetch.
+     */
+    orderBy?: Enumerable<VerificationTokenOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VerificationTokens.
+     */
+    cursor?: VerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VerificationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VerificationTokens.
+     */
+    distinct?: Enumerable<VerificationTokenScalarFieldEnum>
   }
 
   /**
    * VerificationToken findFirst
    */
-  export type VerificationTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VerificationToken
-     */
-    select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
-    /**
-     * Filter, which VerificationToken to fetch.
-     */
-    where?: VerificationTokenWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VerificationTokens to fetch.
-     */
-    orderBy?: VerificationTokenOrderByWithRelationInput | VerificationTokenOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for VerificationTokens.
-     */
-    cursor?: VerificationTokenWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VerificationTokens from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VerificationTokens.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of VerificationTokens.
-     */
-    distinct?: VerificationTokenScalarFieldEnum | VerificationTokenScalarFieldEnum[]
+  export interface VerificationTokenFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends VerificationTokenFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * VerificationToken findFirstOrThrow
    */
-  export type VerificationTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
     /**
      * Filter, which VerificationToken to fetch.
      */
@@ -8247,7 +7552,7 @@ export namespace Prisma {
      * 
      * Determine the order of VerificationTokens to fetch.
      */
-    orderBy?: VerificationTokenOrderByWithRelationInput | VerificationTokenOrderByWithRelationInput[]
+    orderBy?: Enumerable<VerificationTokenOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -8271,21 +7576,18 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of VerificationTokens.
      */
-    distinct?: VerificationTokenScalarFieldEnum | VerificationTokenScalarFieldEnum[]
+    distinct?: Enumerable<VerificationTokenScalarFieldEnum>
   }
+
 
   /**
    * VerificationToken findMany
    */
-  export type VerificationTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
     /**
      * Filter, which VerificationTokens to fetch.
      */
@@ -8295,7 +7597,7 @@ export namespace Prisma {
      * 
      * Determine the order of VerificationTokens to fetch.
      */
-    orderBy?: VerificationTokenOrderByWithRelationInput | VerificationTokenOrderByWithRelationInput[]
+    orderBy?: Enumerable<VerificationTokenOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -8314,69 +7616,45 @@ export namespace Prisma {
      * Skip the first `n` VerificationTokens.
      */
     skip?: number
-    distinct?: VerificationTokenScalarFieldEnum | VerificationTokenScalarFieldEnum[]
+    distinct?: Enumerable<VerificationTokenScalarFieldEnum>
   }
+
 
   /**
    * VerificationToken create
    */
-  export type VerificationTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
     /**
      * The data needed to create a VerificationToken.
      */
     data: XOR<VerificationTokenCreateInput, VerificationTokenUncheckedCreateInput>
   }
 
+
   /**
    * VerificationToken createMany
    */
-  export type VerificationTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many VerificationTokens.
      */
-    data: VerificationTokenCreateManyInput | VerificationTokenCreateManyInput[]
+    data: Enumerable<VerificationTokenCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * VerificationToken createManyAndReturn
-   */
-  export type VerificationTokenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VerificationToken
-     */
-    select?: VerificationTokenSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
-    /**
-     * The data used to create many VerificationTokens.
-     */
-    data: VerificationTokenCreateManyInput | VerificationTokenCreateManyInput[]
-    skipDuplicates?: boolean
-  }
 
   /**
    * VerificationToken update
    */
-  export type VerificationTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
     /**
      * The data needed to update a VerificationToken.
      */
@@ -8387,10 +7665,11 @@ export namespace Prisma {
     where: VerificationTokenWhereUniqueInput
   }
 
+
   /**
    * VerificationToken updateMany
    */
-  export type VerificationTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update VerificationTokens.
      */
@@ -8399,50 +7678,17 @@ export namespace Prisma {
      * Filter which VerificationTokens to update
      */
     where?: VerificationTokenWhereInput
-    /**
-     * Limit how many VerificationTokens to update.
-     */
-    limit?: number
   }
 
-  /**
-   * VerificationToken updateManyAndReturn
-   */
-  export type VerificationTokenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VerificationToken
-     */
-    select?: VerificationTokenSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
-    /**
-     * The data used to update VerificationTokens.
-     */
-    data: XOR<VerificationTokenUpdateManyMutationInput, VerificationTokenUncheckedUpdateManyInput>
-    /**
-     * Filter which VerificationTokens to update
-     */
-    where?: VerificationTokenWhereInput
-    /**
-     * Limit how many VerificationTokens to update.
-     */
-    limit?: number
-  }
 
   /**
    * VerificationToken upsert
    */
-  export type VerificationTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
     /**
      * The filter to search for the VerificationToken to update in case it exists.
      */
@@ -8457,56 +7703,49 @@ export namespace Prisma {
     update: XOR<VerificationTokenUpdateInput, VerificationTokenUncheckedUpdateInput>
   }
 
+
   /**
    * VerificationToken delete
    */
-  export type VerificationTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
     /**
      * Filter which VerificationToken to delete.
      */
     where: VerificationTokenWhereUniqueInput
   }
 
+
   /**
    * VerificationToken deleteMany
    */
-  export type VerificationTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which VerificationTokens to delete
      */
     where?: VerificationTokenWhereInput
-    /**
-     * Limit how many VerificationTokens to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * VerificationToken without action
    */
-  export type VerificationTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type VerificationTokenArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the VerificationToken
      */
     select?: VerificationTokenSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VerificationToken
-     */
-    omit?: VerificationTokenOmit<ExtArgs> | null
   }
+
 
 
   /**
    * Model Job
    */
+
 
   export type AggregateJob = {
     _count: JobCountAggregateOutputType | null
@@ -8537,7 +7776,7 @@ export namespace Prisma {
     salaryFrom: number | null
     salaryTo: number | null
     listingDuration: number | null
-    status: $Enums.JobStatus | null
+    status: JobStatus | null
     companyId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8552,7 +7791,7 @@ export namespace Prisma {
     salaryFrom: number | null
     salaryTo: number | null
     listingDuration: number | null
-    status: $Enums.JobStatus | null
+    status: JobStatus | null
     companyId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8635,7 +7874,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type JobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Job to aggregate.
      */
@@ -8645,7 +7884,7 @@ export namespace Prisma {
      * 
      * Determine the order of Jobs to fetch.
      */
-    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -8707,10 +7946,10 @@ export namespace Prisma {
 
 
 
-  export type JobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: JobWhereInput
-    orderBy?: JobOrderByWithAggregationInput | JobOrderByWithAggregationInput[]
-    by: JobScalarFieldEnum[] | JobScalarFieldEnum
+    orderBy?: Enumerable<JobOrderByWithAggregationInput>
+    by: JobScalarFieldEnum[]
     having?: JobScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -8720,6 +7959,7 @@ export namespace Prisma {
     _min?: JobMinAggregateInputType
     _max?: JobMaxAggregateInputType
   }
+
 
   export type JobGroupByOutputType = {
     id: string
@@ -8731,7 +7971,7 @@ export namespace Prisma {
     salaryTo: number
     listingDuration: number
     benefits: string[]
-    status: $Enums.JobStatus
+    status: JobStatus
     companyId: string
     createdAt: Date
     updatedAt: Date
@@ -8744,7 +7984,7 @@ export namespace Prisma {
 
   type GetJobGroupByPayload<T extends JobGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<JobGroupByOutputType, T['by']> &
+      PickArray<JobGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof JobGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -8756,7 +7996,7 @@ export namespace Prisma {
     >
 
 
-  export type JobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type JobSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     jobTitle?: boolean
     jobDescription?: boolean
@@ -8770,44 +8010,10 @@ export namespace Prisma {
     companyId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    company?: boolean | CompanyArgs<ExtArgs>
     savedJobs?: boolean | Job$savedJobsArgs<ExtArgs>
     jobApplications?: boolean | Job$jobApplicationsArgs<ExtArgs>
-    _count?: boolean | JobCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["job"]>
-
-  export type JobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    jobTitle?: boolean
-    jobDescription?: boolean
-    employmentType?: boolean
-    location?: boolean
-    salaryFrom?: boolean
-    salaryTo?: boolean
-    listingDuration?: boolean
-    benefits?: boolean
-    status?: boolean
-    companyId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["job"]>
-
-  export type JobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    jobTitle?: boolean
-    jobDescription?: boolean
-    employmentType?: boolean
-    location?: boolean
-    salaryFrom?: boolean
-    salaryTo?: boolean
-    listingDuration?: boolean
-    benefits?: boolean
-    status?: boolean
-    companyId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    _count?: boolean | JobCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
 
   export type JobSelectScalar = {
@@ -8826,53 +8032,22 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobTitle" | "jobDescription" | "employmentType" | "location" | "salaryFrom" | "salaryTo" | "listingDuration" | "benefits" | "status" | "companyId" | "createdAt" | "updatedAt", ExtArgs["result"]["job"]>
-  export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  export type JobInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyArgs<ExtArgs>
     savedJobs?: boolean | Job$savedJobsArgs<ExtArgs>
     jobApplications?: boolean | Job$jobApplicationsArgs<ExtArgs>
-    _count?: boolean | JobCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type JobIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
-  }
-  export type JobIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    _count?: boolean | JobCountOutputTypeArgs<ExtArgs>
   }
 
-  export type $JobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Job"
-    objects: {
-      company: Prisma.$CompanyPayload<ExtArgs>
-      savedJobs: Prisma.$SavedJobPayload<ExtArgs>[]
-      jobApplications: Prisma.$JobApplicationPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      jobTitle: string
-      jobDescription: string
-      employmentType: string
-      location: string
-      salaryFrom: number
-      salaryTo: number
-      listingDuration: number
-      benefits: string[]
-      status: $Enums.JobStatus
-      companyId: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["job"]>
-    composites: {}
-  }
 
-  type JobGetPayload<S extends boolean | null | undefined | JobDefaultArgs> = $Result.GetResult<Prisma.$JobPayload, S>
+  type JobGetPayload<S extends boolean | null | undefined | JobArgs> = $Types.GetResult<JobPayload, S>
 
-  type JobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<JobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type JobCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<JobFindManyArgs, 'select' | 'include'> & {
       select?: JobCountAggregateInputType | true
     }
 
-  export interface JobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface JobDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Job'], meta: { name: 'Job' } }
     /**
      * Find zero or one Job that matches the filter.
@@ -8884,12 +8059,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends JobFindUniqueArgs>(args: SelectSubset<T, JobFindUniqueArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends JobFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, JobFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Job'> extends True ? Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one Job that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one Job that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {JobFindUniqueOrThrowArgs} args - Arguments to find a Job
      * @example
      * // Get one Job
@@ -8898,8 +8075,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends JobFindUniqueOrThrowArgs>(args: SelectSubset<T, JobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends JobFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first Job that matches the filter.
@@ -8913,12 +8092,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends JobFindFirstArgs>(args?: SelectSubset<T, JobFindFirstArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends JobFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, JobFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Job'> extends True ? Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first Job that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {JobFindFirstOrThrowArgs} args - Arguments to find a Job
@@ -8929,14 +8110,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends JobFindFirstOrThrowArgs>(args?: SelectSubset<T, JobFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends JobFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Jobs that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {JobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {JobFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Jobs
      * const jobs = await prisma.job.findMany()
@@ -8947,8 +8130,10 @@ export namespace Prisma {
      * // Only select the `id`
      * const jobWithIdOnly = await prisma.job.findMany({ select: { id: true } })
      * 
-     */
-    findMany<T extends JobFindManyArgs>(args?: SelectSubset<T, JobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends JobFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<JobPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a Job.
@@ -8961,46 +8146,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends JobCreateArgs>(args: SelectSubset<T, JobCreateArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends JobCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, JobCreateArgs<ExtArgs>>
+    ): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Jobs.
-     * @param {JobCreateManyArgs} args - Arguments to create many Jobs.
-     * @example
-     * // Create many Jobs
-     * const job = await prisma.job.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {JobCreateManyArgs} args - Arguments to create many Jobs.
+     *     @example
+     *     // Create many Jobs
+     *     const job = await prisma.job.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends JobCreateManyArgs>(args?: SelectSubset<T, JobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Jobs and returns the data saved in the database.
-     * @param {JobCreateManyAndReturnArgs} args - Arguments to create many Jobs.
-     * @example
-     * // Create many Jobs
-     * const job = await prisma.job.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Jobs and only return the `id`
-     * const jobWithIdOnly = await prisma.job.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends JobCreateManyAndReturnArgs>(args?: SelectSubset<T, JobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends JobCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Job.
@@ -9013,8 +8178,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends JobDeleteArgs>(args: SelectSubset<T, JobDeleteArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends JobDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, JobDeleteArgs<ExtArgs>>
+    ): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one Job.
@@ -9030,8 +8197,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends JobUpdateArgs>(args: SelectSubset<T, JobUpdateArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends JobUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, JobUpdateArgs<ExtArgs>>
+    ): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Jobs.
@@ -9044,8 +8213,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends JobDeleteManyArgs>(args?: SelectSubset<T, JobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends JobDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Jobs.
@@ -9063,38 +8234,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends JobUpdateManyArgs>(args: SelectSubset<T, JobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Jobs and returns the data updated in the database.
-     * @param {JobUpdateManyAndReturnArgs} args - Arguments to update many Jobs.
-     * @example
-     * // Update many Jobs
-     * const job = await prisma.job.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Jobs and only return the `id`
-     * const jobWithIdOnly = await prisma.job.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends JobUpdateManyAndReturnArgs>(args: SelectSubset<T, JobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends JobUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, JobUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Job.
@@ -9112,9 +8255,10 @@ export namespace Prisma {
      *     // ... the filter for the Job we want to update
      *   }
      * })
-     */
-    upsert<T extends JobUpsertArgs>(args: SelectSubset<T, JobUpsertArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends JobUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, JobUpsertArgs<ExtArgs>>
+    ): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Jobs.
@@ -9193,7 +8337,7 @@ export namespace Prisma {
         ? { orderBy: JobGroupByArgs['orderBy'] }
         : { orderBy?: JobGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -9241,10 +8385,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, JobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Job model
-   */
-  readonly fields: JobFieldRefs;
+
   }
 
   /**
@@ -9253,71 +8394,64 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__JobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    savedJobs<T extends Job$savedJobsArgs<ExtArgs> = {}>(args?: Subset<T, Job$savedJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    jobApplications<T extends Job$jobApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, Job$jobApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  export class Prisma__JobClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    company<T extends CompanyArgs<ExtArgs> = {}>(args?: Subset<T, CompanyArgs<ExtArgs>>): Prisma__CompanyClient<$Types.GetResult<CompanyPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    savedJobs<T extends Job$savedJobsArgs<ExtArgs> = {}>(args?: Subset<T, Job$savedJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    jobApplications<T extends Job$jobApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, Job$jobApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the Job model
-   */
-  interface JobFieldRefs {
-    readonly id: FieldRef<"Job", 'String'>
-    readonly jobTitle: FieldRef<"Job", 'String'>
-    readonly jobDescription: FieldRef<"Job", 'String'>
-    readonly employmentType: FieldRef<"Job", 'String'>
-    readonly location: FieldRef<"Job", 'String'>
-    readonly salaryFrom: FieldRef<"Job", 'Int'>
-    readonly salaryTo: FieldRef<"Job", 'Int'>
-    readonly listingDuration: FieldRef<"Job", 'Int'>
-    readonly benefits: FieldRef<"Job", 'String[]'>
-    readonly status: FieldRef<"Job", 'JobStatus'>
-    readonly companyId: FieldRef<"Job", 'String'>
-    readonly createdAt: FieldRef<"Job", 'DateTime'>
-    readonly updatedAt: FieldRef<"Job", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * Job findUnique
+   * Job base type for findUnique actions
    */
-  export type JobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
@@ -9325,95 +8459,108 @@ export namespace Prisma {
      */
     where: JobWhereUniqueInput
   }
+
+  /**
+   * Job findUnique
+   */
+  export interface JobFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends JobFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * Job findUniqueOrThrow
    */
-  export type JobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
      * Filter, which Job to fetch.
      */
     where: JobWhereUniqueInput
+  }
+
+
+  /**
+   * Job base type for findFirst actions
+   */
+  export type JobFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Job
+     */
+    select?: JobSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: JobInclude<ExtArgs> | null
+    /**
+     * Filter, which Job to fetch.
+     */
+    where?: JobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Jobs to fetch.
+     */
+    orderBy?: Enumerable<JobOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Jobs.
+     */
+    cursor?: JobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Jobs.
+     */
+    distinct?: Enumerable<JobScalarFieldEnum>
   }
 
   /**
    * Job findFirst
    */
-  export type JobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Job
-     */
-    select?: JobSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobInclude<ExtArgs> | null
-    /**
-     * Filter, which Job to fetch.
-     */
-    where?: JobWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Jobs to fetch.
-     */
-    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Jobs.
-     */
-    cursor?: JobWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Jobs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Jobs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Jobs.
-     */
-    distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+  export interface JobFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends JobFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * Job findFirstOrThrow
    */
-  export type JobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
@@ -9425,7 +8572,7 @@ export namespace Prisma {
      * 
      * Determine the order of Jobs to fetch.
      */
-    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -9449,23 +8596,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of Jobs.
      */
-    distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+    distinct?: Enumerable<JobScalarFieldEnum>
   }
+
 
   /**
    * Job findMany
    */
-  export type JobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
@@ -9477,7 +8621,7 @@ export namespace Prisma {
      * 
      * Determine the order of Jobs to fetch.
      */
-    orderBy?: JobOrderByWithRelationInput | JobOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -9496,23 +8640,20 @@ export namespace Prisma {
      * Skip the first `n` Jobs.
      */
     skip?: number
-    distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+    distinct?: Enumerable<JobScalarFieldEnum>
   }
+
 
   /**
    * Job create
    */
-  export type JobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
@@ -9521,54 +8662,29 @@ export namespace Prisma {
     data: XOR<JobCreateInput, JobUncheckedCreateInput>
   }
 
+
   /**
    * Job createMany
    */
-  export type JobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Jobs.
      */
-    data: JobCreateManyInput | JobCreateManyInput[]
+    data: Enumerable<JobCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * Job createManyAndReturn
-   */
-  export type JobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Job
-     */
-    select?: JobSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * The data used to create many Jobs.
-     */
-    data: JobCreateManyInput | JobCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobIncludeCreateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Job update
    */
-  export type JobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
@@ -9581,10 +8697,11 @@ export namespace Prisma {
     where: JobWhereUniqueInput
   }
 
+
   /**
    * Job updateMany
    */
-  export type JobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Jobs.
      */
@@ -9593,56 +8710,19 @@ export namespace Prisma {
      * Filter which Jobs to update
      */
     where?: JobWhereInput
-    /**
-     * Limit how many Jobs to update.
-     */
-    limit?: number
   }
 
-  /**
-   * Job updateManyAndReturn
-   */
-  export type JobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Job
-     */
-    select?: JobSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * The data used to update Jobs.
-     */
-    data: XOR<JobUpdateManyMutationInput, JobUncheckedUpdateManyInput>
-    /**
-     * Filter which Jobs to update
-     */
-    where?: JobWhereInput
-    /**
-     * Limit how many Jobs to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * Job upsert
    */
-  export type JobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
@@ -9659,20 +8739,17 @@ export namespace Prisma {
     update: XOR<JobUpdateInput, JobUncheckedUpdateInput>
   }
 
+
   /**
    * Job delete
    */
-  export type JobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
     /**
@@ -9681,90 +8758,80 @@ export namespace Prisma {
     where: JobWhereUniqueInput
   }
 
+
   /**
    * Job deleteMany
    */
-  export type JobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Jobs to delete
      */
     where?: JobWhereInput
-    /**
-     * Limit how many Jobs to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * Job.savedJobs
    */
-  export type Job$savedJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Job$savedJobsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     where?: SavedJobWhereInput
-    orderBy?: SavedJobOrderByWithRelationInput | SavedJobOrderByWithRelationInput[]
+    orderBy?: Enumerable<SavedJobOrderByWithRelationInput>
     cursor?: SavedJobWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SavedJobScalarFieldEnum | SavedJobScalarFieldEnum[]
+    distinct?: Enumerable<SavedJobScalarFieldEnum>
   }
+
 
   /**
    * Job.jobApplications
    */
-  export type Job$jobApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Job$jobApplicationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     where?: JobApplicationWhereInput
-    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobApplicationOrderByWithRelationInput>
     cursor?: JobApplicationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+    distinct?: Enumerable<JobApplicationScalarFieldEnum>
   }
+
 
   /**
    * Job without action
    */
-  export type JobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Job
      */
     select?: JobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Job
-     */
-    omit?: JobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobInclude<ExtArgs> | null
   }
 
 
+
   /**
    * Model SavedJob
    */
+
 
   export type AggregateSavedJob = {
     _count: SavedJobCountAggregateOutputType | null
@@ -9823,7 +8890,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type SavedJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which SavedJob to aggregate.
      */
@@ -9833,7 +8900,7 @@ export namespace Prisma {
      * 
      * Determine the order of SavedJobs to fetch.
      */
-    orderBy?: SavedJobOrderByWithRelationInput | SavedJobOrderByWithRelationInput[]
+    orderBy?: Enumerable<SavedJobOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -9883,10 +8950,10 @@ export namespace Prisma {
 
 
 
-  export type SavedJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: SavedJobWhereInput
-    orderBy?: SavedJobOrderByWithAggregationInput | SavedJobOrderByWithAggregationInput[]
-    by: SavedJobScalarFieldEnum[] | SavedJobScalarFieldEnum
+    orderBy?: Enumerable<SavedJobOrderByWithAggregationInput>
+    by: SavedJobScalarFieldEnum[]
     having?: SavedJobScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -9894,6 +8961,7 @@ export namespace Prisma {
     _min?: SavedJobMinAggregateInputType
     _max?: SavedJobMaxAggregateInputType
   }
+
 
   export type SavedJobGroupByOutputType = {
     id: string
@@ -9908,7 +8976,7 @@ export namespace Prisma {
 
   type GetSavedJobGroupByPayload<T extends SavedJobGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<SavedJobGroupByOutputType, T['by']> &
+      PickArray<SavedJobGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof SavedJobGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -9920,34 +8988,14 @@ export namespace Prisma {
     >
 
 
-  export type SavedJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type SavedJobSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     jobId?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["savedJob"]>
-
-  export type SavedJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    jobId?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["savedJob"]>
-
-  export type SavedJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    jobId?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    job?: boolean | JobArgs<ExtArgs>
+    user?: boolean | UserArgs<ExtArgs>
   }, ExtArgs["result"]["savedJob"]>
 
   export type SavedJobSelectScalar = {
@@ -9958,44 +9006,20 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SavedJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["savedJob"]>
-  export type SavedJobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type SavedJobIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type SavedJobIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+  export type SavedJobInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    job?: boolean | JobArgs<ExtArgs>
+    user?: boolean | UserArgs<ExtArgs>
   }
 
-  export type $SavedJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "SavedJob"
-    objects: {
-      job: Prisma.$JobPayload<ExtArgs>
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      jobId: string
-      userId: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["savedJob"]>
-    composites: {}
-  }
 
-  type SavedJobGetPayload<S extends boolean | null | undefined | SavedJobDefaultArgs> = $Result.GetResult<Prisma.$SavedJobPayload, S>
+  type SavedJobGetPayload<S extends boolean | null | undefined | SavedJobArgs> = $Types.GetResult<SavedJobPayload, S>
 
-  type SavedJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<SavedJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type SavedJobCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<SavedJobFindManyArgs, 'select' | 'include'> & {
       select?: SavedJobCountAggregateInputType | true
     }
 
-  export interface SavedJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface SavedJobDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SavedJob'], meta: { name: 'SavedJob' } }
     /**
      * Find zero or one SavedJob that matches the filter.
@@ -10007,12 +9031,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends SavedJobFindUniqueArgs>(args: SelectSubset<T, SavedJobFindUniqueArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends SavedJobFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, SavedJobFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'SavedJob'> extends True ? Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one SavedJob that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one SavedJob that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {SavedJobFindUniqueOrThrowArgs} args - Arguments to find a SavedJob
      * @example
      * // Get one SavedJob
@@ -10021,8 +9047,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends SavedJobFindUniqueOrThrowArgs>(args: SelectSubset<T, SavedJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends SavedJobFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, SavedJobFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first SavedJob that matches the filter.
@@ -10036,12 +9064,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends SavedJobFindFirstArgs>(args?: SelectSubset<T, SavedJobFindFirstArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends SavedJobFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, SavedJobFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'SavedJob'> extends True ? Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first SavedJob that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {SavedJobFindFirstOrThrowArgs} args - Arguments to find a SavedJob
@@ -10052,14 +9082,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends SavedJobFindFirstOrThrowArgs>(args?: SelectSubset<T, SavedJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends SavedJobFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, SavedJobFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more SavedJobs that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {SavedJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {SavedJobFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all SavedJobs
      * const savedJobs = await prisma.savedJob.findMany()
@@ -10070,8 +9102,10 @@ export namespace Prisma {
      * // Only select the `id`
      * const savedJobWithIdOnly = await prisma.savedJob.findMany({ select: { id: true } })
      * 
-     */
-    findMany<T extends SavedJobFindManyArgs>(args?: SelectSubset<T, SavedJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends SavedJobFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SavedJobFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a SavedJob.
@@ -10084,46 +9118,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends SavedJobCreateArgs>(args: SelectSubset<T, SavedJobCreateArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends SavedJobCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, SavedJobCreateArgs<ExtArgs>>
+    ): Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many SavedJobs.
-     * @param {SavedJobCreateManyArgs} args - Arguments to create many SavedJobs.
-     * @example
-     * // Create many SavedJobs
-     * const savedJob = await prisma.savedJob.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {SavedJobCreateManyArgs} args - Arguments to create many SavedJobs.
+     *     @example
+     *     // Create many SavedJobs
+     *     const savedJob = await prisma.savedJob.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends SavedJobCreateManyArgs>(args?: SelectSubset<T, SavedJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many SavedJobs and returns the data saved in the database.
-     * @param {SavedJobCreateManyAndReturnArgs} args - Arguments to create many SavedJobs.
-     * @example
-     * // Create many SavedJobs
-     * const savedJob = await prisma.savedJob.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many SavedJobs and only return the `id`
-     * const savedJobWithIdOnly = await prisma.savedJob.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends SavedJobCreateManyAndReturnArgs>(args?: SelectSubset<T, SavedJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends SavedJobCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SavedJobCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a SavedJob.
@@ -10136,8 +9150,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends SavedJobDeleteArgs>(args: SelectSubset<T, SavedJobDeleteArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends SavedJobDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, SavedJobDeleteArgs<ExtArgs>>
+    ): Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one SavedJob.
@@ -10153,8 +9169,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends SavedJobUpdateArgs>(args: SelectSubset<T, SavedJobUpdateArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends SavedJobUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, SavedJobUpdateArgs<ExtArgs>>
+    ): Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more SavedJobs.
@@ -10167,8 +9185,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends SavedJobDeleteManyArgs>(args?: SelectSubset<T, SavedJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends SavedJobDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SavedJobDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more SavedJobs.
@@ -10186,38 +9206,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends SavedJobUpdateManyArgs>(args: SelectSubset<T, SavedJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more SavedJobs and returns the data updated in the database.
-     * @param {SavedJobUpdateManyAndReturnArgs} args - Arguments to update many SavedJobs.
-     * @example
-     * // Update many SavedJobs
-     * const savedJob = await prisma.savedJob.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more SavedJobs and only return the `id`
-     * const savedJobWithIdOnly = await prisma.savedJob.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends SavedJobUpdateManyAndReturnArgs>(args: SelectSubset<T, SavedJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends SavedJobUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, SavedJobUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one SavedJob.
@@ -10235,9 +9227,10 @@ export namespace Prisma {
      *     // ... the filter for the SavedJob we want to update
      *   }
      * })
-     */
-    upsert<T extends SavedJobUpsertArgs>(args: SelectSubset<T, SavedJobUpsertArgs<ExtArgs>>): Prisma__SavedJobClient<$Result.GetResult<Prisma.$SavedJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends SavedJobUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, SavedJobUpsertArgs<ExtArgs>>
+    ): Prisma__SavedJobClient<$Types.GetResult<SavedJobPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of SavedJobs.
@@ -10316,7 +9309,7 @@ export namespace Prisma {
         ? { orderBy: SavedJobGroupByArgs['orderBy'] }
         : { orderBy?: SavedJobGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -10364,10 +9357,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, SavedJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSavedJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the SavedJob model
-   */
-  readonly fields: SavedJobFieldRefs;
+
   }
 
   /**
@@ -10376,62 +9366,62 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__SavedJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    job<T extends JobDefaultArgs<ExtArgs> = {}>(args?: Subset<T, JobDefaultArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  export class Prisma__SavedJobClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    job<T extends JobArgs<ExtArgs> = {}>(args?: Subset<T, JobArgs<ExtArgs>>): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the SavedJob model
-   */
-  interface SavedJobFieldRefs {
-    readonly id: FieldRef<"SavedJob", 'String'>
-    readonly jobId: FieldRef<"SavedJob", 'String'>
-    readonly userId: FieldRef<"SavedJob", 'String'>
-    readonly createdAt: FieldRef<"SavedJob", 'DateTime'>
-    readonly updatedAt: FieldRef<"SavedJob", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * SavedJob findUnique
+   * SavedJob base type for findUnique actions
    */
-  export type SavedJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
@@ -10439,95 +9429,108 @@ export namespace Prisma {
      */
     where: SavedJobWhereUniqueInput
   }
+
+  /**
+   * SavedJob findUnique
+   */
+  export interface SavedJobFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends SavedJobFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * SavedJob findUniqueOrThrow
    */
-  export type SavedJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
      * Filter, which SavedJob to fetch.
      */
     where: SavedJobWhereUniqueInput
+  }
+
+
+  /**
+   * SavedJob base type for findFirst actions
+   */
+  export type SavedJobFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedJob
+     */
+    select?: SavedJobSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SavedJobInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedJob to fetch.
+     */
+    where?: SavedJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedJobs to fetch.
+     */
+    orderBy?: Enumerable<SavedJobOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SavedJobs.
+     */
+    cursor?: SavedJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedJobs.
+     */
+    distinct?: Enumerable<SavedJobScalarFieldEnum>
   }
 
   /**
    * SavedJob findFirst
    */
-  export type SavedJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SavedJob
-     */
-    select?: SavedJobSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SavedJobInclude<ExtArgs> | null
-    /**
-     * Filter, which SavedJob to fetch.
-     */
-    where?: SavedJobWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of SavedJobs to fetch.
-     */
-    orderBy?: SavedJobOrderByWithRelationInput | SavedJobOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for SavedJobs.
-     */
-    cursor?: SavedJobWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` SavedJobs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` SavedJobs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of SavedJobs.
-     */
-    distinct?: SavedJobScalarFieldEnum | SavedJobScalarFieldEnum[]
+  export interface SavedJobFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends SavedJobFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * SavedJob findFirstOrThrow
    */
-  export type SavedJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
@@ -10539,7 +9542,7 @@ export namespace Prisma {
      * 
      * Determine the order of SavedJobs to fetch.
      */
-    orderBy?: SavedJobOrderByWithRelationInput | SavedJobOrderByWithRelationInput[]
+    orderBy?: Enumerable<SavedJobOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -10563,23 +9566,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of SavedJobs.
      */
-    distinct?: SavedJobScalarFieldEnum | SavedJobScalarFieldEnum[]
+    distinct?: Enumerable<SavedJobScalarFieldEnum>
   }
+
 
   /**
    * SavedJob findMany
    */
-  export type SavedJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
@@ -10591,7 +9591,7 @@ export namespace Prisma {
      * 
      * Determine the order of SavedJobs to fetch.
      */
-    orderBy?: SavedJobOrderByWithRelationInput | SavedJobOrderByWithRelationInput[]
+    orderBy?: Enumerable<SavedJobOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -10610,23 +9610,20 @@ export namespace Prisma {
      * Skip the first `n` SavedJobs.
      */
     skip?: number
-    distinct?: SavedJobScalarFieldEnum | SavedJobScalarFieldEnum[]
+    distinct?: Enumerable<SavedJobScalarFieldEnum>
   }
+
 
   /**
    * SavedJob create
    */
-  export type SavedJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
@@ -10635,54 +9632,29 @@ export namespace Prisma {
     data: XOR<SavedJobCreateInput, SavedJobUncheckedCreateInput>
   }
 
+
   /**
    * SavedJob createMany
    */
-  export type SavedJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many SavedJobs.
      */
-    data: SavedJobCreateManyInput | SavedJobCreateManyInput[]
+    data: Enumerable<SavedJobCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * SavedJob createManyAndReturn
-   */
-  export type SavedJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SavedJob
-     */
-    select?: SavedJobSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * The data used to create many SavedJobs.
-     */
-    data: SavedJobCreateManyInput | SavedJobCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SavedJobIncludeCreateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * SavedJob update
    */
-  export type SavedJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
@@ -10695,10 +9667,11 @@ export namespace Prisma {
     where: SavedJobWhereUniqueInput
   }
 
+
   /**
    * SavedJob updateMany
    */
-  export type SavedJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update SavedJobs.
      */
@@ -10707,56 +9680,19 @@ export namespace Prisma {
      * Filter which SavedJobs to update
      */
     where?: SavedJobWhereInput
-    /**
-     * Limit how many SavedJobs to update.
-     */
-    limit?: number
   }
 
-  /**
-   * SavedJob updateManyAndReturn
-   */
-  export type SavedJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SavedJob
-     */
-    select?: SavedJobSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * The data used to update SavedJobs.
-     */
-    data: XOR<SavedJobUpdateManyMutationInput, SavedJobUncheckedUpdateManyInput>
-    /**
-     * Filter which SavedJobs to update
-     */
-    where?: SavedJobWhereInput
-    /**
-     * Limit how many SavedJobs to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SavedJobIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * SavedJob upsert
    */
-  export type SavedJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
@@ -10773,20 +9709,17 @@ export namespace Prisma {
     update: XOR<SavedJobUpdateInput, SavedJobUncheckedUpdateInput>
   }
 
+
   /**
    * SavedJob delete
    */
-  export type SavedJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
     /**
@@ -10795,42 +9728,38 @@ export namespace Prisma {
     where: SavedJobWhereUniqueInput
   }
 
+
   /**
    * SavedJob deleteMany
    */
-  export type SavedJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which SavedJobs to delete
      */
     where?: SavedJobWhereInput
-    /**
-     * Limit how many SavedJobs to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * SavedJob without action
    */
-  export type SavedJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SavedJobArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SavedJob
      */
     select?: SavedJobSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the SavedJob
-     */
-    omit?: SavedJobOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: SavedJobInclude<ExtArgs> | null
   }
 
 
+
   /**
    * Model JobApplication
    */
+
 
   export type AggregateJobApplication = {
     _count: JobApplicationCountAggregateOutputType | null
@@ -10913,7 +9842,7 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type JobApplicationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which JobApplication to aggregate.
      */
@@ -10923,7 +9852,7 @@ export namespace Prisma {
      * 
      * Determine the order of JobApplications to fetch.
      */
-    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobApplicationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -10973,10 +9902,10 @@ export namespace Prisma {
 
 
 
-  export type JobApplicationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: JobApplicationWhereInput
-    orderBy?: JobApplicationOrderByWithAggregationInput | JobApplicationOrderByWithAggregationInput[]
-    by: JobApplicationScalarFieldEnum[] | JobApplicationScalarFieldEnum
+    orderBy?: Enumerable<JobApplicationOrderByWithAggregationInput>
+    by: JobApplicationScalarFieldEnum[]
     having?: JobApplicationScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -10984,6 +9913,7 @@ export namespace Prisma {
     _min?: JobApplicationMinAggregateInputType
     _max?: JobApplicationMaxAggregateInputType
   }
+
 
   export type JobApplicationGroupByOutputType = {
     id: string
@@ -11002,7 +9932,7 @@ export namespace Prisma {
 
   type GetJobApplicationGroupByPayload<T extends JobApplicationGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<JobApplicationGroupByOutputType, T['by']> &
+      PickArray<JobApplicationGroupByOutputType, T['by']> &
         {
           [P in ((keyof T) & (keyof JobApplicationGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
@@ -11014,7 +9944,7 @@ export namespace Prisma {
     >
 
 
-  export type JobApplicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type JobApplicationSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     jobId?: boolean
     jobSeekerId?: boolean
@@ -11024,36 +9954,8 @@ export namespace Prisma {
     prevCompany?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    jobSeeker?: boolean | JobSeekerDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["jobApplication"]>
-
-  export type JobApplicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    jobId?: boolean
-    jobSeekerId?: boolean
-    resume?: boolean
-    coverLetter?: boolean
-    prevPosition?: boolean
-    prevCompany?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    jobSeeker?: boolean | JobSeekerDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["jobApplication"]>
-
-  export type JobApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    jobId?: boolean
-    jobSeekerId?: boolean
-    resume?: boolean
-    coverLetter?: boolean
-    prevPosition?: boolean
-    prevCompany?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    jobSeeker?: boolean | JobSeekerDefaultArgs<ExtArgs>
+    job?: boolean | JobArgs<ExtArgs>
+    jobSeeker?: boolean | JobSeekerArgs<ExtArgs>
   }, ExtArgs["result"]["jobApplication"]>
 
   export type JobApplicationSelectScalar = {
@@ -11068,48 +9970,20 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type JobApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobId" | "jobSeekerId" | "resume" | "coverLetter" | "prevPosition" | "prevCompany" | "createdAt" | "updatedAt", ExtArgs["result"]["jobApplication"]>
-  export type JobApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    jobSeeker?: boolean | JobSeekerDefaultArgs<ExtArgs>
-  }
-  export type JobApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    jobSeeker?: boolean | JobSeekerDefaultArgs<ExtArgs>
-  }
-  export type JobApplicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    job?: boolean | JobDefaultArgs<ExtArgs>
-    jobSeeker?: boolean | JobSeekerDefaultArgs<ExtArgs>
+  export type JobApplicationInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    job?: boolean | JobArgs<ExtArgs>
+    jobSeeker?: boolean | JobSeekerArgs<ExtArgs>
   }
 
-  export type $JobApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "JobApplication"
-    objects: {
-      job: Prisma.$JobPayload<ExtArgs>
-      jobSeeker: Prisma.$JobSeekerPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      jobId: string
-      jobSeekerId: string
-      resume: string
-      coverLetter: string | null
-      prevPosition: string | null
-      prevCompany: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["jobApplication"]>
-    composites: {}
-  }
 
-  type JobApplicationGetPayload<S extends boolean | null | undefined | JobApplicationDefaultArgs> = $Result.GetResult<Prisma.$JobApplicationPayload, S>
+  type JobApplicationGetPayload<S extends boolean | null | undefined | JobApplicationArgs> = $Types.GetResult<JobApplicationPayload, S>
 
-  type JobApplicationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<JobApplicationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+  type JobApplicationCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<JobApplicationFindManyArgs, 'select' | 'include'> & {
       select?: JobApplicationCountAggregateInputType | true
     }
 
-  export interface JobApplicationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  export interface JobApplicationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
     [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['JobApplication'], meta: { name: 'JobApplication' } }
     /**
      * Find zero or one JobApplication that matches the filter.
@@ -11121,12 +9995,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUnique<T extends JobApplicationFindUniqueArgs>(args: SelectSubset<T, JobApplicationFindUniqueArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findUnique<T extends JobApplicationFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, JobApplicationFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'JobApplication'> extends True ? Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one JobApplication that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
+     * Find one JobApplication that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
      * @param {JobApplicationFindUniqueOrThrowArgs} args - Arguments to find a JobApplication
      * @example
      * // Get one JobApplication
@@ -11135,8 +10011,10 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findUniqueOrThrow<T extends JobApplicationFindUniqueOrThrowArgs>(args: SelectSubset<T, JobApplicationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findUniqueOrThrow<T extends JobApplicationFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobApplicationFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first JobApplication that matches the filter.
@@ -11150,12 +10028,14 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirst<T extends JobApplicationFindFirstArgs>(args?: SelectSubset<T, JobApplicationFindFirstArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirst<T extends JobApplicationFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, JobApplicationFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'JobApplication'> extends True ? Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first JobApplication that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {JobApplicationFindFirstOrThrowArgs} args - Arguments to find a JobApplication
@@ -11166,14 +10046,16 @@ export namespace Prisma {
      *     // ... provide filter here
      *   }
      * })
-     */
-    findFirstOrThrow<T extends JobApplicationFindFirstOrThrowArgs>(args?: SelectSubset<T, JobApplicationFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    findFirstOrThrow<T extends JobApplicationFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobApplicationFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more JobApplications that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {JobApplicationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {JobApplicationFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all JobApplications
      * const jobApplications = await prisma.jobApplication.findMany()
@@ -11184,8 +10066,10 @@ export namespace Prisma {
      * // Only select the `id`
      * const jobApplicationWithIdOnly = await prisma.jobApplication.findMany({ select: { id: true } })
      * 
-     */
-    findMany<T extends JobApplicationFindManyArgs>(args?: SelectSubset<T, JobApplicationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    **/
+    findMany<T extends JobApplicationFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobApplicationFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a JobApplication.
@@ -11198,46 +10082,26 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    create<T extends JobApplicationCreateArgs>(args: SelectSubset<T, JobApplicationCreateArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    create<T extends JobApplicationCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, JobApplicationCreateArgs<ExtArgs>>
+    ): Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many JobApplications.
-     * @param {JobApplicationCreateManyArgs} args - Arguments to create many JobApplications.
-     * @example
-     * // Create many JobApplications
-     * const jobApplication = await prisma.jobApplication.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
+     *     @param {JobApplicationCreateManyArgs} args - Arguments to create many JobApplications.
+     *     @example
+     *     // Create many JobApplications
+     *     const jobApplication = await prisma.jobApplication.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
      *     
-     */
-    createMany<T extends JobApplicationCreateManyArgs>(args?: SelectSubset<T, JobApplicationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many JobApplications and returns the data saved in the database.
-     * @param {JobApplicationCreateManyAndReturnArgs} args - Arguments to create many JobApplications.
-     * @example
-     * // Create many JobApplications
-     * const jobApplication = await prisma.jobApplication.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many JobApplications and only return the `id`
-     * const jobApplicationWithIdOnly = await prisma.jobApplication.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends JobApplicationCreateManyAndReturnArgs>(args?: SelectSubset<T, JobApplicationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    **/
+    createMany<T extends JobApplicationCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobApplicationCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a JobApplication.
@@ -11250,8 +10114,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    delete<T extends JobApplicationDeleteArgs>(args: SelectSubset<T, JobApplicationDeleteArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    delete<T extends JobApplicationDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, JobApplicationDeleteArgs<ExtArgs>>
+    ): Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one JobApplication.
@@ -11267,8 +10133,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    update<T extends JobApplicationUpdateArgs>(args: SelectSubset<T, JobApplicationUpdateArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    **/
+    update<T extends JobApplicationUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, JobApplicationUpdateArgs<ExtArgs>>
+    ): Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more JobApplications.
@@ -11281,8 +10149,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    deleteMany<T extends JobApplicationDeleteManyArgs>(args?: SelectSubset<T, JobApplicationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    **/
+    deleteMany<T extends JobApplicationDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, JobApplicationDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more JobApplications.
@@ -11300,38 +10170,10 @@ export namespace Prisma {
      *   }
      * })
      * 
-     */
-    updateMany<T extends JobApplicationUpdateManyArgs>(args: SelectSubset<T, JobApplicationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more JobApplications and returns the data updated in the database.
-     * @param {JobApplicationUpdateManyAndReturnArgs} args - Arguments to update many JobApplications.
-     * @example
-     * // Update many JobApplications
-     * const jobApplication = await prisma.jobApplication.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more JobApplications and only return the `id`
-     * const jobApplicationWithIdOnly = await prisma.jobApplication.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends JobApplicationUpdateManyAndReturnArgs>(args: SelectSubset<T, JobApplicationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    **/
+    updateMany<T extends JobApplicationUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, JobApplicationUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one JobApplication.
@@ -11349,9 +10191,10 @@ export namespace Prisma {
      *     // ... the filter for the JobApplication we want to update
      *   }
      * })
-     */
-    upsert<T extends JobApplicationUpsertArgs>(args: SelectSubset<T, JobApplicationUpsertArgs<ExtArgs>>): Prisma__JobApplicationClient<$Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
+    **/
+    upsert<T extends JobApplicationUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, JobApplicationUpsertArgs<ExtArgs>>
+    ): Prisma__JobApplicationClient<$Types.GetResult<JobApplicationPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of JobApplications.
@@ -11430,7 +10273,7 @@ export namespace Prisma {
         ? { orderBy: JobApplicationGroupByArgs['orderBy'] }
         : { orderBy?: JobApplicationGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
       HavingFields extends GetHavingFields<T['having']>,
       HavingValid extends Has<ByFields, HavingFields>,
@@ -11478,10 +10321,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, JobApplicationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobApplicationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the JobApplication model
-   */
-  readonly fields: JobApplicationFieldRefs;
+
   }
 
   /**
@@ -11490,66 +10330,62 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__JobApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    job<T extends JobDefaultArgs<ExtArgs> = {}>(args?: Subset<T, JobDefaultArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    jobSeeker<T extends JobSeekerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, JobSeekerDefaultArgs<ExtArgs>>): Prisma__JobSeekerClient<$Result.GetResult<Prisma.$JobSeekerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  export class Prisma__JobApplicationClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    job<T extends JobArgs<ExtArgs> = {}>(args?: Subset<T, JobArgs<ExtArgs>>): Prisma__JobClient<$Types.GetResult<JobPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    jobSeeker<T extends JobSeekerArgs<ExtArgs> = {}>(args?: Subset<T, JobSeekerArgs<ExtArgs>>): Prisma__JobSeekerClient<$Types.GetResult<JobSeekerPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of which ever callback is executed.
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
     /**
      * Attaches a callback for only the rejection of the Promise.
      * @param onrejected The callback to execute when the Promise is rejected.
      * @returns A Promise for the completion of the callback.
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
     /**
      * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
      * resolved value cannot be modified from the callback.
      * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
      * @returns A Promise for the completion of the callback.
      */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
 
-
-
-  /**
-   * Fields of the JobApplication model
-   */
-  interface JobApplicationFieldRefs {
-    readonly id: FieldRef<"JobApplication", 'String'>
-    readonly jobId: FieldRef<"JobApplication", 'String'>
-    readonly jobSeekerId: FieldRef<"JobApplication", 'String'>
-    readonly resume: FieldRef<"JobApplication", 'String'>
-    readonly coverLetter: FieldRef<"JobApplication", 'String'>
-    readonly prevPosition: FieldRef<"JobApplication", 'String'>
-    readonly prevCompany: FieldRef<"JobApplication", 'String'>
-    readonly createdAt: FieldRef<"JobApplication", 'DateTime'>
-    readonly updatedAt: FieldRef<"JobApplication", 'DateTime'>
-  }
-    
 
   // Custom InputTypes
+
   /**
-   * JobApplication findUnique
+   * JobApplication base type for findUnique actions
    */
-  export type JobApplicationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
@@ -11557,95 +10393,108 @@ export namespace Prisma {
      */
     where: JobApplicationWhereUniqueInput
   }
+
+  /**
+   * JobApplication findUnique
+   */
+  export interface JobApplicationFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends JobApplicationFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
 
   /**
    * JobApplication findUniqueOrThrow
    */
-  export type JobApplicationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
      * Filter, which JobApplication to fetch.
      */
     where: JobApplicationWhereUniqueInput
+  }
+
+
+  /**
+   * JobApplication base type for findFirst actions
+   */
+  export type JobApplicationFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobApplication
+     */
+    select?: JobApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: JobApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which JobApplication to fetch.
+     */
+    where?: JobApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobApplications to fetch.
+     */
+    orderBy?: Enumerable<JobApplicationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobApplications.
+     */
+    cursor?: JobApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobApplications.
+     */
+    distinct?: Enumerable<JobApplicationScalarFieldEnum>
   }
 
   /**
    * JobApplication findFirst
    */
-  export type JobApplicationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the JobApplication
-     */
-    select?: JobApplicationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobApplicationInclude<ExtArgs> | null
-    /**
-     * Filter, which JobApplication to fetch.
-     */
-    where?: JobApplicationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of JobApplications to fetch.
-     */
-    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for JobApplications.
-     */
-    cursor?: JobApplicationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` JobApplications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` JobApplications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of JobApplications.
-     */
-    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+  export interface JobApplicationFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends JobApplicationFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
   }
+      
 
   /**
    * JobApplication findFirstOrThrow
    */
-  export type JobApplicationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
@@ -11657,7 +10506,7 @@ export namespace Prisma {
      * 
      * Determine the order of JobApplications to fetch.
      */
-    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobApplicationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -11681,23 +10530,20 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of JobApplications.
      */
-    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+    distinct?: Enumerable<JobApplicationScalarFieldEnum>
   }
+
 
   /**
    * JobApplication findMany
    */
-  export type JobApplicationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
@@ -11709,7 +10555,7 @@ export namespace Prisma {
      * 
      * Determine the order of JobApplications to fetch.
      */
-    orderBy?: JobApplicationOrderByWithRelationInput | JobApplicationOrderByWithRelationInput[]
+    orderBy?: Enumerable<JobApplicationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
@@ -11728,23 +10574,20 @@ export namespace Prisma {
      * Skip the first `n` JobApplications.
      */
     skip?: number
-    distinct?: JobApplicationScalarFieldEnum | JobApplicationScalarFieldEnum[]
+    distinct?: Enumerable<JobApplicationScalarFieldEnum>
   }
+
 
   /**
    * JobApplication create
    */
-  export type JobApplicationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
@@ -11753,54 +10596,29 @@ export namespace Prisma {
     data: XOR<JobApplicationCreateInput, JobApplicationUncheckedCreateInput>
   }
 
+
   /**
    * JobApplication createMany
    */
-  export type JobApplicationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many JobApplications.
      */
-    data: JobApplicationCreateManyInput | JobApplicationCreateManyInput[]
+    data: Enumerable<JobApplicationCreateManyInput>
     skipDuplicates?: boolean
   }
 
-  /**
-   * JobApplication createManyAndReturn
-   */
-  export type JobApplicationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the JobApplication
-     */
-    select?: JobApplicationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * The data used to create many JobApplications.
-     */
-    data: JobApplicationCreateManyInput | JobApplicationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobApplicationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * JobApplication update
    */
-  export type JobApplicationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
@@ -11813,10 +10631,11 @@ export namespace Prisma {
     where: JobApplicationWhereUniqueInput
   }
 
+
   /**
    * JobApplication updateMany
    */
-  export type JobApplicationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update JobApplications.
      */
@@ -11825,56 +10644,19 @@ export namespace Prisma {
      * Filter which JobApplications to update
      */
     where?: JobApplicationWhereInput
-    /**
-     * Limit how many JobApplications to update.
-     */
-    limit?: number
   }
 
-  /**
-   * JobApplication updateManyAndReturn
-   */
-  export type JobApplicationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the JobApplication
-     */
-    select?: JobApplicationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * The data used to update JobApplications.
-     */
-    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyInput>
-    /**
-     * Filter which JobApplications to update
-     */
-    where?: JobApplicationWhereInput
-    /**
-     * Limit how many JobApplications to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: JobApplicationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
 
   /**
    * JobApplication upsert
    */
-  export type JobApplicationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
@@ -11891,20 +10673,17 @@ export namespace Prisma {
     update: XOR<JobApplicationUpdateInput, JobApplicationUncheckedUpdateInput>
   }
 
+
   /**
    * JobApplication delete
    */
-  export type JobApplicationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
     /**
@@ -11913,37 +10692,32 @@ export namespace Prisma {
     where: JobApplicationWhereUniqueInput
   }
 
+
   /**
    * JobApplication deleteMany
    */
-  export type JobApplicationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which JobApplications to delete
      */
     where?: JobApplicationWhereInput
-    /**
-     * Limit how many JobApplications to delete.
-     */
-    limit?: number
   }
+
 
   /**
    * JobApplication without action
    */
-  export type JobApplicationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type JobApplicationArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the JobApplication
      */
     select?: JobApplicationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the JobApplication
-     */
-    omit?: JobApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
+     * Choose, which related nodes to fetch as well.
      */
     include?: JobApplicationInclude<ExtArgs> | null
   }
+
 
 
   /**
@@ -12114,122 +10888,28 @@ export namespace Prisma {
 
 
   /**
-   * Field references
-   */
-
-
-  /**
-   * Reference to a field of type 'String'
-   */
-  export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
-
-
-  /**
-   * Reference to a field of type 'String[]'
-   */
-  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime'
-   */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime[]'
-   */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'UserType'
-   */
-  export type EnumUserTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserType'>
-    
-
-
-  /**
-   * Reference to a field of type 'UserType[]'
-   */
-  export type ListEnumUserTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'JobStatus'
-   */
-  export type EnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'JobStatus[]'
-   */
-  export type ListEnumJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-  /**
    * Deep Input Types
    */
 
 
   export type UserWhereInput = {
-    AND?: UserWhereInput | UserWhereInput[]
-    OR?: UserWhereInput[]
-    NOT?: UserWhereInput | UserWhereInput[]
-    id?: StringFilter<"User"> | string
-    name?: StringNullableFilter<"User"> | string | null
-    email?: StringFilter<"User"> | string
-    emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
-    image?: StringNullableFilter<"User"> | string | null
-    stripeCustomerId?: StringNullableFilter<"User"> | string | null
-    userType?: EnumUserTypeNullableFilter<"User"> | $Enums.UserType | null
-    onboardingComplete?: BoolFilter<"User"> | boolean
-    createdAt?: DateTimeFilter<"User"> | Date | string
-    updatedAt?: DateTimeFilter<"User"> | Date | string
+    AND?: Enumerable<UserWhereInput>
+    OR?: Enumerable<UserWhereInput>
+    NOT?: Enumerable<UserWhereInput>
+    id?: StringFilter | string
+    name?: StringNullableFilter | string | null
+    email?: StringFilter | string
+    emailVerified?: DateTimeNullableFilter | Date | string | null
+    image?: StringNullableFilter | string | null
+    stripeCustomerId?: StringNullableFilter | string | null
+    userType?: EnumUserTypeNullableFilter | UserType | null
+    onboardingComplete?: BoolFilter | boolean
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
-    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
-    JobSeeker?: XOR<JobSeekerNullableScalarRelationFilter, JobSeekerWhereInput> | null
+    company?: XOR<CompanyRelationFilter, CompanyWhereInput> | null
+    JobSeeker?: XOR<JobSeekerRelationFilter, JobSeekerWhereInput> | null
     SavedJob?: SavedJobListRelationFilter
   }
 
@@ -12251,26 +10931,11 @@ export namespace Prisma {
     SavedJob?: SavedJobOrderByRelationAggregateInput
   }
 
-  export type UserWhereUniqueInput = Prisma.AtLeast<{
+  export type UserWhereUniqueInput = {
     id?: string
     email?: string
     stripeCustomerId?: string
-    AND?: UserWhereInput | UserWhereInput[]
-    OR?: UserWhereInput[]
-    NOT?: UserWhereInput | UserWhereInput[]
-    name?: StringNullableFilter<"User"> | string | null
-    emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
-    image?: StringNullableFilter<"User"> | string | null
-    userType?: EnumUserTypeNullableFilter<"User"> | $Enums.UserType | null
-    onboardingComplete?: BoolFilter<"User"> | boolean
-    createdAt?: DateTimeFilter<"User"> | Date | string
-    updatedAt?: DateTimeFilter<"User"> | Date | string
-    accounts?: AccountListRelationFilter
-    sessions?: SessionListRelationFilter
-    company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
-    JobSeeker?: XOR<JobSeekerNullableScalarRelationFilter, JobSeekerWhereInput> | null
-    SavedJob?: SavedJobListRelationFilter
-  }, "id" | "email" | "stripeCustomerId">
+  }
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12289,36 +10954,36 @@ export namespace Prisma {
   }
 
   export type UserScalarWhereWithAggregatesInput = {
-    AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    OR?: UserScalarWhereWithAggregatesInput[]
-    NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"User"> | string
-    name?: StringNullableWithAggregatesFilter<"User"> | string | null
-    email?: StringWithAggregatesFilter<"User"> | string
-    emailVerified?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-    image?: StringNullableWithAggregatesFilter<"User"> | string | null
-    stripeCustomerId?: StringNullableWithAggregatesFilter<"User"> | string | null
-    userType?: EnumUserTypeNullableWithAggregatesFilter<"User"> | $Enums.UserType | null
-    onboardingComplete?: BoolWithAggregatesFilter<"User"> | boolean
-    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    AND?: Enumerable<UserScalarWhereWithAggregatesInput>
+    OR?: Enumerable<UserScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    name?: StringNullableWithAggregatesFilter | string | null
+    email?: StringWithAggregatesFilter | string
+    emailVerified?: DateTimeNullableWithAggregatesFilter | Date | string | null
+    image?: StringNullableWithAggregatesFilter | string | null
+    stripeCustomerId?: StringNullableWithAggregatesFilter | string | null
+    userType?: EnumUserTypeNullableWithAggregatesFilter | UserType | null
+    onboardingComplete?: BoolWithAggregatesFilter | boolean
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type CompanyWhereInput = {
-    AND?: CompanyWhereInput | CompanyWhereInput[]
-    OR?: CompanyWhereInput[]
-    NOT?: CompanyWhereInput | CompanyWhereInput[]
-    id?: StringFilter<"Company"> | string
-    name?: StringFilter<"Company"> | string
-    location?: StringFilter<"Company"> | string
-    about?: StringFilter<"Company"> | string
-    website?: StringFilter<"Company"> | string
-    logo?: StringFilter<"Company"> | string
-    xAccount?: StringNullableFilter<"Company"> | string | null
-    userId?: StringFilter<"Company"> | string
-    createdAt?: DateTimeFilter<"Company"> | Date | string
-    updatedAt?: DateTimeFilter<"Company"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    AND?: Enumerable<CompanyWhereInput>
+    OR?: Enumerable<CompanyWhereInput>
+    NOT?: Enumerable<CompanyWhereInput>
+    id?: StringFilter | string
+    name?: StringFilter | string
+    location?: StringFilter | string
+    about?: StringFilter | string
+    website?: StringFilter | string
+    logo?: StringFilter | string
+    xAccount?: StringNullableFilter | string | null
+    userId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
     jobs?: JobListRelationFilter
   }
 
@@ -12337,23 +11002,10 @@ export namespace Prisma {
     jobs?: JobOrderByRelationAggregateInput
   }
 
-  export type CompanyWhereUniqueInput = Prisma.AtLeast<{
+  export type CompanyWhereUniqueInput = {
     id?: string
     userId?: string
-    AND?: CompanyWhereInput | CompanyWhereInput[]
-    OR?: CompanyWhereInput[]
-    NOT?: CompanyWhereInput | CompanyWhereInput[]
-    name?: StringFilter<"Company"> | string
-    location?: StringFilter<"Company"> | string
-    about?: StringFilter<"Company"> | string
-    website?: StringFilter<"Company"> | string
-    logo?: StringFilter<"Company"> | string
-    xAccount?: StringNullableFilter<"Company"> | string | null
-    createdAt?: DateTimeFilter<"Company"> | Date | string
-    updatedAt?: DateTimeFilter<"Company"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    jobs?: JobListRelationFilter
-  }, "id" | "userId">
+  }
 
   export type CompanyOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12372,33 +11024,33 @@ export namespace Prisma {
   }
 
   export type CompanyScalarWhereWithAggregatesInput = {
-    AND?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
-    OR?: CompanyScalarWhereWithAggregatesInput[]
-    NOT?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Company"> | string
-    name?: StringWithAggregatesFilter<"Company"> | string
-    location?: StringWithAggregatesFilter<"Company"> | string
-    about?: StringWithAggregatesFilter<"Company"> | string
-    website?: StringWithAggregatesFilter<"Company"> | string
-    logo?: StringWithAggregatesFilter<"Company"> | string
-    xAccount?: StringNullableWithAggregatesFilter<"Company"> | string | null
-    userId?: StringWithAggregatesFilter<"Company"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
+    AND?: Enumerable<CompanyScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CompanyScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CompanyScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+    location?: StringWithAggregatesFilter | string
+    about?: StringWithAggregatesFilter | string
+    website?: StringWithAggregatesFilter | string
+    logo?: StringWithAggregatesFilter | string
+    xAccount?: StringNullableWithAggregatesFilter | string | null
+    userId?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type JobSeekerWhereInput = {
-    AND?: JobSeekerWhereInput | JobSeekerWhereInput[]
-    OR?: JobSeekerWhereInput[]
-    NOT?: JobSeekerWhereInput | JobSeekerWhereInput[]
-    id?: StringFilter<"JobSeeker"> | string
-    name?: StringFilter<"JobSeeker"> | string
-    about?: StringFilter<"JobSeeker"> | string
-    resume?: StringFilter<"JobSeeker"> | string
-    userId?: StringFilter<"JobSeeker"> | string
-    createdAt?: DateTimeFilter<"JobSeeker"> | Date | string
-    updatedAt?: DateTimeFilter<"JobSeeker"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    AND?: Enumerable<JobSeekerWhereInput>
+    OR?: Enumerable<JobSeekerWhereInput>
+    NOT?: Enumerable<JobSeekerWhereInput>
+    id?: StringFilter | string
+    name?: StringFilter | string
+    about?: StringFilter | string
+    resume?: StringFilter | string
+    userId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
     jobApplications?: JobApplicationListRelationFilter
   }
 
@@ -12414,20 +11066,10 @@ export namespace Prisma {
     jobApplications?: JobApplicationOrderByRelationAggregateInput
   }
 
-  export type JobSeekerWhereUniqueInput = Prisma.AtLeast<{
+  export type JobSeekerWhereUniqueInput = {
     id?: string
     userId?: string
-    AND?: JobSeekerWhereInput | JobSeekerWhereInput[]
-    OR?: JobSeekerWhereInput[]
-    NOT?: JobSeekerWhereInput | JobSeekerWhereInput[]
-    name?: StringFilter<"JobSeeker"> | string
-    about?: StringFilter<"JobSeeker"> | string
-    resume?: StringFilter<"JobSeeker"> | string
-    createdAt?: DateTimeFilter<"JobSeeker"> | Date | string
-    updatedAt?: DateTimeFilter<"JobSeeker"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    jobApplications?: JobApplicationListRelationFilter
-  }, "id" | "userId">
+  }
 
   export type JobSeekerOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12443,36 +11085,36 @@ export namespace Prisma {
   }
 
   export type JobSeekerScalarWhereWithAggregatesInput = {
-    AND?: JobSeekerScalarWhereWithAggregatesInput | JobSeekerScalarWhereWithAggregatesInput[]
-    OR?: JobSeekerScalarWhereWithAggregatesInput[]
-    NOT?: JobSeekerScalarWhereWithAggregatesInput | JobSeekerScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"JobSeeker"> | string
-    name?: StringWithAggregatesFilter<"JobSeeker"> | string
-    about?: StringWithAggregatesFilter<"JobSeeker"> | string
-    resume?: StringWithAggregatesFilter<"JobSeeker"> | string
-    userId?: StringWithAggregatesFilter<"JobSeeker"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"JobSeeker"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"JobSeeker"> | Date | string
+    AND?: Enumerable<JobSeekerScalarWhereWithAggregatesInput>
+    OR?: Enumerable<JobSeekerScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<JobSeekerScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+    about?: StringWithAggregatesFilter | string
+    resume?: StringWithAggregatesFilter | string
+    userId?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type AccountWhereInput = {
-    AND?: AccountWhereInput | AccountWhereInput[]
-    OR?: AccountWhereInput[]
-    NOT?: AccountWhereInput | AccountWhereInput[]
-    userId?: StringFilter<"Account"> | string
-    type?: StringFilter<"Account"> | string
-    provider?: StringFilter<"Account"> | string
-    providerAccountId?: StringFilter<"Account"> | string
-    refresh_token?: StringNullableFilter<"Account"> | string | null
-    access_token?: StringNullableFilter<"Account"> | string | null
-    expires_at?: IntNullableFilter<"Account"> | number | null
-    token_type?: StringNullableFilter<"Account"> | string | null
-    scope?: StringNullableFilter<"Account"> | string | null
-    id_token?: StringNullableFilter<"Account"> | string | null
-    session_state?: StringNullableFilter<"Account"> | string | null
-    createdAt?: DateTimeFilter<"Account"> | Date | string
-    updatedAt?: DateTimeFilter<"Account"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    AND?: Enumerable<AccountWhereInput>
+    OR?: Enumerable<AccountWhereInput>
+    NOT?: Enumerable<AccountWhereInput>
+    userId?: StringFilter | string
+    type?: StringFilter | string
+    provider?: StringFilter | string
+    providerAccountId?: StringFilter | string
+    refresh_token?: StringNullableFilter | string | null
+    access_token?: StringNullableFilter | string | null
+    expires_at?: IntNullableFilter | number | null
+    token_type?: StringNullableFilter | string | null
+    scope?: StringNullableFilter | string | null
+    id_token?: StringNullableFilter | string | null
+    session_state?: StringNullableFilter | string | null
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -12492,26 +11134,9 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
   }
 
-  export type AccountWhereUniqueInput = Prisma.AtLeast<{
+  export type AccountWhereUniqueInput = {
     provider_providerAccountId?: AccountProviderProviderAccountIdCompoundUniqueInput
-    AND?: AccountWhereInput | AccountWhereInput[]
-    OR?: AccountWhereInput[]
-    NOT?: AccountWhereInput | AccountWhereInput[]
-    userId?: StringFilter<"Account"> | string
-    type?: StringFilter<"Account"> | string
-    provider?: StringFilter<"Account"> | string
-    providerAccountId?: StringFilter<"Account"> | string
-    refresh_token?: StringNullableFilter<"Account"> | string | null
-    access_token?: StringNullableFilter<"Account"> | string | null
-    expires_at?: IntNullableFilter<"Account"> | number | null
-    token_type?: StringNullableFilter<"Account"> | string | null
-    scope?: StringNullableFilter<"Account"> | string | null
-    id_token?: StringNullableFilter<"Account"> | string | null
-    session_state?: StringNullableFilter<"Account"> | string | null
-    createdAt?: DateTimeFilter<"Account"> | Date | string
-    updatedAt?: DateTimeFilter<"Account"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "provider_providerAccountId">
+  }
 
   export type AccountOrderByWithAggregationInput = {
     userId?: SortOrder
@@ -12535,34 +11160,34 @@ export namespace Prisma {
   }
 
   export type AccountScalarWhereWithAggregatesInput = {
-    AND?: AccountScalarWhereWithAggregatesInput | AccountScalarWhereWithAggregatesInput[]
-    OR?: AccountScalarWhereWithAggregatesInput[]
-    NOT?: AccountScalarWhereWithAggregatesInput | AccountScalarWhereWithAggregatesInput[]
-    userId?: StringWithAggregatesFilter<"Account"> | string
-    type?: StringWithAggregatesFilter<"Account"> | string
-    provider?: StringWithAggregatesFilter<"Account"> | string
-    providerAccountId?: StringWithAggregatesFilter<"Account"> | string
-    refresh_token?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    access_token?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    expires_at?: IntNullableWithAggregatesFilter<"Account"> | number | null
-    token_type?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    scope?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    id_token?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    session_state?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
+    AND?: Enumerable<AccountScalarWhereWithAggregatesInput>
+    OR?: Enumerable<AccountScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<AccountScalarWhereWithAggregatesInput>
+    userId?: StringWithAggregatesFilter | string
+    type?: StringWithAggregatesFilter | string
+    provider?: StringWithAggregatesFilter | string
+    providerAccountId?: StringWithAggregatesFilter | string
+    refresh_token?: StringNullableWithAggregatesFilter | string | null
+    access_token?: StringNullableWithAggregatesFilter | string | null
+    expires_at?: IntNullableWithAggregatesFilter | number | null
+    token_type?: StringNullableWithAggregatesFilter | string | null
+    scope?: StringNullableWithAggregatesFilter | string | null
+    id_token?: StringNullableWithAggregatesFilter | string | null
+    session_state?: StringNullableWithAggregatesFilter | string | null
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type SessionWhereInput = {
-    AND?: SessionWhereInput | SessionWhereInput[]
-    OR?: SessionWhereInput[]
-    NOT?: SessionWhereInput | SessionWhereInput[]
-    sessionToken?: StringFilter<"Session"> | string
-    userId?: StringFilter<"Session"> | string
-    expires?: DateTimeFilter<"Session"> | Date | string
-    createdAt?: DateTimeFilter<"Session"> | Date | string
-    updatedAt?: DateTimeFilter<"Session"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    AND?: Enumerable<SessionWhereInput>
+    OR?: Enumerable<SessionWhereInput>
+    NOT?: Enumerable<SessionWhereInput>
+    sessionToken?: StringFilter | string
+    userId?: StringFilter | string
+    expires?: DateTimeFilter | Date | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type SessionOrderByWithRelationInput = {
@@ -12574,17 +11199,9 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
   }
 
-  export type SessionWhereUniqueInput = Prisma.AtLeast<{
+  export type SessionWhereUniqueInput = {
     sessionToken?: string
-    AND?: SessionWhereInput | SessionWhereInput[]
-    OR?: SessionWhereInput[]
-    NOT?: SessionWhereInput | SessionWhereInput[]
-    userId?: StringFilter<"Session"> | string
-    expires?: DateTimeFilter<"Session"> | Date | string
-    createdAt?: DateTimeFilter<"Session"> | Date | string
-    updatedAt?: DateTimeFilter<"Session"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "sessionToken">
+  }
 
   export type SessionOrderByWithAggregationInput = {
     sessionToken?: SortOrder
@@ -12598,23 +11215,23 @@ export namespace Prisma {
   }
 
   export type SessionScalarWhereWithAggregatesInput = {
-    AND?: SessionScalarWhereWithAggregatesInput | SessionScalarWhereWithAggregatesInput[]
-    OR?: SessionScalarWhereWithAggregatesInput[]
-    NOT?: SessionScalarWhereWithAggregatesInput | SessionScalarWhereWithAggregatesInput[]
-    sessionToken?: StringWithAggregatesFilter<"Session"> | string
-    userId?: StringWithAggregatesFilter<"Session"> | string
-    expires?: DateTimeWithAggregatesFilter<"Session"> | Date | string
-    createdAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
+    AND?: Enumerable<SessionScalarWhereWithAggregatesInput>
+    OR?: Enumerable<SessionScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<SessionScalarWhereWithAggregatesInput>
+    sessionToken?: StringWithAggregatesFilter | string
+    userId?: StringWithAggregatesFilter | string
+    expires?: DateTimeWithAggregatesFilter | Date | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type VerificationTokenWhereInput = {
-    AND?: VerificationTokenWhereInput | VerificationTokenWhereInput[]
-    OR?: VerificationTokenWhereInput[]
-    NOT?: VerificationTokenWhereInput | VerificationTokenWhereInput[]
-    identifier?: StringFilter<"VerificationToken"> | string
-    token?: StringFilter<"VerificationToken"> | string
-    expires?: DateTimeFilter<"VerificationToken"> | Date | string
+    AND?: Enumerable<VerificationTokenWhereInput>
+    OR?: Enumerable<VerificationTokenWhereInput>
+    NOT?: Enumerable<VerificationTokenWhereInput>
+    identifier?: StringFilter | string
+    token?: StringFilter | string
+    expires?: DateTimeFilter | Date | string
   }
 
   export type VerificationTokenOrderByWithRelationInput = {
@@ -12623,15 +11240,9 @@ export namespace Prisma {
     expires?: SortOrder
   }
 
-  export type VerificationTokenWhereUniqueInput = Prisma.AtLeast<{
+  export type VerificationTokenWhereUniqueInput = {
     identifier_token?: VerificationTokenIdentifierTokenCompoundUniqueInput
-    AND?: VerificationTokenWhereInput | VerificationTokenWhereInput[]
-    OR?: VerificationTokenWhereInput[]
-    NOT?: VerificationTokenWhereInput | VerificationTokenWhereInput[]
-    identifier?: StringFilter<"VerificationToken"> | string
-    token?: StringFilter<"VerificationToken"> | string
-    expires?: DateTimeFilter<"VerificationToken"> | Date | string
-  }, "identifier_token">
+  }
 
   export type VerificationTokenOrderByWithAggregationInput = {
     identifier?: SortOrder
@@ -12643,32 +11254,32 @@ export namespace Prisma {
   }
 
   export type VerificationTokenScalarWhereWithAggregatesInput = {
-    AND?: VerificationTokenScalarWhereWithAggregatesInput | VerificationTokenScalarWhereWithAggregatesInput[]
-    OR?: VerificationTokenScalarWhereWithAggregatesInput[]
-    NOT?: VerificationTokenScalarWhereWithAggregatesInput | VerificationTokenScalarWhereWithAggregatesInput[]
-    identifier?: StringWithAggregatesFilter<"VerificationToken"> | string
-    token?: StringWithAggregatesFilter<"VerificationToken"> | string
-    expires?: DateTimeWithAggregatesFilter<"VerificationToken"> | Date | string
+    AND?: Enumerable<VerificationTokenScalarWhereWithAggregatesInput>
+    OR?: Enumerable<VerificationTokenScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<VerificationTokenScalarWhereWithAggregatesInput>
+    identifier?: StringWithAggregatesFilter | string
+    token?: StringWithAggregatesFilter | string
+    expires?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type JobWhereInput = {
-    AND?: JobWhereInput | JobWhereInput[]
-    OR?: JobWhereInput[]
-    NOT?: JobWhereInput | JobWhereInput[]
-    id?: StringFilter<"Job"> | string
-    jobTitle?: StringFilter<"Job"> | string
-    jobDescription?: StringFilter<"Job"> | string
-    employmentType?: StringFilter<"Job"> | string
-    location?: StringFilter<"Job"> | string
-    salaryFrom?: IntFilter<"Job"> | number
-    salaryTo?: IntFilter<"Job"> | number
-    listingDuration?: IntFilter<"Job"> | number
-    benefits?: StringNullableListFilter<"Job">
-    status?: EnumJobStatusFilter<"Job"> | $Enums.JobStatus
-    companyId?: StringFilter<"Job"> | string
-    createdAt?: DateTimeFilter<"Job"> | Date | string
-    updatedAt?: DateTimeFilter<"Job"> | Date | string
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    AND?: Enumerable<JobWhereInput>
+    OR?: Enumerable<JobWhereInput>
+    NOT?: Enumerable<JobWhereInput>
+    id?: StringFilter | string
+    jobTitle?: StringFilter | string
+    jobDescription?: StringFilter | string
+    employmentType?: StringFilter | string
+    location?: StringFilter | string
+    salaryFrom?: IntFilter | number
+    salaryTo?: IntFilter | number
+    listingDuration?: IntFilter | number
+    benefits?: StringNullableListFilter
+    status?: EnumJobStatusFilter | JobStatus
+    companyId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    company?: XOR<CompanyRelationFilter, CompanyWhereInput>
     savedJobs?: SavedJobListRelationFilter
     jobApplications?: JobApplicationListRelationFilter
   }
@@ -12692,27 +11303,9 @@ export namespace Prisma {
     jobApplications?: JobApplicationOrderByRelationAggregateInput
   }
 
-  export type JobWhereUniqueInput = Prisma.AtLeast<{
+  export type JobWhereUniqueInput = {
     id?: string
-    AND?: JobWhereInput | JobWhereInput[]
-    OR?: JobWhereInput[]
-    NOT?: JobWhereInput | JobWhereInput[]
-    jobTitle?: StringFilter<"Job"> | string
-    jobDescription?: StringFilter<"Job"> | string
-    employmentType?: StringFilter<"Job"> | string
-    location?: StringFilter<"Job"> | string
-    salaryFrom?: IntFilter<"Job"> | number
-    salaryTo?: IntFilter<"Job"> | number
-    listingDuration?: IntFilter<"Job"> | number
-    benefits?: StringNullableListFilter<"Job">
-    status?: EnumJobStatusFilter<"Job"> | $Enums.JobStatus
-    companyId?: StringFilter<"Job"> | string
-    createdAt?: DateTimeFilter<"Job"> | Date | string
-    updatedAt?: DateTimeFilter<"Job"> | Date | string
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
-    savedJobs?: SavedJobListRelationFilter
-    jobApplications?: JobApplicationListRelationFilter
-  }, "id">
+  }
 
   export type JobOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12736,35 +11329,35 @@ export namespace Prisma {
   }
 
   export type JobScalarWhereWithAggregatesInput = {
-    AND?: JobScalarWhereWithAggregatesInput | JobScalarWhereWithAggregatesInput[]
-    OR?: JobScalarWhereWithAggregatesInput[]
-    NOT?: JobScalarWhereWithAggregatesInput | JobScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Job"> | string
-    jobTitle?: StringWithAggregatesFilter<"Job"> | string
-    jobDescription?: StringWithAggregatesFilter<"Job"> | string
-    employmentType?: StringWithAggregatesFilter<"Job"> | string
-    location?: StringWithAggregatesFilter<"Job"> | string
-    salaryFrom?: IntWithAggregatesFilter<"Job"> | number
-    salaryTo?: IntWithAggregatesFilter<"Job"> | number
-    listingDuration?: IntWithAggregatesFilter<"Job"> | number
-    benefits?: StringNullableListFilter<"Job">
-    status?: EnumJobStatusWithAggregatesFilter<"Job"> | $Enums.JobStatus
-    companyId?: StringWithAggregatesFilter<"Job"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
+    AND?: Enumerable<JobScalarWhereWithAggregatesInput>
+    OR?: Enumerable<JobScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<JobScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    jobTitle?: StringWithAggregatesFilter | string
+    jobDescription?: StringWithAggregatesFilter | string
+    employmentType?: StringWithAggregatesFilter | string
+    location?: StringWithAggregatesFilter | string
+    salaryFrom?: IntWithAggregatesFilter | number
+    salaryTo?: IntWithAggregatesFilter | number
+    listingDuration?: IntWithAggregatesFilter | number
+    benefits?: StringNullableListFilter
+    status?: EnumJobStatusWithAggregatesFilter | JobStatus
+    companyId?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type SavedJobWhereInput = {
-    AND?: SavedJobWhereInput | SavedJobWhereInput[]
-    OR?: SavedJobWhereInput[]
-    NOT?: SavedJobWhereInput | SavedJobWhereInput[]
-    id?: StringFilter<"SavedJob"> | string
-    jobId?: StringFilter<"SavedJob"> | string
-    userId?: StringFilter<"SavedJob"> | string
-    createdAt?: DateTimeFilter<"SavedJob"> | Date | string
-    updatedAt?: DateTimeFilter<"SavedJob"> | Date | string
-    job?: XOR<JobScalarRelationFilter, JobWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    AND?: Enumerable<SavedJobWhereInput>
+    OR?: Enumerable<SavedJobWhereInput>
+    NOT?: Enumerable<SavedJobWhereInput>
+    id?: StringFilter | string
+    jobId?: StringFilter | string
+    userId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    job?: XOR<JobRelationFilter, JobWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type SavedJobOrderByWithRelationInput = {
@@ -12777,19 +11370,10 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
   }
 
-  export type SavedJobWhereUniqueInput = Prisma.AtLeast<{
+  export type SavedJobWhereUniqueInput = {
     id?: string
     jobId_userId?: SavedJobJobIdUserIdCompoundUniqueInput
-    AND?: SavedJobWhereInput | SavedJobWhereInput[]
-    OR?: SavedJobWhereInput[]
-    NOT?: SavedJobWhereInput | SavedJobWhereInput[]
-    jobId?: StringFilter<"SavedJob"> | string
-    userId?: StringFilter<"SavedJob"> | string
-    createdAt?: DateTimeFilter<"SavedJob"> | Date | string
-    updatedAt?: DateTimeFilter<"SavedJob"> | Date | string
-    job?: XOR<JobScalarRelationFilter, JobWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "jobId_userId">
+  }
 
   export type SavedJobOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12803,31 +11387,31 @@ export namespace Prisma {
   }
 
   export type SavedJobScalarWhereWithAggregatesInput = {
-    AND?: SavedJobScalarWhereWithAggregatesInput | SavedJobScalarWhereWithAggregatesInput[]
-    OR?: SavedJobScalarWhereWithAggregatesInput[]
-    NOT?: SavedJobScalarWhereWithAggregatesInput | SavedJobScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"SavedJob"> | string
-    jobId?: StringWithAggregatesFilter<"SavedJob"> | string
-    userId?: StringWithAggregatesFilter<"SavedJob"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"SavedJob"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"SavedJob"> | Date | string
+    AND?: Enumerable<SavedJobScalarWhereWithAggregatesInput>
+    OR?: Enumerable<SavedJobScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<SavedJobScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    jobId?: StringWithAggregatesFilter | string
+    userId?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type JobApplicationWhereInput = {
-    AND?: JobApplicationWhereInput | JobApplicationWhereInput[]
-    OR?: JobApplicationWhereInput[]
-    NOT?: JobApplicationWhereInput | JobApplicationWhereInput[]
-    id?: StringFilter<"JobApplication"> | string
-    jobId?: StringFilter<"JobApplication"> | string
-    jobSeekerId?: StringFilter<"JobApplication"> | string
-    resume?: StringFilter<"JobApplication"> | string
-    coverLetter?: StringNullableFilter<"JobApplication"> | string | null
-    prevPosition?: StringNullableFilter<"JobApplication"> | string | null
-    prevCompany?: StringNullableFilter<"JobApplication"> | string | null
-    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
-    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
-    job?: XOR<JobScalarRelationFilter, JobWhereInput>
-    jobSeeker?: XOR<JobSeekerScalarRelationFilter, JobSeekerWhereInput>
+    AND?: Enumerable<JobApplicationWhereInput>
+    OR?: Enumerable<JobApplicationWhereInput>
+    NOT?: Enumerable<JobApplicationWhereInput>
+    id?: StringFilter | string
+    jobId?: StringFilter | string
+    jobSeekerId?: StringFilter | string
+    resume?: StringFilter | string
+    coverLetter?: StringNullableFilter | string | null
+    prevPosition?: StringNullableFilter | string | null
+    prevCompany?: StringNullableFilter | string | null
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    job?: XOR<JobRelationFilter, JobWhereInput>
+    jobSeeker?: XOR<JobSeekerRelationFilter, JobSeekerWhereInput>
   }
 
   export type JobApplicationOrderByWithRelationInput = {
@@ -12844,23 +11428,10 @@ export namespace Prisma {
     jobSeeker?: JobSeekerOrderByWithRelationInput
   }
 
-  export type JobApplicationWhereUniqueInput = Prisma.AtLeast<{
+  export type JobApplicationWhereUniqueInput = {
     id?: string
     jobId_jobSeekerId?: JobApplicationJobIdJobSeekerIdCompoundUniqueInput
-    AND?: JobApplicationWhereInput | JobApplicationWhereInput[]
-    OR?: JobApplicationWhereInput[]
-    NOT?: JobApplicationWhereInput | JobApplicationWhereInput[]
-    jobId?: StringFilter<"JobApplication"> | string
-    jobSeekerId?: StringFilter<"JobApplication"> | string
-    resume?: StringFilter<"JobApplication"> | string
-    coverLetter?: StringNullableFilter<"JobApplication"> | string | null
-    prevPosition?: StringNullableFilter<"JobApplication"> | string | null
-    prevCompany?: StringNullableFilter<"JobApplication"> | string | null
-    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
-    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
-    job?: XOR<JobScalarRelationFilter, JobWhereInput>
-    jobSeeker?: XOR<JobSeekerScalarRelationFilter, JobSeekerWhereInput>
-  }, "id" | "jobId_jobSeekerId">
+  }
 
   export type JobApplicationOrderByWithAggregationInput = {
     id?: SortOrder
@@ -12878,18 +11449,18 @@ export namespace Prisma {
   }
 
   export type JobApplicationScalarWhereWithAggregatesInput = {
-    AND?: JobApplicationScalarWhereWithAggregatesInput | JobApplicationScalarWhereWithAggregatesInput[]
-    OR?: JobApplicationScalarWhereWithAggregatesInput[]
-    NOT?: JobApplicationScalarWhereWithAggregatesInput | JobApplicationScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"JobApplication"> | string
-    jobId?: StringWithAggregatesFilter<"JobApplication"> | string
-    jobSeekerId?: StringWithAggregatesFilter<"JobApplication"> | string
-    resume?: StringWithAggregatesFilter<"JobApplication"> | string
-    coverLetter?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
-    prevPosition?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
-    prevCompany?: StringNullableWithAggregatesFilter<"JobApplication"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"JobApplication"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"JobApplication"> | Date | string
+    AND?: Enumerable<JobApplicationScalarWhereWithAggregatesInput>
+    OR?: Enumerable<JobApplicationScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<JobApplicationScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    jobId?: StringWithAggregatesFilter | string
+    jobSeekerId?: StringWithAggregatesFilter | string
+    resume?: StringWithAggregatesFilter | string
+    coverLetter?: StringNullableWithAggregatesFilter | string | null
+    prevPosition?: StringNullableWithAggregatesFilter | string | null
+    prevCompany?: StringNullableWithAggregatesFilter | string | null
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type UserCreateInput = {
@@ -12899,7 +11470,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12917,7 +11488,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12935,7 +11506,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12953,7 +11524,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12971,7 +11542,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12984,7 +11555,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12997,7 +11568,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13387,8 +11958,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutJobsInput
@@ -13405,8 +11976,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13423,8 +11994,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutJobsNestedInput
@@ -13441,8 +12012,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13459,8 +12030,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13475,8 +12046,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13490,8 +12061,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13633,68 +12204,68 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type StringFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringFilter = {
+    equals?: string
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringFilter<$PrismaModel> | string
+    not?: NestedStringFilter | string
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    not?: NestedStringNullableFilter | string | null
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  export type DateTimeNullableFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
-  export type EnumUserTypeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserType | EnumUserTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumUserTypeNullableFilter<$PrismaModel> | $Enums.UserType | null
+  export type EnumUserTypeNullableFilter = {
+    equals?: UserType | null
+    in?: Enumerable<UserType> | null
+    notIn?: Enumerable<UserType> | null
+    not?: NestedEnumUserTypeNullableFilter | UserType | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type BoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type DateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
   }
 
   export type AccountListRelationFilter = {
@@ -13709,12 +12280,12 @@ export namespace Prisma {
     none?: SessionWhereInput
   }
 
-  export type CompanyNullableScalarRelationFilter = {
+  export type CompanyRelationFilter = {
     is?: CompanyWhereInput | null
     isNot?: CompanyWhereInput | null
   }
 
-  export type JobSeekerNullableScalarRelationFilter = {
+  export type JobSeekerRelationFilter = {
     is?: JobSeekerWhereInput | null
     isNot?: JobSeekerWhereInput | null
   }
@@ -13781,91 +12352,91 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringWithAggregatesFilter = {
+    equals?: string
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
+    not?: NestedStringWithAggregatesFilter | string
+    _count?: NestedIntFilter
+    _min?: NestedStringFilter
+    _max?: NestedStringFilter
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
     mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  export type DateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
   }
 
-  export type EnumUserTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserType | EnumUserTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumUserTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.UserType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumUserTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumUserTypeNullableFilter<$PrismaModel>
+  export type EnumUserTypeNullableWithAggregatesFilter = {
+    equals?: UserType | null
+    in?: Enumerable<UserType> | null
+    notIn?: Enumerable<UserType> | null
+    not?: NestedEnumUserTypeNullableWithAggregatesFilter | UserType | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedEnumUserTypeNullableFilter
+    _max?: NestedEnumUserTypeNullableFilter
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type BoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+  export type DateTimeWithAggregatesFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeWithAggregatesFilter | Date | string
+    _count?: NestedIntFilter
+    _min?: NestedDateTimeFilter
+    _max?: NestedDateTimeFilter
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
+  export type UserRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
   }
 
   export type JobListRelationFilter = {
@@ -13957,15 +12528,15 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  export type IntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
   }
 
   export type AccountProviderProviderAccountIdCompoundUniqueInput = {
@@ -14029,20 +12600,20 @@ export namespace Prisma {
     expires_at?: SortOrder
   }
 
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
+  export type IntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
   }
 
   export type SessionCountOrderByAggregateInput = {
@@ -14092,35 +12663,30 @@ export namespace Prisma {
     expires?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type IntFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+  export type StringNullableListFilter = {
+    equals?: Enumerable<string> | null
+    has?: string | null
+    hasEvery?: Enumerable<string>
+    hasSome?: Enumerable<string>
     isEmpty?: boolean
   }
 
-  export type EnumJobStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
-  }
-
-  export type CompanyScalarRelationFilter = {
-    is?: CompanyWhereInput
-    isNot?: CompanyWhereInput
+  export type EnumJobStatusFilter = {
+    equals?: JobStatus
+    in?: Enumerable<JobStatus>
+    notIn?: Enumerable<JobStatus>
+    not?: NestedEnumJobStatusFilter | JobStatus
   }
 
   export type JobCountOrderByAggregateInput = {
@@ -14181,35 +12747,35 @@ export namespace Prisma {
     listingDuration?: SortOrder
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type IntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
   }
 
-  export type EnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.JobStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumJobStatusFilter<$PrismaModel>
-    _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  export type EnumJobStatusWithAggregatesFilter = {
+    equals?: JobStatus
+    in?: Enumerable<JobStatus>
+    notIn?: Enumerable<JobStatus>
+    not?: NestedEnumJobStatusWithAggregatesFilter | JobStatus
+    _count?: NestedIntFilter
+    _min?: NestedEnumJobStatusFilter
+    _max?: NestedEnumJobStatusFilter
   }
 
-  export type JobScalarRelationFilter = {
-    is?: JobWhereInput
-    isNot?: JobWhereInput
+  export type JobRelationFilter = {
+    is?: JobWhereInput | null
+    isNot?: JobWhereInput | null
   }
 
   export type SavedJobJobIdUserIdCompoundUniqueInput = {
@@ -14239,11 +12805,6 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type JobSeekerScalarRelationFilter = {
-    is?: JobSeekerWhereInput
-    isNot?: JobSeekerWhereInput
   }
 
   export type JobApplicationJobIdJobSeekerIdCompoundUniqueInput = {
@@ -14288,17 +12849,17 @@ export namespace Prisma {
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
+    create?: XOR<Enumerable<AccountCreateWithoutUserInput>, Enumerable<AccountUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<AccountCreateOrConnectWithoutUserInput>
     createMany?: AccountCreateManyUserInputEnvelope
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    connect?: Enumerable<AccountWhereUniqueInput>
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    create?: XOR<Enumerable<SessionCreateWithoutUserInput>, Enumerable<SessionUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SessionCreateOrConnectWithoutUserInput>
     createMany?: SessionCreateManyUserInputEnvelope
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    connect?: Enumerable<SessionWhereUniqueInput>
   }
 
   export type CompanyCreateNestedOneWithoutUserInput = {
@@ -14314,24 +12875,24 @@ export namespace Prisma {
   }
 
   export type SavedJobCreateNestedManyWithoutUserInput = {
-    create?: XOR<SavedJobCreateWithoutUserInput, SavedJobUncheckedCreateWithoutUserInput> | SavedJobCreateWithoutUserInput[] | SavedJobUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutUserInput | SavedJobCreateOrConnectWithoutUserInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutUserInput>, Enumerable<SavedJobUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutUserInput>
     createMany?: SavedJobCreateManyUserInputEnvelope
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
+    connect?: Enumerable<SavedJobWhereUniqueInput>
   }
 
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
+    create?: XOR<Enumerable<AccountCreateWithoutUserInput>, Enumerable<AccountUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<AccountCreateOrConnectWithoutUserInput>
     createMany?: AccountCreateManyUserInputEnvelope
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+    connect?: Enumerable<AccountWhereUniqueInput>
   }
 
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
+    create?: XOR<Enumerable<SessionCreateWithoutUserInput>, Enumerable<SessionUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SessionCreateOrConnectWithoutUserInput>
     createMany?: SessionCreateManyUserInputEnvelope
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+    connect?: Enumerable<SessionWhereUniqueInput>
   }
 
   export type CompanyUncheckedCreateNestedOneWithoutUserInput = {
@@ -14347,10 +12908,10 @@ export namespace Prisma {
   }
 
   export type SavedJobUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<SavedJobCreateWithoutUserInput, SavedJobUncheckedCreateWithoutUserInput> | SavedJobCreateWithoutUserInput[] | SavedJobUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutUserInput | SavedJobCreateOrConnectWithoutUserInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutUserInput>, Enumerable<SavedJobUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutUserInput>
     createMany?: SavedJobCreateManyUserInputEnvelope
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
+    connect?: Enumerable<SavedJobWhereUniqueInput>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -14366,7 +12927,7 @@ export namespace Prisma {
   }
 
   export type NullableEnumUserTypeFieldUpdateOperationsInput = {
-    set?: $Enums.UserType | null
+    set?: UserType | null
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -14378,127 +12939,127 @@ export namespace Prisma {
   }
 
   export type AccountUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
-    upsert?: AccountUpsertWithWhereUniqueWithoutUserInput | AccountUpsertWithWhereUniqueWithoutUserInput[]
+    create?: XOR<Enumerable<AccountCreateWithoutUserInput>, Enumerable<AccountUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<AccountCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<AccountUpsertWithWhereUniqueWithoutUserInput>
     createMany?: AccountCreateManyUserInputEnvelope
-    set?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    disconnect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    delete?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+    set?: Enumerable<AccountWhereUniqueInput>
+    disconnect?: Enumerable<AccountWhereUniqueInput>
+    delete?: Enumerable<AccountWhereUniqueInput>
+    connect?: Enumerable<AccountWhereUniqueInput>
+    update?: Enumerable<AccountUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<AccountUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<AccountScalarWhereInput>
   }
 
   export type SessionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
+    create?: XOR<Enumerable<SessionCreateWithoutUserInput>, Enumerable<SessionUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SessionCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<SessionUpsertWithWhereUniqueWithoutUserInput>
     createMany?: SessionCreateManyUserInputEnvelope
-    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    set?: Enumerable<SessionWhereUniqueInput>
+    disconnect?: Enumerable<SessionWhereUniqueInput>
+    delete?: Enumerable<SessionWhereUniqueInput>
+    connect?: Enumerable<SessionWhereUniqueInput>
+    update?: Enumerable<SessionUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<SessionUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<SessionScalarWhereInput>
   }
 
   export type CompanyUpdateOneWithoutUserNestedInput = {
     create?: XOR<CompanyCreateWithoutUserInput, CompanyUncheckedCreateWithoutUserInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutUserInput
     upsert?: CompanyUpsertWithoutUserInput
-    disconnect?: CompanyWhereInput | boolean
-    delete?: CompanyWhereInput | boolean
+    disconnect?: boolean
+    delete?: boolean
     connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutUserInput, CompanyUpdateWithoutUserInput>, CompanyUncheckedUpdateWithoutUserInput>
+    update?: XOR<CompanyUpdateWithoutUserInput, CompanyUncheckedUpdateWithoutUserInput>
   }
 
   export type JobSeekerUpdateOneWithoutUserNestedInput = {
     create?: XOR<JobSeekerCreateWithoutUserInput, JobSeekerUncheckedCreateWithoutUserInput>
     connectOrCreate?: JobSeekerCreateOrConnectWithoutUserInput
     upsert?: JobSeekerUpsertWithoutUserInput
-    disconnect?: JobSeekerWhereInput | boolean
-    delete?: JobSeekerWhereInput | boolean
+    disconnect?: boolean
+    delete?: boolean
     connect?: JobSeekerWhereUniqueInput
-    update?: XOR<XOR<JobSeekerUpdateToOneWithWhereWithoutUserInput, JobSeekerUpdateWithoutUserInput>, JobSeekerUncheckedUpdateWithoutUserInput>
+    update?: XOR<JobSeekerUpdateWithoutUserInput, JobSeekerUncheckedUpdateWithoutUserInput>
   }
 
   export type SavedJobUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SavedJobCreateWithoutUserInput, SavedJobUncheckedCreateWithoutUserInput> | SavedJobCreateWithoutUserInput[] | SavedJobUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutUserInput | SavedJobCreateOrConnectWithoutUserInput[]
-    upsert?: SavedJobUpsertWithWhereUniqueWithoutUserInput | SavedJobUpsertWithWhereUniqueWithoutUserInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutUserInput>, Enumerable<SavedJobUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<SavedJobUpsertWithWhereUniqueWithoutUserInput>
     createMany?: SavedJobCreateManyUserInputEnvelope
-    set?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    disconnect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    delete?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    update?: SavedJobUpdateWithWhereUniqueWithoutUserInput | SavedJobUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SavedJobUpdateManyWithWhereWithoutUserInput | SavedJobUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SavedJobScalarWhereInput | SavedJobScalarWhereInput[]
+    set?: Enumerable<SavedJobWhereUniqueInput>
+    disconnect?: Enumerable<SavedJobWhereUniqueInput>
+    delete?: Enumerable<SavedJobWhereUniqueInput>
+    connect?: Enumerable<SavedJobWhereUniqueInput>
+    update?: Enumerable<SavedJobUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<SavedJobUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<SavedJobScalarWhereInput>
   }
 
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
-    upsert?: AccountUpsertWithWhereUniqueWithoutUserInput | AccountUpsertWithWhereUniqueWithoutUserInput[]
+    create?: XOR<Enumerable<AccountCreateWithoutUserInput>, Enumerable<AccountUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<AccountCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<AccountUpsertWithWhereUniqueWithoutUserInput>
     createMany?: AccountCreateManyUserInputEnvelope
-    set?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    disconnect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    delete?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
-    update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+    set?: Enumerable<AccountWhereUniqueInput>
+    disconnect?: Enumerable<AccountWhereUniqueInput>
+    delete?: Enumerable<AccountWhereUniqueInput>
+    connect?: Enumerable<AccountWhereUniqueInput>
+    update?: Enumerable<AccountUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<AccountUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<AccountScalarWhereInput>
   }
 
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
-    upsert?: SessionUpsertWithWhereUniqueWithoutUserInput | SessionUpsertWithWhereUniqueWithoutUserInput[]
+    create?: XOR<Enumerable<SessionCreateWithoutUserInput>, Enumerable<SessionUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SessionCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<SessionUpsertWithWhereUniqueWithoutUserInput>
     createMany?: SessionCreateManyUserInputEnvelope
-    set?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    disconnect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    delete?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
-    update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
+    set?: Enumerable<SessionWhereUniqueInput>
+    disconnect?: Enumerable<SessionWhereUniqueInput>
+    delete?: Enumerable<SessionWhereUniqueInput>
+    connect?: Enumerable<SessionWhereUniqueInput>
+    update?: Enumerable<SessionUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<SessionUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<SessionScalarWhereInput>
   }
 
   export type CompanyUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<CompanyCreateWithoutUserInput, CompanyUncheckedCreateWithoutUserInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutUserInput
     upsert?: CompanyUpsertWithoutUserInput
-    disconnect?: CompanyWhereInput | boolean
-    delete?: CompanyWhereInput | boolean
+    disconnect?: boolean
+    delete?: boolean
     connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutUserInput, CompanyUpdateWithoutUserInput>, CompanyUncheckedUpdateWithoutUserInput>
+    update?: XOR<CompanyUpdateWithoutUserInput, CompanyUncheckedUpdateWithoutUserInput>
   }
 
   export type JobSeekerUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<JobSeekerCreateWithoutUserInput, JobSeekerUncheckedCreateWithoutUserInput>
     connectOrCreate?: JobSeekerCreateOrConnectWithoutUserInput
     upsert?: JobSeekerUpsertWithoutUserInput
-    disconnect?: JobSeekerWhereInput | boolean
-    delete?: JobSeekerWhereInput | boolean
+    disconnect?: boolean
+    delete?: boolean
     connect?: JobSeekerWhereUniqueInput
-    update?: XOR<XOR<JobSeekerUpdateToOneWithWhereWithoutUserInput, JobSeekerUpdateWithoutUserInput>, JobSeekerUncheckedUpdateWithoutUserInput>
+    update?: XOR<JobSeekerUpdateWithoutUserInput, JobSeekerUncheckedUpdateWithoutUserInput>
   }
 
   export type SavedJobUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SavedJobCreateWithoutUserInput, SavedJobUncheckedCreateWithoutUserInput> | SavedJobCreateWithoutUserInput[] | SavedJobUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutUserInput | SavedJobCreateOrConnectWithoutUserInput[]
-    upsert?: SavedJobUpsertWithWhereUniqueWithoutUserInput | SavedJobUpsertWithWhereUniqueWithoutUserInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutUserInput>, Enumerable<SavedJobUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<SavedJobUpsertWithWhereUniqueWithoutUserInput>
     createMany?: SavedJobCreateManyUserInputEnvelope
-    set?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    disconnect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    delete?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    update?: SavedJobUpdateWithWhereUniqueWithoutUserInput | SavedJobUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SavedJobUpdateManyWithWhereWithoutUserInput | SavedJobUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SavedJobScalarWhereInput | SavedJobScalarWhereInput[]
+    set?: Enumerable<SavedJobWhereUniqueInput>
+    disconnect?: Enumerable<SavedJobWhereUniqueInput>
+    delete?: Enumerable<SavedJobWhereUniqueInput>
+    connect?: Enumerable<SavedJobWhereUniqueInput>
+    update?: Enumerable<SavedJobUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<SavedJobUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<SavedJobScalarWhereInput>
   }
 
   export type UserCreateNestedOneWithoutCompanyInput = {
@@ -14508,17 +13069,17 @@ export namespace Prisma {
   }
 
   export type JobCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<JobCreateWithoutCompanyInput, JobUncheckedCreateWithoutCompanyInput> | JobCreateWithoutCompanyInput[] | JobUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: JobCreateOrConnectWithoutCompanyInput | JobCreateOrConnectWithoutCompanyInput[]
+    create?: XOR<Enumerable<JobCreateWithoutCompanyInput>, Enumerable<JobUncheckedCreateWithoutCompanyInput>>
+    connectOrCreate?: Enumerable<JobCreateOrConnectWithoutCompanyInput>
     createMany?: JobCreateManyCompanyInputEnvelope
-    connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
+    connect?: Enumerable<JobWhereUniqueInput>
   }
 
   export type JobUncheckedCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<JobCreateWithoutCompanyInput, JobUncheckedCreateWithoutCompanyInput> | JobCreateWithoutCompanyInput[] | JobUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: JobCreateOrConnectWithoutCompanyInput | JobCreateOrConnectWithoutCompanyInput[]
+    create?: XOR<Enumerable<JobCreateWithoutCompanyInput>, Enumerable<JobUncheckedCreateWithoutCompanyInput>>
+    connectOrCreate?: Enumerable<JobCreateOrConnectWithoutCompanyInput>
     createMany?: JobCreateManyCompanyInputEnvelope
-    connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
+    connect?: Enumerable<JobWhereUniqueInput>
   }
 
   export type UserUpdateOneRequiredWithoutCompanyNestedInput = {
@@ -14526,35 +13087,35 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput
     upsert?: UserUpsertWithoutCompanyInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCompanyInput, UserUpdateWithoutCompanyInput>, UserUncheckedUpdateWithoutCompanyInput>
+    update?: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
   }
 
   export type JobUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<JobCreateWithoutCompanyInput, JobUncheckedCreateWithoutCompanyInput> | JobCreateWithoutCompanyInput[] | JobUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: JobCreateOrConnectWithoutCompanyInput | JobCreateOrConnectWithoutCompanyInput[]
-    upsert?: JobUpsertWithWhereUniqueWithoutCompanyInput | JobUpsertWithWhereUniqueWithoutCompanyInput[]
+    create?: XOR<Enumerable<JobCreateWithoutCompanyInput>, Enumerable<JobUncheckedCreateWithoutCompanyInput>>
+    connectOrCreate?: Enumerable<JobCreateOrConnectWithoutCompanyInput>
+    upsert?: Enumerable<JobUpsertWithWhereUniqueWithoutCompanyInput>
     createMany?: JobCreateManyCompanyInputEnvelope
-    set?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    disconnect?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    delete?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    update?: JobUpdateWithWhereUniqueWithoutCompanyInput | JobUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: JobUpdateManyWithWhereWithoutCompanyInput | JobUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: JobScalarWhereInput | JobScalarWhereInput[]
+    set?: Enumerable<JobWhereUniqueInput>
+    disconnect?: Enumerable<JobWhereUniqueInput>
+    delete?: Enumerable<JobWhereUniqueInput>
+    connect?: Enumerable<JobWhereUniqueInput>
+    update?: Enumerable<JobUpdateWithWhereUniqueWithoutCompanyInput>
+    updateMany?: Enumerable<JobUpdateManyWithWhereWithoutCompanyInput>
+    deleteMany?: Enumerable<JobScalarWhereInput>
   }
 
   export type JobUncheckedUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<JobCreateWithoutCompanyInput, JobUncheckedCreateWithoutCompanyInput> | JobCreateWithoutCompanyInput[] | JobUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: JobCreateOrConnectWithoutCompanyInput | JobCreateOrConnectWithoutCompanyInput[]
-    upsert?: JobUpsertWithWhereUniqueWithoutCompanyInput | JobUpsertWithWhereUniqueWithoutCompanyInput[]
+    create?: XOR<Enumerable<JobCreateWithoutCompanyInput>, Enumerable<JobUncheckedCreateWithoutCompanyInput>>
+    connectOrCreate?: Enumerable<JobCreateOrConnectWithoutCompanyInput>
+    upsert?: Enumerable<JobUpsertWithWhereUniqueWithoutCompanyInput>
     createMany?: JobCreateManyCompanyInputEnvelope
-    set?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    disconnect?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    delete?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
-    update?: JobUpdateWithWhereUniqueWithoutCompanyInput | JobUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: JobUpdateManyWithWhereWithoutCompanyInput | JobUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: JobScalarWhereInput | JobScalarWhereInput[]
+    set?: Enumerable<JobWhereUniqueInput>
+    disconnect?: Enumerable<JobWhereUniqueInput>
+    delete?: Enumerable<JobWhereUniqueInput>
+    connect?: Enumerable<JobWhereUniqueInput>
+    update?: Enumerable<JobUpdateWithWhereUniqueWithoutCompanyInput>
+    updateMany?: Enumerable<JobUpdateManyWithWhereWithoutCompanyInput>
+    deleteMany?: Enumerable<JobScalarWhereInput>
   }
 
   export type UserCreateNestedOneWithoutJobSeekerInput = {
@@ -14564,17 +13125,17 @@ export namespace Prisma {
   }
 
   export type JobApplicationCreateNestedManyWithoutJobSeekerInput = {
-    create?: XOR<JobApplicationCreateWithoutJobSeekerInput, JobApplicationUncheckedCreateWithoutJobSeekerInput> | JobApplicationCreateWithoutJobSeekerInput[] | JobApplicationUncheckedCreateWithoutJobSeekerInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobSeekerInput | JobApplicationCreateOrConnectWithoutJobSeekerInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobSeekerInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobSeekerInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobSeekerInput>
     createMany?: JobApplicationCreateManyJobSeekerInputEnvelope
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
   }
 
   export type JobApplicationUncheckedCreateNestedManyWithoutJobSeekerInput = {
-    create?: XOR<JobApplicationCreateWithoutJobSeekerInput, JobApplicationUncheckedCreateWithoutJobSeekerInput> | JobApplicationCreateWithoutJobSeekerInput[] | JobApplicationUncheckedCreateWithoutJobSeekerInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobSeekerInput | JobApplicationCreateOrConnectWithoutJobSeekerInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobSeekerInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobSeekerInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobSeekerInput>
     createMany?: JobApplicationCreateManyJobSeekerInputEnvelope
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
   }
 
   export type UserUpdateOneRequiredWithoutJobSeekerNestedInput = {
@@ -14582,35 +13143,35 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutJobSeekerInput
     upsert?: UserUpsertWithoutJobSeekerInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutJobSeekerInput, UserUpdateWithoutJobSeekerInput>, UserUncheckedUpdateWithoutJobSeekerInput>
+    update?: XOR<UserUpdateWithoutJobSeekerInput, UserUncheckedUpdateWithoutJobSeekerInput>
   }
 
   export type JobApplicationUpdateManyWithoutJobSeekerNestedInput = {
-    create?: XOR<JobApplicationCreateWithoutJobSeekerInput, JobApplicationUncheckedCreateWithoutJobSeekerInput> | JobApplicationCreateWithoutJobSeekerInput[] | JobApplicationUncheckedCreateWithoutJobSeekerInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobSeekerInput | JobApplicationCreateOrConnectWithoutJobSeekerInput[]
-    upsert?: JobApplicationUpsertWithWhereUniqueWithoutJobSeekerInput | JobApplicationUpsertWithWhereUniqueWithoutJobSeekerInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobSeekerInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobSeekerInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobSeekerInput>
+    upsert?: Enumerable<JobApplicationUpsertWithWhereUniqueWithoutJobSeekerInput>
     createMany?: JobApplicationCreateManyJobSeekerInputEnvelope
-    set?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    disconnect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    delete?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    update?: JobApplicationUpdateWithWhereUniqueWithoutJobSeekerInput | JobApplicationUpdateWithWhereUniqueWithoutJobSeekerInput[]
-    updateMany?: JobApplicationUpdateManyWithWhereWithoutJobSeekerInput | JobApplicationUpdateManyWithWhereWithoutJobSeekerInput[]
-    deleteMany?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+    set?: Enumerable<JobApplicationWhereUniqueInput>
+    disconnect?: Enumerable<JobApplicationWhereUniqueInput>
+    delete?: Enumerable<JobApplicationWhereUniqueInput>
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
+    update?: Enumerable<JobApplicationUpdateWithWhereUniqueWithoutJobSeekerInput>
+    updateMany?: Enumerable<JobApplicationUpdateManyWithWhereWithoutJobSeekerInput>
+    deleteMany?: Enumerable<JobApplicationScalarWhereInput>
   }
 
   export type JobApplicationUncheckedUpdateManyWithoutJobSeekerNestedInput = {
-    create?: XOR<JobApplicationCreateWithoutJobSeekerInput, JobApplicationUncheckedCreateWithoutJobSeekerInput> | JobApplicationCreateWithoutJobSeekerInput[] | JobApplicationUncheckedCreateWithoutJobSeekerInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobSeekerInput | JobApplicationCreateOrConnectWithoutJobSeekerInput[]
-    upsert?: JobApplicationUpsertWithWhereUniqueWithoutJobSeekerInput | JobApplicationUpsertWithWhereUniqueWithoutJobSeekerInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobSeekerInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobSeekerInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobSeekerInput>
+    upsert?: Enumerable<JobApplicationUpsertWithWhereUniqueWithoutJobSeekerInput>
     createMany?: JobApplicationCreateManyJobSeekerInputEnvelope
-    set?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    disconnect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    delete?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    update?: JobApplicationUpdateWithWhereUniqueWithoutJobSeekerInput | JobApplicationUpdateWithWhereUniqueWithoutJobSeekerInput[]
-    updateMany?: JobApplicationUpdateManyWithWhereWithoutJobSeekerInput | JobApplicationUpdateManyWithWhereWithoutJobSeekerInput[]
-    deleteMany?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+    set?: Enumerable<JobApplicationWhereUniqueInput>
+    disconnect?: Enumerable<JobApplicationWhereUniqueInput>
+    delete?: Enumerable<JobApplicationWhereUniqueInput>
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
+    update?: Enumerable<JobApplicationUpdateWithWhereUniqueWithoutJobSeekerInput>
+    updateMany?: Enumerable<JobApplicationUpdateManyWithWhereWithoutJobSeekerInput>
+    deleteMany?: Enumerable<JobApplicationScalarWhereInput>
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -14632,7 +13193,7 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
     upsert?: UserUpsertWithoutAccountsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
+    update?: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -14646,11 +13207,11 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
     upsert?: UserUpsertWithoutSessionsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSessionsInput, UserUpdateWithoutSessionsInput>, UserUncheckedUpdateWithoutSessionsInput>
+    update?: XOR<UserUpdateWithoutSessionsInput, UserUncheckedUpdateWithoutSessionsInput>
   }
 
   export type JobCreatebenefitsInput = {
-    set: string[]
+    set: Enumerable<string>
   }
 
   export type CompanyCreateNestedOneWithoutJobsInput = {
@@ -14660,31 +13221,31 @@ export namespace Prisma {
   }
 
   export type SavedJobCreateNestedManyWithoutJobInput = {
-    create?: XOR<SavedJobCreateWithoutJobInput, SavedJobUncheckedCreateWithoutJobInput> | SavedJobCreateWithoutJobInput[] | SavedJobUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutJobInput | SavedJobCreateOrConnectWithoutJobInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutJobInput>, Enumerable<SavedJobUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutJobInput>
     createMany?: SavedJobCreateManyJobInputEnvelope
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
+    connect?: Enumerable<SavedJobWhereUniqueInput>
   }
 
   export type JobApplicationCreateNestedManyWithoutJobInput = {
-    create?: XOR<JobApplicationCreateWithoutJobInput, JobApplicationUncheckedCreateWithoutJobInput> | JobApplicationCreateWithoutJobInput[] | JobApplicationUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobInput | JobApplicationCreateOrConnectWithoutJobInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobInput>
     createMany?: JobApplicationCreateManyJobInputEnvelope
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
   }
 
   export type SavedJobUncheckedCreateNestedManyWithoutJobInput = {
-    create?: XOR<SavedJobCreateWithoutJobInput, SavedJobUncheckedCreateWithoutJobInput> | SavedJobCreateWithoutJobInput[] | SavedJobUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutJobInput | SavedJobCreateOrConnectWithoutJobInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutJobInput>, Enumerable<SavedJobUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutJobInput>
     createMany?: SavedJobCreateManyJobInputEnvelope
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
+    connect?: Enumerable<SavedJobWhereUniqueInput>
   }
 
   export type JobApplicationUncheckedCreateNestedManyWithoutJobInput = {
-    create?: XOR<JobApplicationCreateWithoutJobInput, JobApplicationUncheckedCreateWithoutJobInput> | JobApplicationCreateWithoutJobInput[] | JobApplicationUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobInput | JobApplicationCreateOrConnectWithoutJobInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobInput>
     createMany?: JobApplicationCreateManyJobInputEnvelope
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -14696,12 +13257,12 @@ export namespace Prisma {
   }
 
   export type JobUpdatebenefitsInput = {
-    set?: string[]
-    push?: string | string[]
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
   }
 
   export type EnumJobStatusFieldUpdateOperationsInput = {
-    set?: $Enums.JobStatus
+    set?: JobStatus
   }
 
   export type CompanyUpdateOneRequiredWithoutJobsNestedInput = {
@@ -14709,63 +13270,63 @@ export namespace Prisma {
     connectOrCreate?: CompanyCreateOrConnectWithoutJobsInput
     upsert?: CompanyUpsertWithoutJobsInput
     connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutJobsInput, CompanyUpdateWithoutJobsInput>, CompanyUncheckedUpdateWithoutJobsInput>
+    update?: XOR<CompanyUpdateWithoutJobsInput, CompanyUncheckedUpdateWithoutJobsInput>
   }
 
   export type SavedJobUpdateManyWithoutJobNestedInput = {
-    create?: XOR<SavedJobCreateWithoutJobInput, SavedJobUncheckedCreateWithoutJobInput> | SavedJobCreateWithoutJobInput[] | SavedJobUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutJobInput | SavedJobCreateOrConnectWithoutJobInput[]
-    upsert?: SavedJobUpsertWithWhereUniqueWithoutJobInput | SavedJobUpsertWithWhereUniqueWithoutJobInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutJobInput>, Enumerable<SavedJobUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutJobInput>
+    upsert?: Enumerable<SavedJobUpsertWithWhereUniqueWithoutJobInput>
     createMany?: SavedJobCreateManyJobInputEnvelope
-    set?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    disconnect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    delete?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    update?: SavedJobUpdateWithWhereUniqueWithoutJobInput | SavedJobUpdateWithWhereUniqueWithoutJobInput[]
-    updateMany?: SavedJobUpdateManyWithWhereWithoutJobInput | SavedJobUpdateManyWithWhereWithoutJobInput[]
-    deleteMany?: SavedJobScalarWhereInput | SavedJobScalarWhereInput[]
+    set?: Enumerable<SavedJobWhereUniqueInput>
+    disconnect?: Enumerable<SavedJobWhereUniqueInput>
+    delete?: Enumerable<SavedJobWhereUniqueInput>
+    connect?: Enumerable<SavedJobWhereUniqueInput>
+    update?: Enumerable<SavedJobUpdateWithWhereUniqueWithoutJobInput>
+    updateMany?: Enumerable<SavedJobUpdateManyWithWhereWithoutJobInput>
+    deleteMany?: Enumerable<SavedJobScalarWhereInput>
   }
 
   export type JobApplicationUpdateManyWithoutJobNestedInput = {
-    create?: XOR<JobApplicationCreateWithoutJobInput, JobApplicationUncheckedCreateWithoutJobInput> | JobApplicationCreateWithoutJobInput[] | JobApplicationUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobInput | JobApplicationCreateOrConnectWithoutJobInput[]
-    upsert?: JobApplicationUpsertWithWhereUniqueWithoutJobInput | JobApplicationUpsertWithWhereUniqueWithoutJobInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobInput>
+    upsert?: Enumerable<JobApplicationUpsertWithWhereUniqueWithoutJobInput>
     createMany?: JobApplicationCreateManyJobInputEnvelope
-    set?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    disconnect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    delete?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    update?: JobApplicationUpdateWithWhereUniqueWithoutJobInput | JobApplicationUpdateWithWhereUniqueWithoutJobInput[]
-    updateMany?: JobApplicationUpdateManyWithWhereWithoutJobInput | JobApplicationUpdateManyWithWhereWithoutJobInput[]
-    deleteMany?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+    set?: Enumerable<JobApplicationWhereUniqueInput>
+    disconnect?: Enumerable<JobApplicationWhereUniqueInput>
+    delete?: Enumerable<JobApplicationWhereUniqueInput>
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
+    update?: Enumerable<JobApplicationUpdateWithWhereUniqueWithoutJobInput>
+    updateMany?: Enumerable<JobApplicationUpdateManyWithWhereWithoutJobInput>
+    deleteMany?: Enumerable<JobApplicationScalarWhereInput>
   }
 
   export type SavedJobUncheckedUpdateManyWithoutJobNestedInput = {
-    create?: XOR<SavedJobCreateWithoutJobInput, SavedJobUncheckedCreateWithoutJobInput> | SavedJobCreateWithoutJobInput[] | SavedJobUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: SavedJobCreateOrConnectWithoutJobInput | SavedJobCreateOrConnectWithoutJobInput[]
-    upsert?: SavedJobUpsertWithWhereUniqueWithoutJobInput | SavedJobUpsertWithWhereUniqueWithoutJobInput[]
+    create?: XOR<Enumerable<SavedJobCreateWithoutJobInput>, Enumerable<SavedJobUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<SavedJobCreateOrConnectWithoutJobInput>
+    upsert?: Enumerable<SavedJobUpsertWithWhereUniqueWithoutJobInput>
     createMany?: SavedJobCreateManyJobInputEnvelope
-    set?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    disconnect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    delete?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    connect?: SavedJobWhereUniqueInput | SavedJobWhereUniqueInput[]
-    update?: SavedJobUpdateWithWhereUniqueWithoutJobInput | SavedJobUpdateWithWhereUniqueWithoutJobInput[]
-    updateMany?: SavedJobUpdateManyWithWhereWithoutJobInput | SavedJobUpdateManyWithWhereWithoutJobInput[]
-    deleteMany?: SavedJobScalarWhereInput | SavedJobScalarWhereInput[]
+    set?: Enumerable<SavedJobWhereUniqueInput>
+    disconnect?: Enumerable<SavedJobWhereUniqueInput>
+    delete?: Enumerable<SavedJobWhereUniqueInput>
+    connect?: Enumerable<SavedJobWhereUniqueInput>
+    update?: Enumerable<SavedJobUpdateWithWhereUniqueWithoutJobInput>
+    updateMany?: Enumerable<SavedJobUpdateManyWithWhereWithoutJobInput>
+    deleteMany?: Enumerable<SavedJobScalarWhereInput>
   }
 
   export type JobApplicationUncheckedUpdateManyWithoutJobNestedInput = {
-    create?: XOR<JobApplicationCreateWithoutJobInput, JobApplicationUncheckedCreateWithoutJobInput> | JobApplicationCreateWithoutJobInput[] | JobApplicationUncheckedCreateWithoutJobInput[]
-    connectOrCreate?: JobApplicationCreateOrConnectWithoutJobInput | JobApplicationCreateOrConnectWithoutJobInput[]
-    upsert?: JobApplicationUpsertWithWhereUniqueWithoutJobInput | JobApplicationUpsertWithWhereUniqueWithoutJobInput[]
+    create?: XOR<Enumerable<JobApplicationCreateWithoutJobInput>, Enumerable<JobApplicationUncheckedCreateWithoutJobInput>>
+    connectOrCreate?: Enumerable<JobApplicationCreateOrConnectWithoutJobInput>
+    upsert?: Enumerable<JobApplicationUpsertWithWhereUniqueWithoutJobInput>
     createMany?: JobApplicationCreateManyJobInputEnvelope
-    set?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    disconnect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    delete?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    connect?: JobApplicationWhereUniqueInput | JobApplicationWhereUniqueInput[]
-    update?: JobApplicationUpdateWithWhereUniqueWithoutJobInput | JobApplicationUpdateWithWhereUniqueWithoutJobInput[]
-    updateMany?: JobApplicationUpdateManyWithWhereWithoutJobInput | JobApplicationUpdateManyWithWhereWithoutJobInput[]
-    deleteMany?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
+    set?: Enumerable<JobApplicationWhereUniqueInput>
+    disconnect?: Enumerable<JobApplicationWhereUniqueInput>
+    delete?: Enumerable<JobApplicationWhereUniqueInput>
+    connect?: Enumerable<JobApplicationWhereUniqueInput>
+    update?: Enumerable<JobApplicationUpdateWithWhereUniqueWithoutJobInput>
+    updateMany?: Enumerable<JobApplicationUpdateManyWithWhereWithoutJobInput>
+    deleteMany?: Enumerable<JobApplicationScalarWhereInput>
   }
 
   export type JobCreateNestedOneWithoutSavedJobsInput = {
@@ -14785,7 +13346,7 @@ export namespace Prisma {
     connectOrCreate?: JobCreateOrConnectWithoutSavedJobsInput
     upsert?: JobUpsertWithoutSavedJobsInput
     connect?: JobWhereUniqueInput
-    update?: XOR<XOR<JobUpdateToOneWithWhereWithoutSavedJobsInput, JobUpdateWithoutSavedJobsInput>, JobUncheckedUpdateWithoutSavedJobsInput>
+    update?: XOR<JobUpdateWithoutSavedJobsInput, JobUncheckedUpdateWithoutSavedJobsInput>
   }
 
   export type UserUpdateOneRequiredWithoutSavedJobNestedInput = {
@@ -14793,7 +13354,7 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutSavedJobInput
     upsert?: UserUpsertWithoutSavedJobInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSavedJobInput, UserUpdateWithoutSavedJobInput>, UserUncheckedUpdateWithoutSavedJobInput>
+    update?: XOR<UserUpdateWithoutSavedJobInput, UserUncheckedUpdateWithoutSavedJobInput>
   }
 
   export type JobCreateNestedOneWithoutJobApplicationsInput = {
@@ -14813,7 +13374,7 @@ export namespace Prisma {
     connectOrCreate?: JobCreateOrConnectWithoutJobApplicationsInput
     upsert?: JobUpsertWithoutJobApplicationsInput
     connect?: JobWhereUniqueInput
-    update?: XOR<XOR<JobUpdateToOneWithWhereWithoutJobApplicationsInput, JobUpdateWithoutJobApplicationsInput>, JobUncheckedUpdateWithoutJobApplicationsInput>
+    update?: XOR<JobUpdateWithoutJobApplicationsInput, JobUncheckedUpdateWithoutJobApplicationsInput>
   }
 
   export type JobSeekerUpdateOneRequiredWithoutJobApplicationsNestedInput = {
@@ -14821,242 +13382,242 @@ export namespace Prisma {
     connectOrCreate?: JobSeekerCreateOrConnectWithoutJobApplicationsInput
     upsert?: JobSeekerUpsertWithoutJobApplicationsInput
     connect?: JobSeekerWhereUniqueInput
-    update?: XOR<XOR<JobSeekerUpdateToOneWithWhereWithoutJobApplicationsInput, JobSeekerUpdateWithoutJobApplicationsInput>, JobSeekerUncheckedUpdateWithoutJobApplicationsInput>
+    update?: XOR<JobSeekerUpdateWithoutJobApplicationsInput, JobSeekerUncheckedUpdateWithoutJobApplicationsInput>
   }
 
-  export type NestedStringFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringFilter<$PrismaModel> | string
+  export type NestedStringFilter = {
+    equals?: string
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringFilter | string
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  export type NestedStringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableFilter | string | null
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  export type NestedDateTimeNullableFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
-  export type NestedEnumUserTypeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserType | EnumUserTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumUserTypeNullableFilter<$PrismaModel> | $Enums.UserType | null
+  export type NestedEnumUserTypeNullableFilter = {
+    equals?: UserType | null
+    in?: Enumerable<UserType> | null
+    notIn?: Enumerable<UserType> | null
+    not?: NestedEnumUserTypeNullableFilter | UserType | null
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type NestedBoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type NestedDateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
   }
 
-  export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
+  export type NestedStringWithAggregatesFilter = {
+    equals?: string
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringWithAggregatesFilter | string
+    _count?: NestedIntFilter
+    _min?: NestedStringFilter
+    _max?: NestedStringFilter
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type NestedIntFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+  export type NestedStringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  export type NestedIntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
   }
 
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  export type NestedDateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
   }
 
-  export type NestedEnumUserTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserType | EnumUserTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.UserType[] | ListEnumUserTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumUserTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.UserType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumUserTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumUserTypeNullableFilter<$PrismaModel>
+  export type NestedEnumUserTypeNullableWithAggregatesFilter = {
+    equals?: UserType | null
+    in?: Enumerable<UserType> | null
+    notIn?: Enumerable<UserType> | null
+    not?: NestedEnumUserTypeNullableWithAggregatesFilter | UserType | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedEnumUserTypeNullableFilter
+    _max?: NestedEnumUserTypeNullableFilter
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type NestedBoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+  export type NestedDateTimeWithAggregatesFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeWithAggregatesFilter | Date | string
+    _count?: NestedIntFilter
+    _min?: NestedDateTimeFilter
+    _max?: NestedDateTimeFilter
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
+  export type NestedIntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  export type NestedFloatNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatNullableFilter | number | null
   }
 
-  export type NestedEnumJobStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
+  export type NestedEnumJobStatusFilter = {
+    equals?: JobStatus
+    in?: Enumerable<JobStatus>
+    notIn?: Enumerable<JobStatus>
+    not?: NestedEnumJobStatusFilter | JobStatus
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type NestedIntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type NestedFloatFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatFilter | number
   }
 
-  export type NestedEnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.JobStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumJobStatusFilter<$PrismaModel>
-    _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  export type NestedEnumJobStatusWithAggregatesFilter = {
+    equals?: JobStatus
+    in?: Enumerable<JobStatus>
+    notIn?: Enumerable<JobStatus>
+    not?: NestedEnumJobStatusWithAggregatesFilter | JobStatus
+    _count?: NestedIntFilter
+    _min?: NestedEnumJobStatusFilter
+    _max?: NestedEnumJobStatusFilter
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -15095,7 +13656,7 @@ export namespace Prisma {
   }
 
   export type AccountCreateManyUserInputEnvelope = {
-    data: AccountCreateManyUserInput | AccountCreateManyUserInput[]
+    data: Enumerable<AccountCreateManyUserInput>
     skipDuplicates?: boolean
   }
 
@@ -15119,7 +13680,7 @@ export namespace Prisma {
   }
 
   export type SessionCreateManyUserInputEnvelope = {
-    data: SessionCreateManyUserInput | SessionCreateManyUserInput[]
+    data: Enumerable<SessionCreateManyUserInput>
     skipDuplicates?: boolean
   }
 
@@ -15199,7 +13760,7 @@ export namespace Prisma {
   }
 
   export type SavedJobCreateManyUserInputEnvelope = {
-    data: SavedJobCreateManyUserInput | SavedJobCreateManyUserInput[]
+    data: Enumerable<SavedJobCreateManyUserInput>
     skipDuplicates?: boolean
   }
 
@@ -15216,26 +13777,26 @@ export namespace Prisma {
 
   export type AccountUpdateManyWithWhereWithoutUserInput = {
     where: AccountScalarWhereInput
-    data: XOR<AccountUpdateManyMutationInput, AccountUncheckedUpdateManyWithoutUserInput>
+    data: XOR<AccountUpdateManyMutationInput, AccountUncheckedUpdateManyWithoutAccountsInput>
   }
 
   export type AccountScalarWhereInput = {
-    AND?: AccountScalarWhereInput | AccountScalarWhereInput[]
-    OR?: AccountScalarWhereInput[]
-    NOT?: AccountScalarWhereInput | AccountScalarWhereInput[]
-    userId?: StringFilter<"Account"> | string
-    type?: StringFilter<"Account"> | string
-    provider?: StringFilter<"Account"> | string
-    providerAccountId?: StringFilter<"Account"> | string
-    refresh_token?: StringNullableFilter<"Account"> | string | null
-    access_token?: StringNullableFilter<"Account"> | string | null
-    expires_at?: IntNullableFilter<"Account"> | number | null
-    token_type?: StringNullableFilter<"Account"> | string | null
-    scope?: StringNullableFilter<"Account"> | string | null
-    id_token?: StringNullableFilter<"Account"> | string | null
-    session_state?: StringNullableFilter<"Account"> | string | null
-    createdAt?: DateTimeFilter<"Account"> | Date | string
-    updatedAt?: DateTimeFilter<"Account"> | Date | string
+    AND?: Enumerable<AccountScalarWhereInput>
+    OR?: Enumerable<AccountScalarWhereInput>
+    NOT?: Enumerable<AccountScalarWhereInput>
+    userId?: StringFilter | string
+    type?: StringFilter | string
+    provider?: StringFilter | string
+    providerAccountId?: StringFilter | string
+    refresh_token?: StringNullableFilter | string | null
+    access_token?: StringNullableFilter | string | null
+    expires_at?: IntNullableFilter | number | null
+    token_type?: StringNullableFilter | string | null
+    scope?: StringNullableFilter | string | null
+    id_token?: StringNullableFilter | string | null
+    session_state?: StringNullableFilter | string | null
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
   }
 
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
@@ -15251,29 +13812,23 @@ export namespace Prisma {
 
   export type SessionUpdateManyWithWhereWithoutUserInput = {
     where: SessionScalarWhereInput
-    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutUserInput>
+    data: XOR<SessionUpdateManyMutationInput, SessionUncheckedUpdateManyWithoutSessionsInput>
   }
 
   export type SessionScalarWhereInput = {
-    AND?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    OR?: SessionScalarWhereInput[]
-    NOT?: SessionScalarWhereInput | SessionScalarWhereInput[]
-    sessionToken?: StringFilter<"Session"> | string
-    userId?: StringFilter<"Session"> | string
-    expires?: DateTimeFilter<"Session"> | Date | string
-    createdAt?: DateTimeFilter<"Session"> | Date | string
-    updatedAt?: DateTimeFilter<"Session"> | Date | string
+    AND?: Enumerable<SessionScalarWhereInput>
+    OR?: Enumerable<SessionScalarWhereInput>
+    NOT?: Enumerable<SessionScalarWhereInput>
+    sessionToken?: StringFilter | string
+    userId?: StringFilter | string
+    expires?: DateTimeFilter | Date | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
   }
 
   export type CompanyUpsertWithoutUserInput = {
     update: XOR<CompanyUpdateWithoutUserInput, CompanyUncheckedUpdateWithoutUserInput>
     create: XOR<CompanyCreateWithoutUserInput, CompanyUncheckedCreateWithoutUserInput>
-    where?: CompanyWhereInput
-  }
-
-  export type CompanyUpdateToOneWithWhereWithoutUserInput = {
-    where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutUserInput, CompanyUncheckedUpdateWithoutUserInput>
   }
 
   export type CompanyUpdateWithoutUserInput = {
@@ -15305,12 +13860,6 @@ export namespace Prisma {
   export type JobSeekerUpsertWithoutUserInput = {
     update: XOR<JobSeekerUpdateWithoutUserInput, JobSeekerUncheckedUpdateWithoutUserInput>
     create: XOR<JobSeekerCreateWithoutUserInput, JobSeekerUncheckedCreateWithoutUserInput>
-    where?: JobSeekerWhereInput
-  }
-
-  export type JobSeekerUpdateToOneWithWhereWithoutUserInput = {
-    where?: JobSeekerWhereInput
-    data: XOR<JobSeekerUpdateWithoutUserInput, JobSeekerUncheckedUpdateWithoutUserInput>
   }
 
   export type JobSeekerUpdateWithoutUserInput = {
@@ -15346,18 +13895,18 @@ export namespace Prisma {
 
   export type SavedJobUpdateManyWithWhereWithoutUserInput = {
     where: SavedJobScalarWhereInput
-    data: XOR<SavedJobUpdateManyMutationInput, SavedJobUncheckedUpdateManyWithoutUserInput>
+    data: XOR<SavedJobUpdateManyMutationInput, SavedJobUncheckedUpdateManyWithoutSavedJobInput>
   }
 
   export type SavedJobScalarWhereInput = {
-    AND?: SavedJobScalarWhereInput | SavedJobScalarWhereInput[]
-    OR?: SavedJobScalarWhereInput[]
-    NOT?: SavedJobScalarWhereInput | SavedJobScalarWhereInput[]
-    id?: StringFilter<"SavedJob"> | string
-    jobId?: StringFilter<"SavedJob"> | string
-    userId?: StringFilter<"SavedJob"> | string
-    createdAt?: DateTimeFilter<"SavedJob"> | Date | string
-    updatedAt?: DateTimeFilter<"SavedJob"> | Date | string
+    AND?: Enumerable<SavedJobScalarWhereInput>
+    OR?: Enumerable<SavedJobScalarWhereInput>
+    NOT?: Enumerable<SavedJobScalarWhereInput>
+    id?: StringFilter | string
+    jobId?: StringFilter | string
+    userId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
   }
 
   export type UserCreateWithoutCompanyInput = {
@@ -15367,7 +13916,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15384,7 +13933,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15408,8 +13957,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     savedJobs?: SavedJobCreateNestedManyWithoutJobInput
@@ -15425,8 +13974,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     savedJobs?: SavedJobUncheckedCreateNestedManyWithoutJobInput
@@ -15439,19 +13988,13 @@ export namespace Prisma {
   }
 
   export type JobCreateManyCompanyInputEnvelope = {
-    data: JobCreateManyCompanyInput | JobCreateManyCompanyInput[]
+    data: Enumerable<JobCreateManyCompanyInput>
     skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutCompanyInput = {
     update: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
     create: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutCompanyInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
   }
 
   export type UserUpdateWithoutCompanyInput = {
@@ -15461,7 +14004,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15478,7 +14021,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15501,26 +14044,26 @@ export namespace Prisma {
 
   export type JobUpdateManyWithWhereWithoutCompanyInput = {
     where: JobScalarWhereInput
-    data: XOR<JobUpdateManyMutationInput, JobUncheckedUpdateManyWithoutCompanyInput>
+    data: XOR<JobUpdateManyMutationInput, JobUncheckedUpdateManyWithoutJobsInput>
   }
 
   export type JobScalarWhereInput = {
-    AND?: JobScalarWhereInput | JobScalarWhereInput[]
-    OR?: JobScalarWhereInput[]
-    NOT?: JobScalarWhereInput | JobScalarWhereInput[]
-    id?: StringFilter<"Job"> | string
-    jobTitle?: StringFilter<"Job"> | string
-    jobDescription?: StringFilter<"Job"> | string
-    employmentType?: StringFilter<"Job"> | string
-    location?: StringFilter<"Job"> | string
-    salaryFrom?: IntFilter<"Job"> | number
-    salaryTo?: IntFilter<"Job"> | number
-    listingDuration?: IntFilter<"Job"> | number
-    benefits?: StringNullableListFilter<"Job">
-    status?: EnumJobStatusFilter<"Job"> | $Enums.JobStatus
-    companyId?: StringFilter<"Job"> | string
-    createdAt?: DateTimeFilter<"Job"> | Date | string
-    updatedAt?: DateTimeFilter<"Job"> | Date | string
+    AND?: Enumerable<JobScalarWhereInput>
+    OR?: Enumerable<JobScalarWhereInput>
+    NOT?: Enumerable<JobScalarWhereInput>
+    id?: StringFilter | string
+    jobTitle?: StringFilter | string
+    jobDescription?: StringFilter | string
+    employmentType?: StringFilter | string
+    location?: StringFilter | string
+    salaryFrom?: IntFilter | number
+    salaryTo?: IntFilter | number
+    listingDuration?: IntFilter | number
+    benefits?: StringNullableListFilter
+    status?: EnumJobStatusFilter | JobStatus
+    companyId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
   }
 
   export type UserCreateWithoutJobSeekerInput = {
@@ -15530,7 +14073,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15547,7 +14090,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15590,19 +14133,13 @@ export namespace Prisma {
   }
 
   export type JobApplicationCreateManyJobSeekerInputEnvelope = {
-    data: JobApplicationCreateManyJobSeekerInput | JobApplicationCreateManyJobSeekerInput[]
+    data: Enumerable<JobApplicationCreateManyJobSeekerInput>
     skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutJobSeekerInput = {
     update: XOR<UserUpdateWithoutJobSeekerInput, UserUncheckedUpdateWithoutJobSeekerInput>
     create: XOR<UserCreateWithoutJobSeekerInput, UserUncheckedCreateWithoutJobSeekerInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutJobSeekerInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutJobSeekerInput, UserUncheckedUpdateWithoutJobSeekerInput>
   }
 
   export type UserUpdateWithoutJobSeekerInput = {
@@ -15612,7 +14149,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15629,7 +14166,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15652,22 +14189,22 @@ export namespace Prisma {
 
   export type JobApplicationUpdateManyWithWhereWithoutJobSeekerInput = {
     where: JobApplicationScalarWhereInput
-    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyWithoutJobSeekerInput>
+    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyWithoutJobApplicationsInput>
   }
 
   export type JobApplicationScalarWhereInput = {
-    AND?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
-    OR?: JobApplicationScalarWhereInput[]
-    NOT?: JobApplicationScalarWhereInput | JobApplicationScalarWhereInput[]
-    id?: StringFilter<"JobApplication"> | string
-    jobId?: StringFilter<"JobApplication"> | string
-    jobSeekerId?: StringFilter<"JobApplication"> | string
-    resume?: StringFilter<"JobApplication"> | string
-    coverLetter?: StringNullableFilter<"JobApplication"> | string | null
-    prevPosition?: StringNullableFilter<"JobApplication"> | string | null
-    prevCompany?: StringNullableFilter<"JobApplication"> | string | null
-    createdAt?: DateTimeFilter<"JobApplication"> | Date | string
-    updatedAt?: DateTimeFilter<"JobApplication"> | Date | string
+    AND?: Enumerable<JobApplicationScalarWhereInput>
+    OR?: Enumerable<JobApplicationScalarWhereInput>
+    NOT?: Enumerable<JobApplicationScalarWhereInput>
+    id?: StringFilter | string
+    jobId?: StringFilter | string
+    jobSeekerId?: StringFilter | string
+    resume?: StringFilter | string
+    coverLetter?: StringNullableFilter | string | null
+    prevPosition?: StringNullableFilter | string | null
+    prevCompany?: StringNullableFilter | string | null
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -15677,7 +14214,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15694,7 +14231,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15712,12 +14249,6 @@ export namespace Prisma {
   export type UserUpsertWithoutAccountsInput = {
     update: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
     create: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAccountsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
   }
 
   export type UserUpdateWithoutAccountsInput = {
@@ -15727,7 +14258,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15744,7 +14275,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15761,7 +14292,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15778,7 +14309,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15796,12 +14327,6 @@ export namespace Prisma {
   export type UserUpsertWithoutSessionsInput = {
     update: XOR<UserUpdateWithoutSessionsInput, UserUncheckedUpdateWithoutSessionsInput>
     create: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutSessionsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutSessionsInput, UserUncheckedUpdateWithoutSessionsInput>
   }
 
   export type UserUpdateWithoutSessionsInput = {
@@ -15811,7 +14336,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15828,7 +14353,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15889,7 +14414,7 @@ export namespace Prisma {
   }
 
   export type SavedJobCreateManyJobInputEnvelope = {
-    data: SavedJobCreateManyJobInput | SavedJobCreateManyJobInput[]
+    data: Enumerable<SavedJobCreateManyJobInput>
     skipDuplicates?: boolean
   }
 
@@ -15921,19 +14446,13 @@ export namespace Prisma {
   }
 
   export type JobApplicationCreateManyJobInputEnvelope = {
-    data: JobApplicationCreateManyJobInput | JobApplicationCreateManyJobInput[]
+    data: Enumerable<JobApplicationCreateManyJobInput>
     skipDuplicates?: boolean
   }
 
   export type CompanyUpsertWithoutJobsInput = {
     update: XOR<CompanyUpdateWithoutJobsInput, CompanyUncheckedUpdateWithoutJobsInput>
     create: XOR<CompanyCreateWithoutJobsInput, CompanyUncheckedCreateWithoutJobsInput>
-    where?: CompanyWhereInput
-  }
-
-  export type CompanyUpdateToOneWithWhereWithoutJobsInput = {
-    where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutJobsInput, CompanyUncheckedUpdateWithoutJobsInput>
   }
 
   export type CompanyUpdateWithoutJobsInput = {
@@ -15975,7 +14494,7 @@ export namespace Prisma {
 
   export type SavedJobUpdateManyWithWhereWithoutJobInput = {
     where: SavedJobScalarWhereInput
-    data: XOR<SavedJobUpdateManyMutationInput, SavedJobUncheckedUpdateManyWithoutJobInput>
+    data: XOR<SavedJobUpdateManyMutationInput, SavedJobUncheckedUpdateManyWithoutSavedJobsInput>
   }
 
   export type JobApplicationUpsertWithWhereUniqueWithoutJobInput = {
@@ -15991,7 +14510,7 @@ export namespace Prisma {
 
   export type JobApplicationUpdateManyWithWhereWithoutJobInput = {
     where: JobApplicationScalarWhereInput
-    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyWithoutJobInput>
+    data: XOR<JobApplicationUpdateManyMutationInput, JobApplicationUncheckedUpdateManyWithoutJobApplicationsInput>
   }
 
   export type JobCreateWithoutSavedJobsInput = {
@@ -16003,8 +14522,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutJobsInput
@@ -16020,8 +14539,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16040,7 +14559,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16057,7 +14576,7 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     stripeCustomerId?: string | null
-    userType?: $Enums.UserType | null
+    userType?: UserType | null
     onboardingComplete?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16075,12 +14594,6 @@ export namespace Prisma {
   export type JobUpsertWithoutSavedJobsInput = {
     update: XOR<JobUpdateWithoutSavedJobsInput, JobUncheckedUpdateWithoutSavedJobsInput>
     create: XOR<JobCreateWithoutSavedJobsInput, JobUncheckedCreateWithoutSavedJobsInput>
-    where?: JobWhereInput
-  }
-
-  export type JobUpdateToOneWithWhereWithoutSavedJobsInput = {
-    where?: JobWhereInput
-    data: XOR<JobUpdateWithoutSavedJobsInput, JobUncheckedUpdateWithoutSavedJobsInput>
   }
 
   export type JobUpdateWithoutSavedJobsInput = {
@@ -16092,8 +14605,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutJobsNestedInput
@@ -16109,8 +14622,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16120,12 +14633,6 @@ export namespace Prisma {
   export type UserUpsertWithoutSavedJobInput = {
     update: XOR<UserUpdateWithoutSavedJobInput, UserUncheckedUpdateWithoutSavedJobInput>
     create: XOR<UserCreateWithoutSavedJobInput, UserUncheckedCreateWithoutSavedJobInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutSavedJobInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutSavedJobInput, UserUncheckedUpdateWithoutSavedJobInput>
   }
 
   export type UserUpdateWithoutSavedJobInput = {
@@ -16135,7 +14642,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16152,7 +14659,7 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | $Enums.UserType | null
+    userType?: NullableEnumUserTypeFieldUpdateOperationsInput | UserType | null
     onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16171,8 +14678,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutJobsInput
@@ -16188,8 +14695,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16229,12 +14736,6 @@ export namespace Prisma {
   export type JobUpsertWithoutJobApplicationsInput = {
     update: XOR<JobUpdateWithoutJobApplicationsInput, JobUncheckedUpdateWithoutJobApplicationsInput>
     create: XOR<JobCreateWithoutJobApplicationsInput, JobUncheckedCreateWithoutJobApplicationsInput>
-    where?: JobWhereInput
-  }
-
-  export type JobUpdateToOneWithWhereWithoutJobApplicationsInput = {
-    where?: JobWhereInput
-    data: XOR<JobUpdateWithoutJobApplicationsInput, JobUncheckedUpdateWithoutJobApplicationsInput>
   }
 
   export type JobUpdateWithoutJobApplicationsInput = {
@@ -16246,8 +14747,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutJobsNestedInput
@@ -16263,8 +14764,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16274,12 +14775,6 @@ export namespace Prisma {
   export type JobSeekerUpsertWithoutJobApplicationsInput = {
     update: XOR<JobSeekerUpdateWithoutJobApplicationsInput, JobSeekerUncheckedUpdateWithoutJobApplicationsInput>
     create: XOR<JobSeekerCreateWithoutJobApplicationsInput, JobSeekerUncheckedCreateWithoutJobApplicationsInput>
-    where?: JobSeekerWhereInput
-  }
-
-  export type JobSeekerUpdateToOneWithWhereWithoutJobApplicationsInput = {
-    where?: JobSeekerWhereInput
-    data: XOR<JobSeekerUpdateWithoutJobApplicationsInput, JobSeekerUncheckedUpdateWithoutJobApplicationsInput>
   }
 
   export type JobSeekerUpdateWithoutJobApplicationsInput = {
@@ -16361,7 +14856,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AccountUncheckedUpdateManyWithoutUserInput = {
+  export type AccountUncheckedUpdateManyWithoutAccountsInput = {
     type?: StringFieldUpdateOperationsInput | string
     provider?: StringFieldUpdateOperationsInput | string
     providerAccountId?: StringFieldUpdateOperationsInput | string
@@ -16390,7 +14885,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SessionUncheckedUpdateManyWithoutUserInput = {
+  export type SessionUncheckedUpdateManyWithoutSessionsInput = {
     sessionToken?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16411,7 +14906,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SavedJobUncheckedUpdateManyWithoutUserInput = {
+  export type SavedJobUncheckedUpdateManyWithoutSavedJobInput = {
     id?: StringFieldUpdateOperationsInput | string
     jobId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16427,8 +14922,8 @@ export namespace Prisma {
     salaryFrom: number
     salaryTo: number
     listingDuration: number
-    benefits?: JobCreatebenefitsInput | string[]
-    status?: $Enums.JobStatus
+    benefits?: JobCreatebenefitsInput | Enumerable<string>
+    status?: JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16442,8 +14937,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     savedJobs?: SavedJobUpdateManyWithoutJobNestedInput
@@ -16459,15 +14954,15 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     savedJobs?: SavedJobUncheckedUpdateManyWithoutJobNestedInput
     jobApplications?: JobApplicationUncheckedUpdateManyWithoutJobNestedInput
   }
 
-  export type JobUncheckedUpdateManyWithoutCompanyInput = {
+  export type JobUncheckedUpdateManyWithoutJobsInput = {
     id?: StringFieldUpdateOperationsInput | string
     jobTitle?: StringFieldUpdateOperationsInput | string
     jobDescription?: StringFieldUpdateOperationsInput | string
@@ -16476,8 +14971,8 @@ export namespace Prisma {
     salaryFrom?: IntFieldUpdateOperationsInput | number
     salaryTo?: IntFieldUpdateOperationsInput | number
     listingDuration?: IntFieldUpdateOperationsInput | number
-    benefits?: JobUpdatebenefitsInput | string[]
-    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    benefits?: JobUpdatebenefitsInput | Enumerable<string>
+    status?: EnumJobStatusFieldUpdateOperationsInput | JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16515,7 +15010,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type JobApplicationUncheckedUpdateManyWithoutJobSeekerInput = {
+  export type JobApplicationUncheckedUpdateManyWithoutJobApplicationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     jobId?: StringFieldUpdateOperationsInput | string
     resume?: StringFieldUpdateOperationsInput | string
@@ -16558,7 +15053,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SavedJobUncheckedUpdateManyWithoutJobInput = {
+  export type SavedJobUncheckedUpdateManyWithoutSavedJobsInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16577,17 +15072,6 @@ export namespace Prisma {
   }
 
   export type JobApplicationUncheckedUpdateWithoutJobInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    jobSeekerId?: StringFieldUpdateOperationsInput | string
-    resume?: StringFieldUpdateOperationsInput | string
-    coverLetter?: NullableStringFieldUpdateOperationsInput | string | null
-    prevPosition?: NullableStringFieldUpdateOperationsInput | string | null
-    prevCompany?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type JobApplicationUncheckedUpdateManyWithoutJobInput = {
     id?: StringFieldUpdateOperationsInput | string
     jobSeekerId?: StringFieldUpdateOperationsInput | string
     resume?: StringFieldUpdateOperationsInput | string
