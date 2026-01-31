@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint --ignore-path .eslintignore",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "vercel-build": "prisma generate && prisma migrate deploy && prisma db push && next build"
   },
   "dependencies": {
     "@arcjet/inspect": "1.0.0-beta.7",
