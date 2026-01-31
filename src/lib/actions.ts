@@ -17,6 +17,8 @@ import { jobListingDurationPricing } from "@/utils/pricingTiers";
 import { inngest } from "@/inngest/client";
 import { revalidatePath } from "next/cache";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 const aj = arcjet
   .withRule(shield({ mode: "LIVE" }))
   .withRule(detectBot({ mode: "LIVE", allow: [] }));
@@ -193,8 +195,8 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
     metadata: {
       jobId: newJob.id,
     },
-    success_url: `https://trabaho-platform.vercel.app/payment/success`,
-    cancel_url: `https://trabaho-platform.vercel.app/payment/cancel`,
+    success_url: `${baseUrl}/payment/success`,
+    cancel_url: `${baseUrl}/payment/cancel`,
   });
 
   return redirect(session.url as string);
