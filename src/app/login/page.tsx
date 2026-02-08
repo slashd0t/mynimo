@@ -10,9 +10,7 @@ const page = () => {
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link href="/" className="flex items-center gap-2 self-center">
           <Image src={logo} alt="logo" width={40} height={40} className="size-10" />
-          <h1 className="text-2xl font-bold">
-            Hire<span className="text-primary">ek</span>
-          </h1>
+          <h1 className="text-2xl font-bold">Trabaho</h1>
         </Link>
 
         {/* Login Form */}
